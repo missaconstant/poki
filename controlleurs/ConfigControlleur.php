@@ -80,7 +80,12 @@
          */
         public function checkDefaultTables()
         {
-            return $this->loadModele()->existsDefaultTables();
+            if (file_exists(ROOT . 'statics/config.php')) {
+                return $this->loadModele()->existsDefaultTables();
+            }
+            else {
+                return false;
+            }
         }
 
         /**
@@ -91,6 +96,7 @@
         public function configSurvey($redirtoifok='/', $path=false)
         {
             $val = $this->isConfigured();
+        
             if ($val < 2) {
                 if ($val == 0 && $path != 'install') {
                     $this->redirTo(Routes::find('install'));
