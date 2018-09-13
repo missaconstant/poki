@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([a-zA-Z0-9=/&\-]+)$ index.php?/$1 [QSA]
+# RewriteRule ^([a-zA-Z0-9=&\-]+)$ index.php?/$1 [QSA]
+# RewriteRule ^([a-zA-Z0-9=&\-]+)/([a-zA-Z0-9=&\-]+)$ index.php?/$1/$2 [QSA]
+# RewriteRule ^([a-zA-Z0-9=&\-]+)/([a-zA-Z0-9=&\-]+)/([a-zA-Z0-9=&\-]+)$ index.php?/$1/$2/$3 [QSA]
