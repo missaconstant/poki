@@ -1,0 +1,22 @@
+#!/usr/bin/php
+
+<?php
+
+	if (strtolower(php_sapi_name()) != 'cli') exit();
+
+	/*
+	 * Getting config vars
+	*/
+	include_once 'core/config.php';
+
+	/*
+	 * Start serving ...
+	*/
+	if (!isset($argv[1]) || (isset($argv[1]) && $argv[1]=='--dev')) {
+		echo "Now serving on " . Config::$dev_host . ':' . Config::$serve_port . "\n";
+		shell_exec("php -S " . Config::$dev_host . ':' . Config::$serve_port);
+	}
+	else if (isset($argv[1]) && $argv[1]=='--share'){
+		echo "Now serving on " . Config::$share_host . ':' . Config::$serve_port . "\n";
+		shell_exec("php -S " . Config::$share_host . ':' . Config::$serve_port);
+	}
