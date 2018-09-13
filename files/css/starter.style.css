@@ -1,0 +1,84 @@
+body, html {
+    padding: 0;
+    margin: 0;
+    background: #EFF3F6;
+    font-family: sans-serif;
+}
+
+form#configform {
+    width: 370px;
+    /* min-height: 500px; */
+    background: #fff;
+    margin: auto;
+    margin-top: 80px;
+    box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.07);
+    border-radius: 10px;
+    padding-top: 1px;
+}
+
+form#configform div.top {
+    text-align: center;
+    margin-top: 40px;
+}
+
+form#configform div.top img {
+    width: 120px;
+}
+
+form#configform div.top i {
+    font-size: 7em;
+    display: block;
+    margin-bottom: 40px;
+    color: #5b6be8;
+}
+
+form#configform h3 {
+    text-align: center;
+    font-size: 1.1em;
+    color: #888;
+    margin-top: 25px;
+}
+
+form#configform p {
+    padding: 5px 20px;
+    margin-top: 0;
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+}
+
+form#configform div.fields {
+    padding: 15px 20px;
+}
+
+div.field {
+    margin-bottom: 20px;
+}
+
+div.field input {
+    font-size: 13px;
+    padding: 12px 20px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+div.field button[type="submit"], div.field a.btn {
+    width: 100%;
+    background: #5b6be8;
+    color: #fff;
+    font-size: 13px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 20px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+div.field p.text-muted {
+    color: #888;
+    font-size: 14px;
+}
