@@ -25,7 +25,7 @@
 
             /* Creating datas */
             try {
-                $sql = "INSERT INTO adm_users(name, email, password) VALUES('admin', '$username', md5('$password'), '1', '1')";
+                $sql = "INSERT INTO adm_users(name, email, password, active, role) VALUES('admin', '$username', md5('$password'), '1', '1')";
                 $q = modele::$bd->query($sql);
                 $q->closeCursor();
             }
