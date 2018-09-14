@@ -51,6 +51,7 @@
 
     <script>
         $(function () {
+            
         });
 
         function deleteContent(btn, categoryname) {
@@ -74,7 +75,7 @@
                                     if (!response.error) {
                                         loader.hide();
                                         alerter.success("Content deleted !");
-                                        $('#' + id).parent().fadeOut();
+                                        $('#content_' + id).parent().fadeOut();
                                     }
                                     else {
                                         loader.hide();
