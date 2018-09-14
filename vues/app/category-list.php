@@ -51,7 +51,6 @@
 
     <script>
         $(function () {
-            
         });
 
         function deleteContent(btn, categoryname) {
