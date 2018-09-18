@@ -22,5 +22,7 @@
 
         public static $fields_files_webpath = WROOT . 'appfiles/fields_files/';
 
+        public static $jsonp_files_path = ROOT . 'appfiles/category_params_files/';
+
         public static $appfolder = "noset";
     }

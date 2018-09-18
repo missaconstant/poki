@@ -38,9 +38,13 @@
 
         public function createDefaultTables()
         {
-            $done = true;
+            /* Creating default category parmas json file */
+            $ok = $this->createCategoryParamFile('default');
+            if (!$ok) return false;
 
             /* Creating table */
+            $done = true;
+
             try {
                 /* table 1 */
                 $sql = "CREATE TABLE IF NOT EXISTS adm_settings (
@@ -112,7 +116,7 @@
                 $done = false;
             }
 
-            return $done;
+            return $done && $ok;
         }
 
         public function existsDefaultTables()
@@ -128,6 +132,15 @@
             catch (Exception $e) {
                 return false;
             }
+        }
+
+        public function createCategoryParamFile($category)
+        {
+            $structure = [
+                "links" => [],
+                "created_at" => date('d-m-Y H:i')
+            ];
+            return file_put_contents(Config::$jsonp_files_path . "adm_app_$category.params", json_encode($structure));
         }
     }
     
