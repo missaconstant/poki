@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="<?= Routes::find('categories') ?>" id="newfieldmodalform" name="newfieldmodalform" method="post">
+                <form action="<?= Routes::find('categories') ?>" id="newfieldmodalform" name="newfieldmodalform" method="post" onsubmit="return false;">
                     <div class="form-group">
                         <label>Filed Name</label>
                         <input class="form-control" placeholder="Type something" type="text" name="fieldname">

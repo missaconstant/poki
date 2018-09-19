@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="<?= Routes::find('categories-create-act') ?>" id="newcategorymodalform" name="newcategorymodalform" method="post">
+                <form action="<?= Routes::find('categories-create-act') ?>" id="newcategorymodalform" name="newcategorymodalform" method="post" onsubmit="return false;">
                     <div class="form-group">
                         <label>Category Name</label>
                         <input class="form-control" placeholder="Type something" type="text" name="name">

@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="<?= Routes::find('api-set') ?>" id="apimodalform" name="apimodalform" method="post">
+                <form action="<?= Routes::find('api-set') ?>" id="apimodalform" name="apimodalform" method="post" onsubmit="return false;">
                     <div class="form-group">
                         <label>Category Api key</label>
                         <div class="input-group mt-2">
