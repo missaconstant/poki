@@ -38,10 +38,10 @@
 
                                             <form action="<?= Routes::find('content-add') ?>" id="newcontent" name="newcontent" method="post" enctype="multipart/form-data">
                                                 <?php foreach ($category_fields as $k => $field): ?>
-                                                <div class="form-group">
-                                                    <label><?= $field['name'] ?></label><?= $field['type'] == 'text' ? ' - <a href="#" class="badge badge-pill badge-danger switcheditor">Switch editor</a>':'' ?>
-                                                    <?= Helpers::displayHtmlField($field['type'], $field['name'], ($content ? $content[$field['name']]:false)) ?>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label><?= $field['name'] ?></label><?= $field['type'] == 'text' ? ' - <a href="#" class="badge badge-pill badge-danger switcheditor">Switch editor</a>':'' ?>
+                                                        <?= Helpers::displayHtmlField($field['type'], $field['name'], ($content ? $content[$field['name']]:false), $category_name) ?>
+                                                    </div>
                                                 <?php endforeach ?>
 
                                                 <div class="form-group">
@@ -174,6 +174,8 @@
                         }
                     });
                 });
+
+                $('.linkchoose').select2();
             });
 
             function setLoading(where) {
@@ -202,6 +204,10 @@
                     rest.push(this.getAttribute('data-fname'));
                 });
                 $('#' + fieldid).val(rest.join('|'));
+            }
+
+            function bindSelectChange(field, value) {
+                $('#' + field).val(value);
             }
         </script>
     </body>
