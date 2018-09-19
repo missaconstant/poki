@@ -1,5 +1,10 @@
 <?php
 
+    /**
+     * @class ApiControlleur
+     * @extends controlleur
+     * Manage api actions
+     */
     class ApiControlleur extends controlleur
     {
         private $cfg;
@@ -18,6 +23,10 @@
             $this->cfg = $this->loadController('config');
         }
 
+        /**
+         * Toogle Api, enable or disable
+         * @return json_message
+         */
         public function toggle()
         {
             if ($this->loadModele()->toggleApi(Posts::get(0), Posts::get(1))) {
@@ -30,6 +39,10 @@
             }
         }
 
+        /**
+         * Sets api access right
+         * @return json_message
+         */
         public function set()
         {
             $allowed = Posts::post(['allowed']) ? trim(implode(',',$_POST['allowed'])) : '';
@@ -43,6 +56,10 @@
             }
         }
 
+        /**
+         * Creates or Changes api key
+         * @return json_message
+         */
         public function changeKey()
         {
             $category = Posts::get(0);
@@ -56,6 +73,164 @@
             }
         }
 
+        /**
+         * Api version 1
+         * @return void
+         */
+        public function v1()
+        {
+            header("Access-Control-Allow-Origin: *");
+            header("Content-Type: application/json");
+
+            Posts::disableCSRF();
+
+            $category = Posts::get([0]) ? Posts::get(0) : '';
+            $action = Posts::get([1]) ? Posts::get(1) : false;
+            $content = Posts::get([2]) ? Posts::get(2) : 0;
+            $apikey = Posts::get([3]) ? Posts::get(3) : '';
+
+            # get actions
+            if ($action && $action == 'get') {
+                if ($content) {
+                    # get one
+                    $this->apiSurvey($category, 'get-one', $apikey);
+                    $found = $this->loadModele('contents')->trouverContents($category, $content);
+                    if ($found) {
+                        $this->json_answer(["error" => 0, "contents" => [$found]]);
+                        exit();
+                    }
+                    else {
+                        $this->apiError(404, 'Nothing found !');
+                    }
+                }
+                else {
+                    # get all | get
+                    $this->apiSurvey($category, 'get', $apikey);
+                    $contents = $this->loadModele('contents')->trouverTousContents($category);
+                    if ($contents && count($content)) {
+                        $this->json_answer(["error" => 0, "contents" => $contents]);
+                        exit();
+                    }
+                    else {
+                        $this->apiError(404, 'Nothing found !');
+                    }
+                }
+            }
+            # cud action : create, update, ddelete
+            else if ($action && in_array($action, ['add', 'edit', 'delete'])) {
+                $categoryname = $category;
+                $apikey = Posts::post(['apikey']) ? Posts::post('apikey') : false;
+                $contentid = $content;
+
+                if (!$categoryname) {
+                    $this->apiError(403, "Action not permitted or target omitted !");
+                }
+
+                $this->apiSurvey($categoryname, $action, $apikey);
+
+                # delete action
+                if ($action == 'delete') {
+                    if ($this->loadModele('contents')->supprimerContents($categoryname, $contentid)) {
+                        $this->json_answer(["error" => 0, "message" => "Action done !"]);
+                    }
+                    else {
+                        $this->apiError(404, "Error found !");
+                    }
+                }
+                # add and edit action
+                else if ($action == 'edit' || $action == 'add') {
+                    $content = [];
+                    $queryfields = ['apikey'];
+    
+                    foreach ($_POST as $k => $value) {
+                        if ($k != 'id' && $k != 'added_at') {
+                            if (!in_array($k, $queryfields)) {
+                                $content[$k] = $value;
+                            }
+                        }
+                        else {
+                            $this->apiError(402, "You are not allowed to edit this ". $k);
+                            break;
+                        }
+                    }
+                    
+                    if ($this->loadModele('contents')->{ $action=='edit' ? 'modifierContent':'creerContent' }($content, $categoryname, $contentid)) {
+                        $this->json_answer(["error" => 0, "message" => "Action done !"]);
+                    }
+                    else {
+                        $this->apiError(404, "Error found !");
+                    }
+                }
+            }
+            else {
+                $this->apiError(403, "You're asking for impossible !");
+            }
+        }
+
+        /**
+         * Api level access survey
+         * @param category asked category
+         * @param permission access level asked
+         * @param apikey api key provided
+         */
+        public function apiSurvey($categoryname, $permission, $apikey) {
+            $api = $this->loadModele()->trouverApi($categoryname);
+            if ($api && $api->active == '1') {
+                if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey != 'noset' && $apikey != $api->apikey) {
+                    $this->apiError(401, "You don't have this permission level without an api key.");
+                }
+                else if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey == 'noset') {
+                    $this->apiError(402, "This authorisation level is disabled.");
+                }
+            }
+            else if ($api && $api->active != '1') {
+                $this->apiError(405, "Access not allowed !");
+            }
+            else {
+                $this->apiError(403, "You're asking for impossible !");
+            }
+        }
+
+        /**
+         * Returns api error according to error type
+         * @param errortype
+         * @param messsage Message to return from error
+         */
+        private function apiError($errortype, $message)
+        {
+            $this->json_answer([
+                "error" => $errortype,
+                "message" => $message
+            ]);
+            exit();
+        }
+
+        public function apiTest()
+        {
+            /*$values = [
+                "action" => "delete"
+            ];
+            // exit($_SERVER['SERVER_PORT']);
+            $c = curl_init();
+            curl_setopt($c, CURLOPT_URL, 'http://localhost:9000');
+            // curl_setopt($c, CURLOPT_PORT , $_SERVER['SERVER_PORT']);
+            curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($c, CURLOPT_TIMEOUT, 5);
+            curl_setopt($c, CURLOPT_POST, 1);
+            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query($values));
+            curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+            $r = curl_exec($c);
+            curl_close($c);
+
+            var_dump($r);*/
+            $this->render('app/apitest');
+        }
+
+        /* Oldest */
+
+        /**
+         * Watch function to delete when api will be certified as good working
+         */
         public function watch()
         {
             header("Content-Type: application/json");
@@ -88,6 +263,9 @@
             }
         }
 
+        /**
+         * Do function to delete when api will be certified as good working
+         */
         public function do()
         {
             header("Content-Type: application/json");
@@ -136,54 +314,6 @@
                     $this->apiError(404, "Error found !");
                 }
             }
-        }
-
-        public function apiSurvey($categoryname, $permission, $apikey) {
-            $api = $this->loadModele()->trouverApi($categoryname);
-            if ($api && $api->active == '1') {
-                if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey != 'noset' && $apikey != $api->apikey) {
-                    $this->apiError(401, "You don't have this permission level without api right key.");
-                }
-                else if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey == 'noset') {
-                    $this->apiError(402, "This authorisation level is disabled.");
-                }
-            }
-            else if ($api && $api->active != '1') {
-                $this->apiError(405, "Access not allowed !");
-            }
-            else {
-                $this->apiError(403, "You're asking for impossible !");
-            }
-        }
-
-        private function apiError($errortype, $message)
-        {
-            $this->json_answer([
-                "error" => $errortype,
-                "message" => $message
-            ]);
-            exit();
-        }
-
-        public function apiTest()
-        {
-            /*$values = [
-                "action" => "delete"
-            ];
-// exit($_SERVER['SERVER_PORT']);
-            $c = curl_init();
-            curl_setopt($c, CURLOPT_URL, 'http://localhost:9000');
-            // curl_setopt($c, CURLOPT_PORT , $_SERVER['SERVER_PORT']);
-            curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
-            curl_setopt($c, CURLOPT_TIMEOUT, 5);
-            curl_setopt($c, CURLOPT_POST, 1);
-            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query($values));
-            curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-            $r = curl_exec($c);
-            curl_close($c);
-
-            var_dump($r);*/
-            $this->render('app/apitest');
         }
     }
     

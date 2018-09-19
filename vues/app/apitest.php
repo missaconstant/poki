@@ -7,10 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <form action="http://localhost:9000/api/do" method="post">
-        <label>Action:</label> <input type="text" name="action" placeholder="What action to perform"> <br>
-        <label>Target:</label> <input type="text" name="target" placeholder="what category to perform action on"> <br>
-        <label>Content id:</label> <input type="text" name="targetid" placeholder="Which content to perform action on"> <br>
+    <form action="http://localhost:9000/api/v1/default/delete/5" method="post">
         <label>Api key:</label> <input type="text" name="apikey" placeholder="Your api key"> <br>
         <!-- <input type="text" name="id" value="1"> -->
         <input type="text" name="title" value="Je suis hereux">
