@@ -41,6 +41,7 @@
             }
             else {
                 if ($this->loadModele()->{ $edition != '0' ? 'modifierCategory':'creerCategory' }($category)) {
+                    $this->loadModele('params')->{ $edition != '0' ? 'updateCategoryParams':'createCategoryParams' }($category);
                     $this->json_success('Category created !', ["newtoken" => Posts::getCSRFTokenValue(), "name" => $name]);
                     exit();
                 }
@@ -56,6 +57,7 @@
             $name = Posts::get(0);
 
             if ($this->loadModele()->supprimerCategory($name)) {
+                $this->loadModele('params')->deleteCategoryParams($name);
                 $this->json_success('Deleted !');
                 exit();
             }

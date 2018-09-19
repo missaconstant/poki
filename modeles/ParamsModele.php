@@ -24,6 +24,17 @@
             return json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
         }
 
+        public function createCategoryParams($category)
+        {
+            $categoryname = $category->name;
+            $structure = [
+                "name" => $categoryname,
+                "links" => [],
+                "created_at" => date('d-m-Y H:i')
+            ];
+            return file_put_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params", json_encode($structure));
+        }
+
         public function saveCategoryParams($categoryname, $datas)
         {
             return file_put_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params", json_encode($datas));
@@ -34,9 +45,16 @@
             return unlink(Config::$jsonp_files_path . "adm_app_$categoryname.params");
         }
 
-        public function updateCategoryParams($categoryname, $newname)
+        public function updateCategoryParams($category)
         {
+            $categoryname = $category->oldname;
+            $newname = $category->name;
             return rename(Config::$jsonp_files_path . "adm_app_$categoryname.params", Config::$jsonp_files_path . "adm_app_$newname.params");
+        }
+
+        public function changeFieldType($categoryname, $field, $type)
+        {
+            
         }
     }
     
