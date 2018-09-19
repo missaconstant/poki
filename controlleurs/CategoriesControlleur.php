@@ -86,6 +86,7 @@
             }
             else {
                 $categorie = $this->loadModele()->trouverCategory(Posts::get(0));
+                $allfields = $this->loadModele()->trouverTousCategoryFields();
                 $category_api = $this->loadModele('api')->trouverApi(Posts::get(0));
                 $apitypes = $this->loadModele('settings')->get('apipermissiontypes');
                 $this->render('app/category-show', [
@@ -94,6 +95,7 @@
                     "categories" => $this->list(),
                     "category_name" => Posts::get(0),
                     "category_fields" => $categorie,
+                    "all_category_fileds" => $allfields,
                     "apitypes" => explode(',', $apitypes->content),
                     "api" => $category_api
                 ]);
@@ -140,6 +142,25 @@
             else {
                 $this->json_success('An error occured ! Try again later.');
                 exit();
+            }
+        }
+
+        public function linkField()
+        {
+            if ($admin = $this->usr->loginSurvey(false, false, false)) {
+                $category = Posts::get(0);
+                $field = Posts::get(1);
+                $linkto = Posts::get(2) != '0' ? Posts::get(2) . '/' . Posts::get(3) : $linkto = '0';
+
+                if ($this->loadModele('params')->setLink($category, $field, $linkto)) {
+                    echo $this->json_success("Link correctely setted !");
+                }
+                else {
+                    echo $this->json_error("An error occurred. Please try again later.");
+                }
+            }
+            else {
+                echo $this->json_error("Vous devez être connecter pour effectuer cette operation !");
             }
         }
 

@@ -52,7 +52,7 @@ function postize(url, type, datas, success, error, letloader) {
             else {
                 if (success) success(response);
             }
-            $('input[name="_token"]').val(response.newtoken);
+            if (response.newtoken) $('input[name="_token"]').val(response.newtoken);
         },
         error: function (err) {
             if (error) error({message: "An error occured ! Check your connexion and try again later.", err: err});

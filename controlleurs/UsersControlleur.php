@@ -134,12 +134,17 @@
             }
         }
 
-        public function loginSurvey($iflogged=false, $ifnot=false)
+        public function loginSurvey($iflogged=false, $ifnot=false, $returnfalse=false)
         {
             if ($user = $this->loadModele()->findAdmin(Session::get('admin'))) {
                 if ($iflogged) {
-                    $this->redirTo(Routes::find($iflogged));
-                    exit();
+                    if (!$returnfalse) {
+                        $this->redirTo(Routes::find($iflogged));
+                        exit();
+                    }
+                    else {
+                        return false;
+                    }
                 }
                 else {
                     return $user;
@@ -147,8 +152,13 @@
             }
             else {
                 if ($ifnot) {
-                    $this->redirTo(Routes::find($ifnot));
-                    exit();
+                    if (!$returnfalse) {
+                        $this->redirTo(Routes::find($ifnot));
+                        exit();
+                    }
+                    else {
+                        return false;
+                    }
                 }
             }
         }

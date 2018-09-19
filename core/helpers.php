@@ -9,6 +9,8 @@
             "char" => "File field"
         ];
 
+        public static $categoryparams = [];
+
         public static function getFieldPseudoType($oname, $withbagde=false)
         {
             $vars = ["varchar" => "info", "int" => "danger", "text" => "success", "char" => "primary"];
@@ -57,10 +59,18 @@
         /**
          * Echo if exists
          */
-        public static function eie($var, $property=false)
+        public static function eie($var, $property=false, $othervalue='')
         {
-            if (!isset($var)) return '';
+            if (!isset($var)) return $othervalue;
             return $property ? $var->$property : $var;
+        }
+
+        public static function getCategoryParams($categoryname, $param, $renew=false)
+        {
+            if (!isset(self::$categoryparams[$categoryname]) || $renew) {
+                self::$categoryparams[$categoryname] = json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
+            }
+            return self::$categoryparams[$categoryname][$param];
         }
     }
     

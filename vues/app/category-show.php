@@ -62,6 +62,20 @@
                     $('#addfieldmodal .modal-title').text('Add new field');
                 });
                 $('.api-level-choose').select2();
+                $('.link-choose').select2();
+                $('.link-choose').on('change', function (e) {
+                    var linkto = this.value, field = this.name, category = $('#currentcategoryname').val();
+                    
+                    if (!linkto.length) return;
+
+                    loader.show();
+                    postize('<?= Routes::find("categories-link-act") ?>/' + category + '/' + field + '/' + linkto, 'get', null, function (response) {
+                        alerter.success(response.message);
+                    },
+                    function (err) {
+                        alerter.error(err.message);
+                    });
+                });
             });
 
             function saveNewField() {
@@ -103,6 +117,7 @@
                     '<td>'+ ($('.category-fields-table tbody tr').length+1) +'</td>' +
                     '<td class="field_name">'+ name +'</td>' +
                     '<td class="field_type"><span class="p-2 bagde badge-pill badge-'+ vars[type] +'">'+ types[type] +'</span></td>' +
+                    '<td>Reload page to link</td>' +
                     '<td>Unknown</td>' +
                     '<td style="white-space: nowrap; width: 15%;">' +
                         '<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">' +

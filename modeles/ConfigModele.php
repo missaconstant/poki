@@ -39,8 +39,8 @@
         public function createDefaultTables()
         {
             /* Creating default category parmas json file */
-            $ok = $this->createCategoryParamFile('default');
-            if (!$ok) return false;
+            $paramcreated = $this->createCategoryParamFile('default');
+            if (!$paramcreated) return false;
 
             /* Creating table */
             $done = true;
@@ -97,26 +97,26 @@
 
             /* Creating datas */
             try {
-                $sql = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('language', 'default', 'english')";
-                $q = modele::$bd->exec($sql);
+                $sql5 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('language', 'default', 'english')";
+                $q5 = modele::$bd->exec($sql5);
 
                 $sql4 = "INSERT INTO adm_roles(role, active) VALUES ('admin', '1'), ('writer', '2'), ('viewer', '3')";
                 $q4 = modele::$bd->exec($sql4);
 
-                $sql3 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete')";
-                $q3 = modele::$bd->exec($sql3);
+                $sql6 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete')";
+                $q6 = modele::$bd->exec($sql6);
 
-                $sql1 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
-                $q1 = modele::$bd->exec($sql1);
+                $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
+                $q7 = modele::$bd->exec($sql7);
 
-                $sql2 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Adminify !', 'You are now on adminify app. Then enjoy ! Create categories and admin your website easely.')";
-                $q2 = modele::$bd->exec($sql2);
+                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Adminify !', 'You are now on adminify app. Then enjoy ! Create categories and admin your website easely.')";
+                $q8 = modele::$bd->exec($sql8);
             }
             catch (Exception $e) {
                 $done = false;
             }
 
-            return $done && $ok;
+            return $done && $paramcreated;
         }
 
         public function existsDefaultTables()
@@ -137,6 +137,7 @@
         public function createCategoryParamFile($category)
         {
             $structure = [
+                "name" => $category,
                 "links" => [],
                 "created_at" => date('d-m-Y H:i')
             ];

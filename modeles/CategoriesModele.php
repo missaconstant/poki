@@ -14,11 +14,21 @@
 
         public function trouverCategory($name)
         {
+            $dbname = Config::$db_name;
             $c_name = 'adm_app_' . $name;
-            $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$c_name' AND column_name!='id' AND column_name!='active' AND column_name!='added_at'");
+            $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' AND column_name!='id' AND column_name!='active' AND column_name!='added_at'");
             $r = $q->fetchAll();
             $q->closeCursor();
             return count($r) ? $r : false;
+        }
+
+        public function trouverTousCategoryFields()
+        {
+            $dbname = Config::$db_name;
+            $q = modele::$bd->query("SELECT table_name as tab_name, column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema='$dbname' AND TABLE_NAME REGEXP '^adm_app' AND column_name!='active' AND column_name!='added_at'");
+            $r = $q->fetchAll(PDO::FETCH_ASSOC);
+            $q->closeCursor();
+            return $r;
         }
 
         public function creerCategory($category) {
@@ -117,9 +127,10 @@
             }
         }
 
-        function existsFieldCategory($name, $field) {
+        public function existsFieldCategory($name, $field) {
+            $dbname = Config::$db_name;
             $c_name = 'adm_app_' . $name;
-            $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$c_name' AND column_name='$field'");
+            $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' AND column_name='$field'");
             $r = $q->fetchAll();
             $q->closeCursor();
             return count($r);
