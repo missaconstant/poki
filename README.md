@@ -1,2 +1,2 @@
-# adminizer
+# Poki
 Simple website administration tool
