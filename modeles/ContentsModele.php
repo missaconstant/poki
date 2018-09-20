@@ -80,5 +80,10 @@
                 return false;
             }
         }
+
+        public function getCategoryParams($categoryname)
+        {
+            return json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
+        }
     }
     
