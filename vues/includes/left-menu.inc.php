@@ -7,7 +7,7 @@
                 <!-- LOGO -->
                 <div class="topbar-left">
                     <div class="text-center">
-                        <a href="#" class="logo"><i class="mdi mdi-rocket" id="left-logo-icon"></i> Adminizer</a>
+                        <a href="#" class="logo"><i class="mdi mdi-rocket" id="left-logo-icon"></i> Poki</a>
                         <!-- <a href="index.html" class="logo"><img src="assets/images/logo.png" height="24" alt="logo"></a> -->
                     </div>
                 </div>

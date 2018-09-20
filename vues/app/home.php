@@ -33,7 +33,7 @@
                                     <img src="<?= Files::image('logo.png') ?>" alt="" id="logoimg">
                                     <h4 class="text-primary" id="logotext1">Welcome here !</h4>
                                     <p class="text-muted" id="logotext2">
-                                        Welcome on Adminizer which is an admin app came to you to help you in apps administration and more other stuffs. Adminizer is very simple to use following few steps. It's an Open Source project under MIT licence.
+                                        Welcome on Poki which is an admin app came to you to help you in apps administration and more other stuffs. Poki is very simple to use following few steps. It's an Open Source project under MIT licence.
                                     </p>
                                 </div>
                             </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Adminizer - Install</title>
+    <title>Poki - Install</title>
     <link rel="stylesheet" href="<?= Files::style('starter.style') ?>">
 </head>
 <body>
@@ -15,14 +15,14 @@
         </div>
         <h3>Last step and then install</h3>
         <p>
-            Confirm your login and password for Adminizer root user and then proceed to installation
+            Confirm your login and password for Poki root user and then proceed to installation
         </p>
         <div class="fields">
             <div class="field">
-                <input type="text" placeholder="Username : default is adminizer" name="username">
+                <input type="text" placeholder="Username : default is poki" name="username">
             </div>
             <div class="field">
-                <input type="" placeholder="Your Password : default is adminizer" name="password">
+                <input type="" placeholder="Your Password : default is poki" name="password">
             </div>
             <div class="field">
                 <button type="submit">Install</button>

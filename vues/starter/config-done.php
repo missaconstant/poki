@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Adminizer - Install done !</title>
+    <title>Poki - Install done !</title>
     <link rel="stylesheet" href="<?= Files::style('starter.style') ?>">
 </head>
 <body>
@@ -15,7 +15,7 @@
         </div>
         <h3>Install done !</h3>
         <p>
-            Your adminizer install is now ended and correctly done ! You can now log into your admin dashboard and start Adminizer ! 
+            Your Poki installation is now ended and correctly done ! You can now log into your admin dashboard and start Poki ! 
         </p>
         <div class="fields">
             <div class="field">

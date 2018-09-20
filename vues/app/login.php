@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Adminizer - Login</title>
+    <title>Poki - Login</title>
     <link rel="stylesheet" href="<?= THEME ?>assets/css/icons.css">
     <link rel="stylesheet" href="<?= Files::style('starter.style') ?>">
 </head>
@@ -14,7 +14,7 @@
         <div class="top">
             <i class="mdi mdi-lock"></i>
         </div>
-        <h3><?= langexp('en','w1') ?> | ADMINIZER</h3>
+        <h3><?= langexp('en','w1') ?> | POKI</h3>
         <p>
             <?= langexp('en','w2') ?><br><?= langexp('en', 'w3') ?>
         </p>

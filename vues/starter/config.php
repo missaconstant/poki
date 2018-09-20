@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Adminizer - Install</title>
+    <title>Poki - Install</title>
     <link rel="stylesheet" href="<?= Files::style('starter.style') ?>">
 </head>
 <body>
@@ -13,7 +13,7 @@
         <div class="top">
             <img src="<?= Files::image('02.png') ?>" alt="">
         </div>
-        <h3>WELCOME | ADMINIZER</h3>
+        <h3>WELCOME | POKI</h3>
         <p>
             Fill the following form to configure.<br>Once done click on "next" button to continue.
         </p>
