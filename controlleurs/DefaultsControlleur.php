@@ -50,8 +50,8 @@
 				}
 			}
 			else if (Posts::post(['username'])) {
-				$username = strlen(trim(Posts::post('username'))) ? trim(Posts::post('username')) : 'adminizer';
-				$password = strlen(Posts::post('password')) ? Posts::post('password') : 'adminizer';
+				$username = strlen(trim(Posts::post('username'))) ? trim(Posts::post('username')) : 'poki';
+				$password = strlen(Posts::post('password')) ? Posts::post('password') : 'poki';
 
 				if (strlen($username)>2) {
 					if ($this->cfg->setDefaultsTables($username, $password)) {
