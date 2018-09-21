@@ -45,12 +45,25 @@
             }
         }
 
-        public function trouverTousContents($categoryname)
+        public function trouverTousContents($categoryname, $checkJoin=false)
         {
             try {
-                $q = modele::$bd->query("SELECT * FROM adm_app_$categoryname");
+                # getting joining table
+                $joining = $this->getCategoryParams($categoryname);
+
+                # searching right query string
+                $sql = '';
+                if ($checkJoin && count($joining['links'])) {
+                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname);
+                }
+                else {
+                    $sql = "SELECT * FROM adm_app_$categoryname";
+                }
+                #doing query
+                $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(PDO::FETCH_ASSOC);
                 $q->closeCursor();
+                
                 return $r;
             }
             catch (Exception $e) {
@@ -58,16 +71,29 @@
             }
         }
 
-        public function trouverContents($categoryname, $contentid)
+        public function trouverContents($categoryname, $contentid, $checkJoin=false)
         {
             try {
-                $q = modele::$bd->query("SELECT * FROM adm_app_$categoryname WHERE id='$contentid'");
+                # getting joining table
+                $joining = $this->getCategoryParams($categoryname);
+                
+                # searching right query string
+                $sql = '';
+                if ($checkJoin && count($joining['links'])) {
+                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $contentid);
+                }
+                else {
+                    $sql = "SELECT * FROM adm_app_$categoryname WHERE id='$contentid'";
+                }
+                #doing query
+                $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(PDO::FETCH_ASSOC);
                 $q->closeCursor();
+
                 return count($r) ? $r[0]:false;
             }
             catch (Exception $e) {
-                return false;
+                echo json_encode([$e->getMessage()]); exit();
             }
         }
 
@@ -81,9 +107,63 @@
             }
         }
 
+        /* Forked Method */
+
         public function getCategoryParams($categoryname)
         {
             return json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
+        }
+
+        public function getCategoriesJoinedName($links)
+        {
+            $categories = [];
+            foreach ($links as $key => $link) {
+                $categories[] = $link['linkedto'];
+            }
+            return $categories;
+        }
+
+        public function trouverCategory($name, $norestrict=false)
+        {
+            try {
+                $dbname = Config::$db_name;
+                $c_name = 'adm_app_' . $name;
+                $norestrictstring = $norestrict ? " AND column_name!='id' AND column_name!='active' AND column_name!='added_at'" : '';
+                $q = modele::$bd->query("SELECT column_name as name FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' $norestrictstring");
+                $r = $q->fetchAll(PDO::FETCH_COLUMN);
+                $q->closeCursor();
+                return count($r) ? $r : false;
+            }
+            catch (Exception $e) {
+                // exit(json_encode([$e->getMessage()]));
+            }
+        }
+
+        public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false)
+        {
+            # list of table to take in select query
+            $categoriesJoined = $this->getCategoriesJoinedName($joining['links']);
+            array_unshift($categoriesJoined, $categoryname);
+
+            # preparing SELECT query string
+            $querySelectStrings = array_map(function ($category) use ($categoryname) {
+                $tablefields = $this->trouverCategory($category, ($category!=$categoryname));
+                $tablestring = [];
+                foreach ($tablefields as $k => $field) {
+                    $tablestring[] = 'adm_app_'.$category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
+                }
+                return implode(', ', $tablestring);
+            }, $categoriesJoined);
+            
+            # preparing WHERE condition
+            $wherestring = [];
+            foreach ($joining['links'] as $fieldlinked => $link) {
+                $linkedto = 'adm_app_'. $link['linkedto'];
+                $linked = 'adm_app_'. $joining['name'];
+                $wherestring[] = "LEFT JOIN $linkedto ON $linkedto.id=$linked.$fieldlinked";
+            }
+
+            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid" : "");
         }
     }
     

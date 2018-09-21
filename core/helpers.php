@@ -87,7 +87,7 @@
                 }
                 
                 $field = '<select class="form-control block linkchoose" onchange="bindSelectChange(\''. $field_id .'\', this.value)" style="width:100%;">'. implode("", $options) .'</select>';
-                $field.= '<input type="hidden" name="'. $name .'" id="'. $field_id .'">';
+                $field.= '<input type="hidden" name="'. $name .'" id="'. $field_id .'" value="'. ($value ? $value:'') .'">';
 
                 return $field;
             }

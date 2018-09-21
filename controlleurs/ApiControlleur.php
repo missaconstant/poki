@@ -94,7 +94,7 @@
                 if ($content) {
                     # get one
                     $this->apiSurvey($category, 'get-one', $apikey);
-                    $found = $this->loadModele('contents')->trouverContents($category, $content);
+                    $found = $this->loadModele('contents')->trouverContents($category, $content, true);
                     if ($found) {
                         $this->json_answer(["error" => 0, "contents" => [$found]]);
                         exit();
@@ -106,7 +106,7 @@
                 else {
                     # get all | get
                     $this->apiSurvey($category, 'get', $apikey);
-                    $contents = $this->loadModele('contents')->trouverTousContents($category);
+                    $contents = $this->loadModele('contents')->trouverTousContents($category, true);
                     if ($contents && count($content)) {
                         $this->json_answer(["error" => 0, "contents" => $contents]);
                         exit();
