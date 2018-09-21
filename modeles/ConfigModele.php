@@ -109,7 +109,7 @@
                 $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
                 $q7 = modele::$bd->exec($sql7);
 
-                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Adminify !', 'You are now on adminify app. Then enjoy ! Create categories and admin your website easely.')";
+                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.')";
                 $q8 = modele::$bd->exec($sql8);
             }
             catch (Exception $e) {

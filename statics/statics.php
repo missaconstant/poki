@@ -13,7 +13,7 @@
             "lang" => [
                 "en" => [
                     "w1" => "WELCOME",
-                    "w2" => "Fill the form to log into your Adminizer app.",
+                    "w2" => "Fill the form to log into your Poki app.",
                     "w3" => "Give your username and password.",
                     "w4" => "Username",
                     "w5" => "Your password",
