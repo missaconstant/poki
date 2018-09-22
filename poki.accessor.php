@@ -2,11 +2,12 @@
 
     require __DIR__ . '/core/config.php';
     require __DIR__ . '/core/modele.php';
+    require __DIR__ . '/modeles/ContentsModele.php';
 
     define('ROOT', pathinfo(__FILE__, PATHINFO_DIRNAME) . '/');
     define('WROOT', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 
-    class Adminify extends modele
+    class Poki extends modele
     {
         public static $inited = false;
         public static $cfg = [];
