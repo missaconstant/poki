@@ -25,25 +25,13 @@
                     self::$inited = true;
                 }
             }
+            self::$mdl = new ContentsModele();
         }
 
-        public static function get($categoryname, $contentid=false, $limits=false)
+        public static function get($categoryname, $contentid=false, $filter=false, $joins=false)
         {
             if (!self::$inited) self::init();
-            try {
-                $whereclause = $contentid ? "WHERE id=$contentid" : "";
-                $limitclause = $limits && count($limits) > 1 && !$contentid ? "LIMIT ". $limits[0] .", ". $limits[1] : '';
-                $limitclause = $limits && count($limits) == 1 && !$contentid ? "LIMIT ". $limits[0] : '';
-
-                $q = modele::$bd->query("SELECT * FROM adm_app_$categoryname $whereclause $limits");
-                $r = $q->fetchAll(PDO::FETCH_OBJ);
-                $q->closeCursor();
-                
-                return $contentid ? (count($r) ? $r[0] : false) : $r;
-            }
-            catch (Exception $e) {
-                return false;
-            }
+            return self::$mdl->{$contentid ? 'trouverContents' : 'trouverTousContents'}($categoryname, $joins, ($contentid ?? $filter));
         }
 
         public static function parseFiles($filestring)

@@ -45,7 +45,7 @@
             }
         }
 
-        public function trouverTousContents($categoryname, $checkJoin=false)
+        public function trouverTousContents($categoryname, $checkJoin=false, $filter=false)
         {
             try {
                 # getting joining table
@@ -54,7 +54,7 @@
                 # searching right query string
                 $sql = '';
                 if ($checkJoin && count($joining['links'])) {
-                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname);
+                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, false, $filter);
                 }
                 else {
                     $sql = "SELECT * FROM adm_app_$categoryname";
@@ -95,6 +95,11 @@
             catch (Exception $e) {
                 echo json_encode([$e->getMessage()]); exit();
             }
+        }
+
+        public function trouverContentsAccessor($categoryname, $checkJoin, $contentid)
+        {
+            return $this->trouverContents($categoryname, $contentid, $checkJoin);
         }
 
         public function supprimerContents($categoryname, $contentid) {
@@ -139,7 +144,7 @@
             }
         }
 
-        public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false)
+        public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false, $filter=false)
         {
             # list of table to take in select query
             $categoriesJoined = $this->getCategoriesJoinedName($joining['links']);
@@ -163,7 +168,18 @@
                 $wherestring[] = "LEFT JOIN $linkedto ON $linkedto.id=$linked.$fieldlinked";
             }
 
-            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid" : "");
+            # preparing filters instruction
+            $limit = ''; $order = '';
+            if ($filter) {
+                if (isset($filter['limit'])) {
+                    $limit = "LIMIT " .$filter['limit'];
+                }
+                else if (isset($filter['order'])) {
+                    $order = "ORDER BY " .$filter['order'];
+                }
+            }
+
+            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid $order $limit" : "");
         }
     }
     
