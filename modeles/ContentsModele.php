@@ -57,7 +57,10 @@
                     $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, false, $filter);
                 }
                 else {
-                    $sql = "SELECT * FROM adm_app_$categoryname";
+                    $filter = $this->getFilter($filter);
+                    $limit = $filter['limit'];
+                    $order = $filter['order'];
+                    $sql = "SELECT * FROM adm_app_$categoryname $order $limit";
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
@@ -169,17 +172,25 @@
             }
 
             # preparing filters instruction
+            $filter = $this->getFilter($filter);
+            $limit = $filter['limit'];
+            $order = $filter['order'];
+
+            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid" : " $order $limit");
+        }
+
+        private function getFilter($filter)
+        {
             $limit = ''; $order = '';
             if ($filter) {
                 if (isset($filter['limit'])) {
                     $limit = "LIMIT " .$filter['limit'];
                 }
-                else if (isset($filter['order'])) {
+                if (isset($filter['order'])) {
                     $order = "ORDER BY " .$filter['order'];
                 }
             }
-
-            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid $order $limit" : "");
+            return ["limit" => $limit, "order" => $order];
         }
     }
     

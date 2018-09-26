@@ -31,7 +31,7 @@
         public static function get($categoryname, $contentid=false, $filter=false, $joins=false)
         {
             if (!self::$inited) self::init();
-            return self::$mdl->{$contentid ? 'trouverContents' : 'trouverTousContents'}($categoryname, $joins, ($contentid ?? $filter));
+            return self::$mdl->{$contentid ? 'trouverContentsAccessor' : 'trouverTousContents'}($categoryname, $joins, ($contentid ? $contentid : $filter));
         }
 
         public static function parseFiles($filestring)
