@@ -10,7 +10,8 @@
             "varchar" => "Alphanumeric",
             "int" => "Numeric",
             "text" => "Text field",
-            "char" => "File field"
+            "char" => "File field",
+            "date" => "Date field"
         ];
 
         /**
@@ -27,7 +28,7 @@
          */
         public static function getFieldPseudoType($oname, $withbagde=false)
         {
-            $vars = ["varchar" => "info", "int" => "danger", "text" => "success", "char" => "primary"];
+            $vars = ["varchar" => "info", "int" => "danger", "text" => "success", "char" => "primary", "date" => "warning"];
             $rets = $withbagde ? '<span class="p-2 bagde badge-pill badge-'. $vars[$oname] .'">'. self::$types[$oname] .'</span>' : self::$types[$oname];
             return $rets;
         }
@@ -50,6 +51,9 @@
                         break;
                     case 'varchar':
                         return '<input type="text" max-length="255" class="form-control" name="'. $name .'" value="'. ($value ? $value:'') .'">';
+                        break;
+                    case 'date':
+                        return '<input type="date" class="form-control" name="'. $name .'" value="'. ($value ? $value:'') .'">';
                         break;
                     case 'char':
                         $files = explode('|', $value);
