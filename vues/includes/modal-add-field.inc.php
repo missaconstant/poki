@@ -9,18 +9,20 @@
             </div>
             <div class="modal-body">
                 <form action="<?= Routes::find('categories') ?>" id="newfieldmodalform" name="newfieldmodalform" method="post" onsubmit="return false;">
-                    <div class="form-group">
-                        <label>Filed Name</label>
-                        <input class="form-control" placeholder="Type something" type="text" name="fieldname">
-                    </div>
-                    <div class="form-group">
-                        <label>Filed Type</label>
-                        <select class="form-control" name="fieldtype">
-                            <option value="0" selected>Choose field type</option>
-                            <?php foreach (Helpers::$types as $type => $label): ?>
-                            <option value="<?= $type ?>"><?= $label ?></option>
-                            <?php endforeach ?>
-                        </select>
+                    <div class="row mainline fieldline">
+                        <div class="col-12 form-group">
+                            <label>Filed Name</label>
+                            <input class="form-control field-name" placeholder="Type something" type="text" name="fieldname">
+                        </div>
+                        <div class="col-12 form-group">
+                            <label>Filed Type</label>
+                            <select class="form-control field-type" name="fieldtype">
+                                <option value="0" selected>Choose field type</option>
+                                <?php foreach (Helpers::$types as $type => $label): ?>
+                                <option value="<?= $type ?>"><?= $label ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
                     </div>
                     <input type="hidden" name="category" value="<?= $category_name ?>" id="categoryname">
                     <input type="hidden" name="editing" value="0" id="editingfield">
@@ -28,6 +30,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+            <a href="#" onclick="addModalFieldLine()" class="btn btn-info more-field-btn position-absolute" style="left:15px;"><span class="mdi mdi-plus"></span></a>
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" onclick="saveNewField()">Save field</button>
             </div>

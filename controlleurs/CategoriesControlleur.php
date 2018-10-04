@@ -106,19 +106,34 @@
 
         public function addField($edition=false)
         {
-            $field = (object) [
+            $fields = [];
+            $field_main = (object) [
                 "name" => Posts::post('fieldname'),
                 "type" => Posts::post('fieldtype'),
                 "category" => Posts::post('category'),
                 "oldname" => Posts::post('editing')
             ];
-            $this->checkFieldValues($field);
+            $fields[] = $field_main;
+
+            if (Posts::post(['fieldname_1'])) {
+                $i = 1;
+                while (Posts::post(['fieldname_' . $i])) {
+                    $fields[] = (object) [
+                        "name" => Posts::post('fieldname_' . $i),
+                        "type" => Posts::post('fieldtype_' . $i),
+                        "category" => Posts::post('category'),
+                        "oldname" => Posts::post('editing')
+                    ];
+                    $i++;
+                }
+            }
+
+            $this->checkFieldValues($fields);
             
-            if ($this->loadModele()->{ $edition ? 'modifierCategoryField' : 'creerCategoryField' }($field)) {
-                $this->json_success('New field added to !', [
+            if ($this->loadModele()->{ $edition ? 'modifierCategoryField' : 'creerCategoryField' }($edition ? $field_main : $fields)) {
+                $this->json_success('New fields added to !', [
                     "newtoken" => Posts::getCSRFTokenValue(),
-                    "addedtype" => $field->type,
-                    "addedname" => $field->name
+                    "addedfields" => $fields
                 ]);
                 exit();
             }
@@ -218,26 +233,28 @@
             }
         }
 
-        public function checkFieldValues($field)
+        public function checkFieldValues($fields)
         {
-            $sname = explode(' ', (trim($field->name)));
-            
-            if (count($sname) > 1 || strlen($field->name)==0) {
-                $this->json_error('Field name might not contain whitespaces !', ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
-            }
-            else if ($field->type=='0') {
-                $this->json_error('You have to choose a type for this field !', ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
-            }
-            else if (!isset(Helpers::$types[$field->type])) {
-                $this->json_error('This type is not allowed and should break your app !', ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
-            }
-            else if ($this->checkFieldExists($field->name, $field->category)) {
-                if ($field->oldname != $field->name) {
-                    $this->json_error('This field name already exists. Choose another one.', ["newtoken" => Posts::getCSRFTokenValue()]);
+            foreach ($fields as $k => $field) {
+                $sname = explode(' ', (trim($field->name)));
+                
+                if (count($sname) > 1 || strlen($field->name)==0) {
+                    $this->json_error('Field name might not contain whitespaces !', ["newtoken" => Posts::getCSRFTokenValue()]);
                     exit();
+                }
+                else if ($field->type=='0') {
+                    $this->json_error('You have to choose a type for this field !', ["newtoken" => Posts::getCSRFTokenValue()]);
+                    exit();
+                }
+                else if (!isset(Helpers::$types[$field->type])) {
+                    $this->json_error('This type is not allowed and should break your app !', ["newtoken" => Posts::getCSRFTokenValue()]);
+                    exit();
+                }
+                else if ($this->checkFieldExists($field->name, $field->category)) {
+                    if ($field->oldname != $field->name) {
+                        $this->json_error('This field name already exists. Choose another one.', ["newtoken" => Posts::getCSRFTokenValue()]);
+                        exit();
+                    }
                 }
             }
         }

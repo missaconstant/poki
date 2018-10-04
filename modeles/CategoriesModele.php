@@ -85,14 +85,16 @@
             return count($r);
         }
 
-        public function creerCategoryField($field)
+        public function creerCategoryField($fields)
         {
             try {
-                $category = 'adm_app_' . $field->category;
-                $fieldname = $field->name;
-                $fieldtype = $field->type;
-                $fieldlength = $field->type != 'text' ? '(255)' : '';
-                $q = modele::$bd->query("ALTER TABLE $category ADD $fieldname $fieldtype $fieldlength");
+                foreach ($fields as $k => $field) {
+                    $category = 'adm_app_' . $field->category;
+                    $fieldname = $field->name;
+                    $fieldtype = $field->type;
+                    $fieldlength = $field->type != 'text' ? '(255)' : '';
+                    $q = modele::$bd->exec("ALTER TABLE $category ADD $fieldname $fieldtype $fieldlength");
+                }
                 return true;
             }
             catch (Exception $e) {

@@ -60,6 +60,9 @@
                     $('#newfieldmodalform #editingfield').val('0');
                     $('#newfieldmodalform input[name="fieldname"]').val('');
                     $('#addfieldmodal .modal-title').text('Add new field');
+                    $('#newfieldmodalform .fieldline:not(.mainline)').remove();
+                    $('#newfieldmodalform .form-group').removeClass('col-6').addClass('col-12');
+                    $('.more-field-btn').fadeIn();
                 });
                 $('.api-level-choose').select2();
                 $('.link-choose').select2();
@@ -91,9 +94,9 @@
                     success: function (response) {
                         if (!response.error) {
                             $('#addfieldmodal').modal('hide');
-                            alerter.success('Field <b>'+ $('#newfieldmodalform input[name="fieldname"]').val() +'</b> '+(edition!=0 ? 'modified':'added')+' !');
-                            if (!edition) addNewField(response.addedname, response.addedtype);
-                            else editField(response.addedname, response.addedtype);
+                            alerter.success('Field(s) correctly '+(edition!=0 ? 'modified':'added')+' !');
+                            if (!edition) addNewFields(response.addedfields);
+                            else editField(response.addedfields[0].name, response.addedfields[0].type);
                             $('#newfieldmodalform')[0].reset();
                         }
                         else {
@@ -110,28 +113,46 @@
                 });
             }
 
-            function addNewField(name, type) {
+            function addNewFields(fields) {
                 var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary"};
                 var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field"};
-                var line = '<tr id="field_'+ ($('.category-fields-table tbody tr').length+1) +'">' +
-                    '<td>'+ ($('.category-fields-table tbody tr').length+1) +'</td>' +
-                    '<td class="field_name">'+ name +'</td>' +
-                    '<td class="field_type"><span class="p-2 bagde badge-pill badge-'+ vars[type] +'">'+ types[type] +'</span></td>' +
-                    '<td>Reload page to link</td>' +
-                    '<td>Unknown</td>' +
-                    '<td style="white-space: nowrap; width: 15%;">' +
-                        '<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">' +
-                            '<div class="btn-group btn-group-sm" style="float: none;">' +
-                                '<button type="button" onclick="openFieldEditor(\'<?= $category_name ?>\', this)" class="btn btn-sm btn-info" style="float: none; margin: 5px;"><span class="ti-pencil"></span></button>' +
-                                '<button type="button" class="btn btn-sm btn-warning" style="float: none; margin: 5px;"><span class="ti-eye"></span></button>' +
-                                '<button type="button" onclick="removeField(\''+ name +'\', \'<?= $category_name ?>\', this)" class="btn btn-sm btn-danger" style="float: none; margin: 5px;"><span class="ti-trash"></span></button>' +
+
+                for (var field in fields) {
+                    var line = '<tr id="field_'+ ($('.category-fields-table tbody tr').length+1) +'">' +
+                        '<td>'+ ($('.category-fields-table tbody tr').length+1) +'</td>' +
+                        '<td class="field_name">'+ fields[field].name +'</td>' +
+                        '<td class="field_type"><span class="p-2 bagde badge-pill badge-'+ vars[fields[field].type] +'">'+ types[fields[field].type] +'</span></td>' +
+                        '<td>Reload page to link</td>' +
+                        '<td>Unknown</td>' +
+                        '<td style="white-space: nowrap; width: 15%;">' +
+                            '<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">' +
+                                '<div class="btn-group btn-group-sm" style="float: none;">' +
+                                    '<button type="button" onclick="openFieldEditor(\'<?= $category_name ?>\', this)" class="btn btn-sm btn-info" style="float: none; margin: 5px;"><span class="ti-pencil"></span></button>' +
+                                    '<button type="button" class="btn btn-sm btn-warning" style="float: none; margin: 5px;"><span class="ti-eye"></span></button>' +
+                                    '<button type="button" onclick="removeField(\''+ fields[field].name +'\', \'<?= $category_name ?>\', this)" class="btn btn-sm btn-danger" style="float: none; margin: 5px;"><span class="ti-trash"></span></button>' +
+                                '</div>' +
                             '</div>' +
-                        '</div>' +
-                    '</td>' +
-                '</tr>';
-                $('.category-fields-table tbody').append(line);
+                        '</td>' +
+                    '</tr>';
+                    $('.category-fields-table tbody').append(line);
+                }
+
                 $('.category-fields-table').fadeIn();
                 $('.category-top-manage').fadeIn();
+            }
+
+            function addModalFieldLine() {
+                nblines = $('#newfieldmodalform .fieldline').length;
+                $mainline = $('#newfieldmodalform .mainline');
+                $newline = null;
+                if (nblines >= 1) {
+                    $mainline.find('.form-group').removeClass('col-12').addClass('col-6');
+                }
+                $newline = $($mainline[0].cloneNode(true));
+                $newline.removeClass('mainline').find('.field-name').val('');
+                $newline.find('.field-name').attr({name: 'fieldname_' + nblines});
+                $newline.find('.field-type').attr({name: 'fieldtype_' + nblines});
+                $('#newfieldmodalform').append($newline);
             }
 
             function editField(name, type) {
@@ -184,9 +205,6 @@
                 $parent = $(btn).parent().parent().parent().parent();
                 $oldname = $parent.find('.field_name').text();
                 $oldtype = $parent.find('.field_type span').text();
-
-                console.log($parent.find('.field_type span'));
-
                 $editline = $parent;
 
                 $('#newfieldmodalform input[name="fieldname"]').val($oldname);
@@ -204,6 +222,7 @@
                     }
                 }
                 
+                $('.more-field-btn').hide();
                 $('#addfieldmodal .modal-title').text('Edit field');
                 $('#addfieldmodal').modal('show');
             }
