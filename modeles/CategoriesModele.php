@@ -92,13 +92,14 @@
                     $category = 'adm_app_' . $field->category;
                     $fieldname = $field->name;
                     $fieldtype = $field->type;
-                    $fieldlength = $field->type != 'text' ? '(255)' : '';
+                    $fieldlength = $field->type != 'text' && $field->type != 'date' ? '(255)' : '';
                     $q = modele::$bd->exec("ALTER TABLE $category ADD $fieldname $fieldtype $fieldlength");
                 }
                 return true;
             }
             catch (Exception $e) {
-                return false;
+                //return false;
+                exit(json_encode(["error" => true, "message" => $e->getMessage()]));
             }
         }
 
