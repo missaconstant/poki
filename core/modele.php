@@ -77,4 +77,9 @@
 				die($e->getMessage()) ;
 			}
 		}
+
+		public function getDbInstance()
+		{
+			return modele::$bd;
+		}
 	}

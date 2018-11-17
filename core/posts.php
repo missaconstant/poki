@@ -110,7 +110,7 @@
 		static private function getRequestValue($type, $index)
 		{
 			if (isset($type[$index])) {
-				return htmlspecialchars($type[$index]);
+				return is_array($type[$index]) ? $type[$index] : htmlspecialchars($type[$index]);
 			}
 			else {
 				throw new Exception("Index undefined", 1);

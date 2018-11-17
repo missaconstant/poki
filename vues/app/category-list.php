@@ -93,5 +93,57 @@
                 }
             });
         }
+
+        function addContentFromCsv(fileinput) {
+            var file = fileinput.files[0];
+
+            if (!/^[\s\S]+.csv$/.test(file.name)) {
+                alerter.error("Please choose a CSV file");
+            }
+            else {
+                $.confirm({
+                    title: 'Are you sure ?',
+                    content: 'Vous allez ajouter les élements de ce fichier à cette catégorie.',
+                    type: 'red',
+                    theme: 'modern',
+                    icon: 'fa fa-warning',
+                    buttons: {
+                        confirm: {
+                            btnClass: 'btn btn-danger',
+                            action: function () {
+                                loader.show();
+                                var fd = new FormData();
+                                    fd.append('csvfile', file);
+                                    fd.append('categoryname', '<?= $category_name ?>');
+                                $.ajax({
+                                    url: '<?= Routes::find('content-from-csv') ?>',
+                                    type: 'post',
+                                    contentType: false,
+                                    processData: false,
+                                    cache: false,
+                                    data: fd,
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (!response.error) {
+                                            alerter.success(response.message);
+                                            window.location.reload();
+                                        }
+                                        else {
+                                            alerter.error(response.message);
+                                        }
+                                        loader.hide();
+                                    },
+                                    error: function (err) {
+                                        alerter.error("An error occured ! Please try again later.");
+                                        loader.hide();
+                                    }
+                                });
+                            },
+                        },
+                        cancel: {}
+                    }
+                });
+            }
+        }
     </script>
 </html>

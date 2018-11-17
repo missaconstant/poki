@@ -36,11 +36,11 @@
 		else {
 			Config::$appfolder = '';
 		}
-    }
+	}
 
     $s = $_SERVER['REQUEST_URI'];
-    $s = str_replace(Config::$appfolder, '', $s);
-    $_SERVER['REQUEST_URI'] = strlen($s) ? $s : '/';
+	$s = str_replace(Config::$appfolder, '', $s);
+	$_SERVER['REQUEST_URI'] = strlen($s) ? $s : '/';
 
     /* recupperation de la partie concernant la requête */
 	$q = explode('/', $_SERVER['REQUEST_URI']);

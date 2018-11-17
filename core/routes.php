@@ -52,6 +52,7 @@
                 "content-edit" => "/contents/edit",
                 "content-delete" => "/contents/delete",
                 "content-list" => "/contents/list",
+                "content-from-csv" => "/contents/add-from-csv",
                 /* files */
                 "upload-file" => "/file/upload-file",
                 /* apis */

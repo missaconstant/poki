@@ -3,7 +3,10 @@
     <div class="card bg-white m-b-30">
         <div class="card-body new-user">
             <?php if ($admin->role != 'viewer'): ?>
+                <label class="btn btn-success btn-sm float-right" for="csvloader"><i class="mdi mdi-file-outline"></i> Load CSV</label>
+                <span class="float-right">&nbsp;&nbsp;</span>
                 <a href="<?= Routes::find('category-form') .'/'. $category_name ?>" class="btn btn-outline-info btn-sm float-right"><i class="mdi mdi-plus"></i> Add new content</a>
+                <input type="file" id="csvloader" style="display:none" onchange="addContentFromCsv(this)">
             <?php endif ?>
             <h5 class="header-title mb-2 mt-0">Contents list</h5>
             <p class="text-muted font-14 mb-4">List of the content from this category.</p>

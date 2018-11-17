@@ -36,6 +36,49 @@
             }
         }
 
+        public function addFromCsv()
+        {
+            Posts::disableCSRF();
+            $file = Posts::file('csvfile');
+            $categoryname = Posts::post('categoryname');
+            $content = file_get_contents($file['tmp_name']);
+            $categoryfields = $this->loadModele('categories')->trouverCategory($categoryname);
+            try {
+                $lines = dm::getFromCsv($content);
+                # getting category fields in array
+                $columns = [];
+                foreach ($categoryfields as $k => $field) {
+                    $columns[] = $field['name'];
+                }
+                # csv does correspond to category fields ?
+                if (count($lines[0]) == count($columns)) {
+                    $valuestring = [];
+                    foreach ($lines as $k => $line) {
+                        $linestring = implode(',', array_map(function ($item) { return "'". str_replace("'", "", $item) ."'"; }, $line));
+                        $valuestring[] = '('. $linestring .')';
+                    }
+                    # query string
+                    $left = implode(',', $columns);
+                    $right = implode(',', $valuestring);
+                    $q = 'INSERT INTO adm_app_' .$categoryname. ' ('. $left .') VALUES '. $right;
+                    # adding in database
+                    try {
+                        $this->loadModele('categories')->getDbInstance()->exec($q);
+                        echo $this->json_success("Well Done !");
+                    }
+                    catch (Exception $e) {
+                        echo $this->json_error("An error occured ! Please try again later." . $e->getMessage());
+                    }
+                }
+                else {
+                    echo $this->json_error("Le fichier CSV n'est pas correctement formaté !");
+                }
+            }
+            catch (Exception $e) {
+                echo $this->json_error("Le fichier CSV n'est pas correctement formaté !");
+            }
+        }
+
         public function list($category)
         {
             return $this->loadModele()->trouverTousContents($category);
