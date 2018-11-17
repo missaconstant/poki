@@ -145,5 +145,36 @@
                 });
             }
         }
+
+        function getCSV(categoryname)
+        {
+            loader.show();
+            $.ajax({
+                url: '<?= Routes::find('content-get-csv') ?>/' + categoryname,
+                type: 'get',
+                dataType: 'json',
+                success: function (response) {
+                    if (!response.error) {
+                        if (!$('#linkdowncsv').length) {
+                            var el = document.createElement('a');
+                                el.href = response.message;
+                                el.id = 'linkdowncsv';
+                                el.setAttribute('download', '');
+                                el.style.display = 'none';
+                            $(document.body).append(el);
+                        }
+                        $('#linkdowncsv')[0].click();
+                    }
+                    else {
+                        alerter.error("An error occured ! Please try again later.");
+                    }
+                    loader.hide();
+                },
+                error: function (err) {
+                    alerter.error("An error occured ! Please try again later.");
+                    loader.hide();
+                }
+            });
+        }
     </script>
 </html>
