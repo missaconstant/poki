@@ -103,7 +103,7 @@
             else {
                 $.confirm({
                     title: 'Are you sure ?',
-                    content: 'Vous allez ajouter les élements de ce fichier à cette catégorie.',
+                    content: 'You are going to add this file elements to this category ...',
                     type: 'red',
                     theme: 'modern',
                     icon: 'fa fa-warning',
