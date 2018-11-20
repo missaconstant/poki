@@ -80,7 +80,7 @@
         public function v1()
         {
             header("Access-Control-Allow-Origin: *");
-            header("Content-Type: application/json");
+            //header("Content-Type: application/json");
 
             Posts::disableCSRF();
 
@@ -91,7 +91,7 @@
 
             # get actions
             if ($action && $action == 'get') {
-                if ($content) {
+                if ($content && $content != 'all') {
                     # get one
                     $this->apiSurvey($category, 'get-one', $apikey);
                     $found = $this->loadModele('contents')->trouverContents($category, $content, true);

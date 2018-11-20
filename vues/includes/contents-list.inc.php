@@ -59,7 +59,26 @@
                         <?php endforeach ?>
                     </tbody>
                 </table>
-                
+                <!-- --->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="ui-pagination.html#" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="ui-pagination.html#" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

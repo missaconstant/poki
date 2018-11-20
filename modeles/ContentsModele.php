@@ -50,6 +50,7 @@
             try {
                 # getting joining table
                 $joining = $this->getCategoryParams($categoryname);
+                $joining['name'] = $categoryname;
 
                 # searching right query string
                 $sql = '';
@@ -79,6 +80,7 @@
             try {
                 # getting joining table
                 $joining = $this->getCategoryParams($categoryname);
+                $joining['name'] = $categoryname;
                 
                 # searching right query string
                 $sql = '';
@@ -109,6 +111,19 @@
             try {
                 $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$contentid'");
                 return true;
+            }
+            catch (Exception $e) {
+                return false;
+            }
+        }
+
+        public function compterContents($categoryname)
+        {
+            try {
+                $q = modele::$bd->query("SELECT count(*) as els_count FROM adm_app_$categoryname");
+                $r = $q->fetchAll();
+                $q->closeCursor();
+                return $r[0]['els_count'];
             }
             catch (Exception $e) {
                 return false;
@@ -156,11 +171,13 @@
             # preparing SELECT query string
             $querySelectStrings = array_map(function ($category) use ($categoryname) {
                 $tablefields = $this->trouverCategory($category, ($category!=$categoryname));
-                $tablestring = [];
-                foreach ($tablefields as $k => $field) {
-                    $tablestring[] = 'adm_app_'.$category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
+                if ($tablefields) { // cause can be false if category does not exists
+                    $tablestring = [];
+                    foreach ($tablefields as $k => $field) {
+                        $tablestring[] = 'adm_app_'.$category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
+                    }
+                    return implode(', ', $tablestring);
                 }
-                return implode(', ', $tablestring);
             }, $categoriesJoined);
             
             # preparing WHERE condition

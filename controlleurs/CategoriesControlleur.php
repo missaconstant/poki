@@ -210,7 +210,8 @@
 
         public function listContents()
         {
-            $name = posts::get(0);
+            $name = Posts::get(0);
+            $limit = Posts::get([1]) ? (((Posts::get(1)-1)*30) . ', 30') : '0, 30';
 
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
@@ -221,13 +222,15 @@
             }
             else {
                 $category = $this->loadModele()->trouverCategory($name);
-                $contents = $this->loadController('contents')->list($name);
+                $contents = $this->loadController('contents')->list($name, ["limit" => $limit]);
+                $contentsNumber = $this->loadModele('contents')->compterContents($name);
                 $this->render('app/category-list', [
                     "admin" => $admin,
                     "pagetitle" => 'Category contents: <a href="'. Routes::find('category-show') . '/' . $name .'">' . $name . '</a>',
                     "categories" => $this->list(),
                     "category_name" => $name,
                     "category_fields" => $category,
+                    "nbrcontents" => $contentsNumber,
                     "contents" => $contents
                 ]);
             }

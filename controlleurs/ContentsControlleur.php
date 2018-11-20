@@ -79,9 +79,9 @@
             }
         }
 
-        public function list($category)
+        public function list($category, $filter=false)
         {
-            return $this->loadModele()->trouverTousContents($category);
+            return $this->loadModele()->trouverTousContents($category, false, $filter);
         }
 
         public function delete()
