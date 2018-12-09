@@ -80,7 +80,7 @@
         public function v1()
         {
             header("Access-Control-Allow-Origin: *");
-            //header("Content-Type: application/json");
+            header("Content-Type: application/json");
 
             Posts::disableCSRF();
 
