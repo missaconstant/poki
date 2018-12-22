@@ -210,8 +210,9 @@
 
         public function listContents()
         {
+            $contentMax = 2;
             $name = Posts::get(0);
-            $limit = Posts::get([1]) ? (((Posts::get(1)-1)*30) . ', 30') : '0, 30';
+            $limit = Posts::get([1]) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
 
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
@@ -231,6 +232,8 @@
                     "category_name" => $name,
                     "category_fields" => $category,
                     "nbrcontents" => $contentsNumber,
+                    "maxcontentperpage" => $contentMax,
+                    "actualcontentspage" => Posts::get([1]) ? Posts::get(1) : 1,
                     "contents" => $contents
                 ]);
             }

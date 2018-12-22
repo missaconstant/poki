@@ -62,21 +62,41 @@
                 <!-- --->
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a class="page-link" href="ui-pagination.html#" aria-label="Previous">
+                        <?php
+                            $i = 1;
+                            $pages = (int) ($nbrcontents / $maxcontentperpage);
+                            $pages += ($nbrcontents % $maxcontentperpage) > 0 ? 1 : 0;
+                            if ($pages > 1):
+                        ?>
+                        <li class="page-item <?= $actualcontentspage==1 ? 'disabled':'' ?>">
+                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage-1) ?>" aria-label="Previous">
                                 <span aria-hidden="true">«</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="ui-pagination.html#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="ui-pagination.html#" aria-label="Next">
+                        <?php endif ?>
+                        <!-- paginate -->
+                        <?php
+                            $nbrpages = $pages;
+                            if ($nbrpages > 1):
+                                while ($nbrpages > 0):
+                        ?>
+                            <li class="page-item <?= $actualcontentspage==$i ? 'disabled':'' ?>"><a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. $i ?>"><?= $i ?></a></li>
+                        <?php
+                                    $i++;
+                                    $nbrpages--;
+                                endwhile;
+                            endif;
+                        ?>
+                        <!-- /paginate -->
+                        <?php if ($pages): ?>
+                        <li class="page-item <?= $actualcontentspage==$pages ? 'disabled':'' ?>">
+                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage+1) ?>" aria-label="Next">
                                 <span aria-hidden="true">»</span>
                                 <span class="sr-only">Next</span>
                             </a>
                         </li>
+                        <?php endif ?>
                     </ul>
                 </nav>
             </div>
