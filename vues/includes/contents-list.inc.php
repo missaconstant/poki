@@ -89,7 +89,7 @@
                             endif;
                         ?>
                         <!-- /paginate -->
-                        <?php if ($pages): ?>
+                        <?php if ($pages > 1): ?>
                         <li class="page-item <?= $actualcontentspage==$pages ? 'disabled':'' ?>">
                             <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage+1) ?>" aria-label="Next">
                                 <span aria-hidden="true">»</span>

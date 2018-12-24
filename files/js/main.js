@@ -5,6 +5,8 @@ $(function () {
         $('#addfieldmodal .modal-title').text('Add new category');
         $('.deletecategorybtn').hide();
     });
+
+    autocomplete.init($('.app-search .form-control')[0], {parent: $('.content-page')[0], top: 70});
 });
 
 function saveCategoryField(path) {
@@ -79,3 +81,60 @@ function warningAction(doaction) {
         }
     });
 }
+
+var autocomplete = {
+    box: null,
+    parent: null,
+
+    setBox: function (options) {
+        autocomplete.box = document.createElement('div');
+        autocomplete.box.style.position = 'absolute';
+        autocomplete.box.style.top = (options.parent.offsetTop + options.top) + 'px';
+        autocomplete.box.style.left = options.parent.offSetLeft + 'px';
+        autocomplete.box.style.width = '100%';
+        autocomplete.box.style.minHeight = '100px';
+        autocomplete.box.style.zIndex = '1';
+        autocomplete.box.style.background = '#fff';
+
+        this.parent = options.parent;
+    },
+
+    init: function (elt, options) {
+        if (!autocomplete.box) {
+            this.setBox(options);
+        }
+
+        elt.addEventListener('keyup', function (e) {
+            if (this.value.length) {
+                autocomplete.doSeach(this.value);
+            }
+            else {
+                autocomplete.hideBox();
+            }
+        });
+    },
+
+    doSeach(keyword) {
+        this.showBox();
+    },
+
+    showBox: function () {
+        this.parent.appendChild(autocomplete.box);
+    },
+
+    hideBox: function () {
+        this.parent.removeChild(this.box);
+    },
+
+    getTemplate: function (item) {
+        return '<div>' +
+                    '<div class="pk-left">'+
+                        '<img src="http://via.placeholder.com/50x50">'+
+                    '</div>'+
+                    '<div class="pk-right">'+
+                        '<b>'+ item.number +' results</b>'+
+                        '<b>Found in category '+ item.category +'</b>'+
+                    '</div>'+
+                '</div>';
+    }
+};
