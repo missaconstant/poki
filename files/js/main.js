@@ -85,9 +85,11 @@ function warningAction(doaction) {
 var autocomplete = {
     box: null,
     parent: null,
+    activeItem: false,
 
     setBox: function (options) {
         autocomplete.box = document.createElement('div');
+        autocomplete.box.id = 'autocomplete-box';
         autocomplete.box.style.position = 'absolute';
         autocomplete.box.style.top = (options.parent.offsetTop + options.top) + 'px';
         autocomplete.box.style.left = options.parent.offSetLeft + 'px';
@@ -96,6 +98,7 @@ var autocomplete = {
         autocomplete.box.style.zIndex = '1';
         autocomplete.box.style.background = '#fff';
 
+        this.box = autocomplete.box;
         this.parent = options.parent;
     },
 
@@ -104,17 +107,88 @@ var autocomplete = {
             this.setBox(options);
         }
 
+        document.querySelector('.pk-search').addEventListener('submit', function (e) {
+            e.preventDefault();
+            console.log('submitted !');
+        });
+
         elt.addEventListener('keyup', function (e) {
             if (this.value.length) {
+                /* Focus on keyboard up and down */
+                if (e.which == 38 || e.which == 40) {
+                    var focused = autocomplete.activeItem;
+                    var items = autocomplete.box.querySelectorAll('.pk-item');
+                    if (e.which == 38) {
+                        if (!focused) {
+                            autocomplete.activeItem = items[items.length-1];
+                            focused = autocomplete.activeItem;
+                            focused.classList.add('focused');
+                        }
+                        else {
+                            var prev = focused.parentNode.previousSibling;
+                                prev =  prev && prev.nodeName.toLowerCase() == 'a' ? prev : prev ? prev.previousSibling : false;
+                            if (prev && prev.nodeName.toLowerCase() == 'a') {
+                                autocomplete.activeItem.classList.remove('focused');
+                                autocomplete.activeItem = prev.querySelector('.pk-item');
+                                focused = autocomplete.activeItem;
+                                focused.classList.add('focused');
+                            }
+                            else {
+                                autocomplete.activeItem.classList.remove('focused');
+                                autocomplete.activeItem = false;
+                            }
+                        }
+                    }
+                    else {
+                        if (!focused) {
+                            autocomplete.activeItem = items[0];
+                            focused = autocomplete.activeItem;
+                            focused.classList.add('focused');
+                        }
+                        else {
+                            var next = focused.parentNode.nextSibling;
+                                next =  next && next.nodeName.toLowerCase() == 'a' ? next : next ? next.nextSibling : false;
+                            if (next && next.nodeName.toLowerCase() == 'a') {
+                                autocomplete.activeItem.classList.remove('focused');
+                                autocomplete.activeItem = next.querySelector('.pk-item');
+                                focused = autocomplete.activeItem;
+                                focused.classList.add('focused');
+                            }
+                            else {
+                                autocomplete.activeItem.classList.remove('focused');
+                                autocomplete.activeItem = false;
+                            }
+                        }
+                    }
+                    return;
+                }
+                else if (e.which == 27) {
+                    autocomplete.hideBox();
+                }
+                /* do search on keyword */
                 autocomplete.doSeach(this.value);
             }
             else {
                 autocomplete.hideBox();
             }
         });
+        elt.addEventListener('blur', function () {
+            autocomplete.hideBox();
+        });
+        elt.addEventListener('focus', function () {
+            if (this.value.length){
+                autocomplete.doSeach(this.value);
+            }
+        });
     },
 
     doSeach(keyword) {
+        var datas = [{number: 3, category: 'articles'},{number: 10, category: 'authors'},{number: 7, category: 'categories'}];
+        var list = '';
+        for (var i=0; i<datas.length; i++) {
+            list += this.getTemplate(datas[i]);
+        }
+        this.box.innerHTML = list;
         this.showBox();
     },
 
@@ -123,18 +197,23 @@ var autocomplete = {
     },
 
     hideBox: function () {
-        this.parent.removeChild(this.box);
+        if (this.box.parentNode == this.parent) {
+            this.parent.removeChild(this.box);
+            this.activeItem = false;
+        }
     },
 
     getTemplate: function (item) {
-        return '<div>' +
-                    '<div class="pk-left">'+
-                        '<img src="http://via.placeholder.com/50x50">'+
+        return '<a href="#" class="pk-item-link">'+
+                    '<div class="pk-item">' +
+                        '<div class="pk-left">'+
+                            '<img src="http://via.placeholder.com/50x50">'+
+                        '</div>'+
+                        '<div class="pk-right">'+
+                            '<b class="numbers">'+ item.number +' results found</b>'+
+                            '<span>From category <b>'+ item.category +'</b></span>'+
+                        '</div>'+
                     '</div>'+
-                    '<div class="pk-right">'+
-                        '<b>'+ item.number +' results</b>'+
-                        '<b>Found in category '+ item.category +'</b>'+
-                    '</div>'+
-                '</div>';
+                '</a>';
     }
 };

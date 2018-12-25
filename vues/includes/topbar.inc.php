@@ -107,7 +107,7 @@
             </button>
         </li>
         <li class="hide-phone app-search">
-            <form role="search" class="">
+            <form role="search" class="pk-search" onsubmit="return false;">
                 <input type="text" placeholder="Search..." class="form-control">
                 <a href="pages-blank.html"><i class="fa fa-search"></i></a>
             </form>

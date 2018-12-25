@@ -65,6 +65,47 @@
     animation-timing-function: ease-out;
 }
 
+#autocomplete-box {
+    box-shadow: 1px 4px 20px 0 #ddd;
+    /* background: #5b6be8; */
+}
+
+#autocomplete-box .pk-item {
+    padding: 10px;
+    overflow: auto;
+}
+
+#autocomplete-box .pk-item:hover, #autocomplete-box .pk-item.focused {
+    background: #f7f7ff;
+}
+
+#autocomplete-box .pk-item .pk-left {
+    float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#autocomplete-box .pk-item .pk-left img {
+    width: 100%;
+}
+
+#autocomplete-box .pk-item .pk-right {
+    margin-left: 50px;
+}
+
+#autocomplete-box .pk-item .pk-right b.numbers {
+    color: #727272;
+    display: block;
+    font-size: 14px;
+}
+
+#autocomplete-box .pk-item .pk-right span {
+    color: #999;
+    font-size: 13px;
+}
+
 @keyframes fileloader {
     from { box-shadow: 1px 1px 6px 0 #aaa; }
     50% { box-shadow: 1px 1px 15px 0 #aaa; }
