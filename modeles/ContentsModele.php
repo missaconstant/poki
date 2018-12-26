@@ -162,6 +162,31 @@
             }
         }
 
+        /**
+         * searchInCategory
+         * @param $categoryname string
+         * @param $kwd string
+         * @param $limit string (ex: "0, val")
+         */
+        public function searchInCategory($categoryname, $kwd, $limit=false, $count=false)
+        {
+            try {
+                $category = $this->trouverCategory(str_replace('adm_app_', '', $categoryname));
+                $query = "SELECT ". ($count==true ? "count(*) as searchcount" : "*") ." FROM $categoryname WHERE ";
+                $wheres = [];
+                for ($i=0; $i<count($category); $i++) {
+                    $wheres[] = $category[$i] . " LIKE '%$kwd%'";
+                }
+                $query .= implode($wheres, ' OR ');
+                $q = modele::$bd->query($query . ($limit ? "LIMIT $limit" : ""));
+                $r = $q->fetchAll(PDO::FETCH_ASSOC);
+                $q->closeCursor();
+                return $r;
+            } catch (Exception $e) {
+                exit(json_encode(["error" => true, "message" => $e->getMessage()]));
+            }
+        }
+
         public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false, $filter=false)
         {
             # list of table to take in select query

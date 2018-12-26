@@ -69,7 +69,7 @@
                             if ($pages > 1):
                         ?>
                         <li class="page-item <?= $actualcontentspage==1 ? 'disabled':'' ?>">
-                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage-1) ?>" aria-label="Previous">
+                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage-1) . ($issearch ? "/$issearch" : "") ?>" aria-label="Previous">
                                 <span aria-hidden="true">«</span>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -81,7 +81,7 @@
                             if ($nbrpages > 1):
                                 while ($nbrpages > 0):
                         ?>
-                            <li class="page-item <?= $actualcontentspage==$i ? 'disabled':'' ?>"><a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. $i ?>"><?= $i ?></a></li>
+                            <li class="page-item <?= $actualcontentspage==$i ? 'disabled':'' ?>"><a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. $i . ($issearch ? "/$issearch" : "") ?>"><?= $i ?></a></li>
                         <?php
                                     $i++;
                                     $nbrpages--;
@@ -91,7 +91,7 @@
                         <!-- /paginate -->
                         <?php if ($pages > 1): ?>
                         <li class="page-item <?= $actualcontentspage==$pages ? 'disabled':'' ?>">
-                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage+1) ?>" aria-label="Next">
+                            <a class="page-link" href="<?= Routes::find('category-list') .'/'. $category_name .'/'. ($actualcontentspage+1) . ($issearch ? "/$issearch" : "") ?>" aria-label="Next">
                                 <span aria-hidden="true">»</span>
                                 <span class="sr-only">Next</span>
                             </a>

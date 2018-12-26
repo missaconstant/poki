@@ -7,7 +7,7 @@
         {
             $dbname = Config::$db_name;
             $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app'");
-            $r = $q->fetchAll();
+            $r = $q->fetchAll(PDO::FETCH_ASSOC);
             $q->closeCursor();
             return $r;
         }

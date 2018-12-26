@@ -172,8 +172,10 @@ var autocomplete = {
                 autocomplete.hideBox();
             }
         });
-        elt.addEventListener('blur', function () {
-            autocomplete.hideBox();
+        elt.addEventListener('blur', function (e) {
+            if (!e.relatedTarget || e.relatedTarget.className != 'pk-item-link') {
+                autocomplete.hideBox();
+            }
         });
         elt.addEventListener('focus', function () {
             if (this.value.length){
@@ -183,13 +185,24 @@ var autocomplete = {
     },
 
     doSeach(keyword) {
-        var datas = [{number: 3, category: 'articles'},{number: 10, category: 'authors'},{number: 7, category: 'categories'}];
-        var list = '';
-        for (var i=0; i<datas.length; i++) {
-            list += this.getTemplate(datas[i]);
-        }
-        this.box.innerHTML = list;
-        this.showBox();
+        var datas = [];
+        $.get({
+            url: '/categories/search-count-key-in-all-categories/' + encodeURIComponent(keyword),
+            dataType: 'json',
+            success: function (datas) {
+                var list = '';
+                for (var i=0; i<datas.length; i++) {
+                    var categoryname = datas[i].category;
+                    var number = datas[i].list.length;
+                    list += autocomplete.getTemplate({category: categoryname, number: number, keyword: keyword});
+                }
+                autocomplete.box.innerHTML = list;
+                autocomplete.showBox();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
     },
 
     showBox: function () {
@@ -204,10 +217,10 @@ var autocomplete = {
     },
 
     getTemplate: function (item) {
-        return '<a href="#" class="pk-item-link">'+
+        return '<a href="/categories/list-contents/'+ item.category +'/1/'+ item.keyword +'" class="pk-item-link">'+
                     '<div class="pk-item">' +
                         '<div class="pk-left">'+
-                            '<img src="http://via.placeholder.com/50x50">'+
+                            '<img src="http://via.placeholder.com/50x50" alt="">'+
                         '</div>'+
                         '<div class="pk-right">'+
                             '<b class="numbers">'+ item.number +' results found</b>'+

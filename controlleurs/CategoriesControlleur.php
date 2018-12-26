@@ -210,9 +210,12 @@
 
         public function listContents()
         {
+            $contentsNumber = 0;
+            $content = null;
             $contentMax = 2;
             $name = Posts::get(0);
-            $limit = Posts::get([1]) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
+            $limit = Posts::get([1]) && strlen(Posts::get(1)) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
+            $search = Posts::get([2]) && strlen(Posts::get(2)) ? Posts::get(2) : false;
 
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
@@ -223,8 +226,15 @@
             }
             else {
                 $category = $this->loadModele()->trouverCategory($name);
-                $contents = $this->loadController('contents')->list($name, ["limit" => $limit]);
-                $contentsNumber = $this->loadModele('contents')->compterContents($name);
+                if (!$search) {
+                    $contents = $this->loadController('contents')->list($name, ["limit" => $limit]);
+                    $contentsNumber = $this->loadModele('contents')->compterContents($name);
+                }
+                else {
+                    $contents = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, $limit);
+                    $contentsNumber = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, false, true);
+                    $contentsNumber = $contentsNumber[0]['searchcount'];
+                }
                 $this->render('app/category-list', [
                     "admin" => $admin,
                     "pagetitle" => 'Category contents: <a href="'. Routes::find('category-show') . '/' . $name .'">' . $name . '</a>',
@@ -234,8 +244,27 @@
                     "nbrcontents" => $contentsNumber,
                     "maxcontentperpage" => $contentMax,
                     "actualcontentspage" => Posts::get([1]) ? Posts::get(1) : 1,
+                    "issearch" => $search,
                     "contents" => $contents
                 ]);
+            }
+        }
+
+        public function searchCountKeyInAllCategories()
+        {
+            try {
+                $kwd = htmlentities(Posts::get(0));
+                $categories = $this->loadModele()->trouverTousCategories();
+                $found = [];
+                for ($i=0; $i<count($categories); $i++) {
+                    $found[] = [
+                        "category" => str_replace('adm_app_', '', $categories[$i]['field']),
+                        "list" => $this->loadModele('contents')->searchInCategory($categories[$i]['field'], $kwd)
+                    ];
+                }
+                echo $this->json_answer($found);
+            } catch (Exception $e) {
+                exit(json_encode(["error" => true, "message" => $e->getMessage()]));
             }
         }
 
