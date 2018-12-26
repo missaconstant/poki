@@ -37,7 +37,7 @@
                 $q = modele::$bd->exec("CREATE TABLE $name (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     active int(1) NOT NULL DEFAULT '1',
-                    added_at varchar(100) NOT NULL DEFAULT '" . date('d-m-Y H:i') . "'
+                    added_at varchar(100)
                 )");
 
                 $name = $category->name;

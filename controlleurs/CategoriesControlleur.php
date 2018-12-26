@@ -212,7 +212,7 @@
         {
             $contentsNumber = 0;
             $content = null;
-            $contentMax = 2;
+            $contentMax = 10;
             $name = Posts::get(0);
             $limit = Posts::get([1]) && strlen(Posts::get(1)) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
             $search = Posts::get([2]) && strlen(Posts::get(2)) ? Posts::get(2) : false;

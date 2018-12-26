@@ -7,6 +7,9 @@
             try {
                 $leftstring = [];
                 $rightstring = [];
+                /* add date to content */
+                $content['added_at'] = date('d-m-Y H:i');
+                /* */
                 foreach ($content as $key => $value) {
                     $rightstring[] = ':' . $key;
                     $leftstring[] = $key;

@@ -86,7 +86,7 @@
                     title varchar(150) NOT NULL,
                     content text NOT NULL,
                     active int(1) NOT NULL DEFAULT '1',
-                    added_at varchar(100) NOT NULL DEFAULT '" . date('d-m-Y H:i') . "'
+                    added_at varchar(100)
                 )";
                 $q2 = modele::$bd->query($sql2);
                 $q2->closeCursor();
@@ -109,7 +109,7 @@
                 $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
                 $q7 = modele::$bd->exec($sql7);
 
-                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.')";
+                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
                 $q8 = modele::$bd->exec($sql8);
             }
             catch (Exception $e) {
