@@ -20,6 +20,13 @@
 
         public function create()
         {
+            $admin = $this->usr->loginSurvey(false, 'login');
+
+            if ($admin->role != 'admin') {
+                $this->json_error('You cannot create category !');
+                exit();
+            }
+
             $name = Posts::post('name');
             $edition = Posts::post('editing');
             $category = (object) ["name" => $name, "oldname" => $edition];
@@ -54,6 +61,13 @@
 
         public function delete()
         {
+            $admin = $this->usr->loginSurvey(false, 'login');
+
+            if ($admin->role != 'admin') {
+                $this->json_error('You cannot create category !');
+                exit();
+            }
+
             $name = Posts::get(0);
 
             if ($this->loadModele()->supprimerCategory($name)) {
@@ -106,6 +120,13 @@
 
         public function addField($edition=false)
         {
+            $admin = $this->usr->loginSurvey(false, 'login');
+
+            if ($admin->role != 'admin') {
+                $this->json_error('You cannot create category !');
+                exit();
+            }
+
             $fields = [];
             $field_main = (object) [
                 "name" => Posts::post('fieldname'),
@@ -150,6 +171,13 @@
 
         public function deleteField()
         {
+            $admin = $this->usr->loginSurvey(false, 'login');
+
+            if ($admin->role != 'admin') {
+                $this->json_error('You cannot create category !');
+                exit();
+            }
+            
             $field = Posts::get(1);
             $category = Posts::get(0);
             if ($this->loadModele()->supprimerCategoryField($field, $category)) {

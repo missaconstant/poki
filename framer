@@ -13,8 +13,13 @@
 	 * Start serving ...
 	*/
 	if (!isset($argv[1]) || (isset($argv[1]) && $argv[1]=='--dev')) {
-		echo "Now serving on " . Config::$dev_host . ':' . Config::$serve_port . "\n";
-		shell_exec("php -S " . Config::$dev_host . ':' . Config::$serve_port);
+		if (isset($argv[1])) {
+			echo "Now serving on " . Config::$dev_host . ':' . Config::$serve_port . "\n";
+			shell_exec("php -S " . Config::$dev_host . ':' . Config::$serve_port);
+		}
+		else {
+			shell_exec("php -S 0.0.0.0:" . Config::$serve_port);
+		}
 	}
 	else if (isset($argv[1]) && $argv[1]=='--share'){
 		echo "Now serving on " . Config::$share_host . ':' . Config::$serve_port . "\n";
