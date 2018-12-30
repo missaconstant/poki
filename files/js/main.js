@@ -193,7 +193,7 @@ var autocomplete = {
                 var list = '';
                 for (var i=0; i<datas.length; i++) {
                     var categoryname = datas[i].category;
-                    var number = datas[i].list.length;
+                    var number = datas[i].list[0].countlines;
                     list += autocomplete.getTemplate({category: categoryname, number: number, keyword: keyword});
                 }
                 autocomplete.box.innerHTML = list;

@@ -15,7 +15,11 @@
 		public function blank()
 		{
 			$this->cfg->configSurvey(false);
-			$this->render('app/blank');
+			// $this->render('app/blank');
+			$mdl = $this->loadModele('contents');
+			$ret = $mdl->something('articles');
+			var_dump($ret); exit();
+			// $mdl->getQueryStringFromCategoryParams();
 		}
 
 		public function install()

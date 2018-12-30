@@ -240,7 +240,7 @@
         {
             $contentsNumber = 0;
             $content = null;
-            $contentMax = 10;
+            $contentMax = 3;
             $name = Posts::get(0);
             $limit = Posts::get([1]) && strlen(Posts::get(1)) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
             $search = Posts::get([2]) && strlen(Posts::get(2)) ? Posts::get(2) : false;
@@ -261,7 +261,7 @@
                 else {
                     $contents = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, $limit);
                     $contentsNumber = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, false, true);
-                    $contentsNumber = $contentsNumber[0]['searchcount'];
+                    $contentsNumber = $contentsNumber[0]['countlines'];
                 }
                 $this->render('app/category-list', [
                     "admin" => $admin,
@@ -287,7 +287,7 @@
                 for ($i=0; $i<count($categories); $i++) {
                     $found[] = [
                         "category" => str_replace('adm_app_', '', $categories[$i]['field']),
-                        "list" => $this->loadModele('contents')->searchInCategory($categories[$i]['field'], $kwd)
+                        "list" => $this->loadModele('contents')->searchInCategory($categories[$i]['field'], $kwd, false, true)
                     ];
                 }
                 echo $this->json_answer($found);

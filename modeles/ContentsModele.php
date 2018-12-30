@@ -174,14 +174,18 @@
         public function searchInCategory($categoryname, $kwd, $limit=false, $count=false)
         {
             try {
+                # getting category
                 $category = $this->trouverCategory(str_replace('adm_app_', '', $categoryname));
-                $query = "SELECT ". ($count==true ? "count(*) as searchcount" : "*") ." FROM $categoryname WHERE ";
-                $wheres = [];
-                for ($i=0; $i<count($category); $i++) {
-                    $wheres[] = $category[$i] . " LIKE '%$kwd%'";
-                }
-                $query .= implode($wheres, ' OR ');
-                $q = modele::$bd->query($query . ($limit ? "LIMIT $limit" : ""));
+                # getting joining table
+                $joining = $this->getCategoryParams(str_replace('adm_app_', '', $categoryname));
+                $joining['name'] = str_replace('adm_app_', '', $categoryname);
+                // $query = "SELECT ". ($count==true ? "count(*) as searchcount" : "*") ." FROM $categoryname WHERE ";
+                # getting query string
+                $query = $this->getQueryStringFromCategoryParams($joining, str_replace('adm_app_', '', $categoryname), false, [
+                    "like" => $kwd,
+                    "limit" => $limit ? $limit : false,
+                ], $count);
+                $q = modele::$bd->query($query);
                 $r = $q->fetchAll(PDO::FETCH_ASSOC);
                 $q->closeCursor();
                 return $r;
@@ -190,30 +194,52 @@
             }
         }
 
-        public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false, $filter=false)
+        public function something($categoryname)
+        {
+            # getting joining table
+            $joining = $this->getCategoryParams($categoryname);
+            $joining['name'] = $categoryname;
+            return $string = $this->getQueryStringFromCategoryParams($joining, $categoryname, false, ['like' => 'Hello'], true);
+        }
+
+        public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false, $filter=false, $count=false)
         {
             # list of table to take in select query
             $categoriesJoined = $this->getCategoriesJoinedName($joining['links']);
             array_unshift($categoriesJoined, $categoryname);
 
+            # to save category fields
+            $fields = [];
+
             # preparing SELECT query string
-            $querySelectStrings = array_map(function ($category) use ($categoryname) {
+            $querySelectStrings = array_map(function ($category) use ($categoryname, &$fields) {
                 $tablefields = $this->trouverCategory($category, ($category!=$categoryname));
                 if ($tablefields) { // cause can be false if category does not exists
                     $tablestring = [];
                     foreach ($tablefields as $k => $field) {
                         $tablestring[] = 'adm_app_'.$category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
+                        # saving fields
+                        $fields[] = 'adm_app_'.$category .'.'. $field;
                     }
                     return implode(', ', $tablestring);
                 }
             }, $categoriesJoined);
-            
+
+            # preparing LIKE condition
+            $likestring = [];
+            $likeword = $filter['like'];
+            foreach ($fields as $k => $field) {
+                if (!preg_match("#added_at#", $field) & !preg_match("#active#", $field) && !preg_match("#id#", $field)) {
+                    $likestring[] = $field . " LIKE '%$likeword%'";
+                }
+            }
+
             # preparing WHERE condition
-            $wherestring = [];
+            $joinedstring = [];
             foreach ($joining['links'] as $fieldlinked => $link) {
                 $linkedto = 'adm_app_'. $link['linkedto'];
                 $linked = 'adm_app_'. $joining['name'];
-                $wherestring[] = "LEFT JOIN $linkedto ON $linkedto.id=$linked.$fieldlinked";
+                $joinedstring[] = "LEFT JOIN $linkedto ON $linkedto.id=$linked.$fieldlinked";
             }
 
             # preparing filters instruction
@@ -221,21 +247,34 @@
             $limit = $filter['limit'];
             $order = $filter['order'];
 
-            return "SELECT ". implode(',', $querySelectStrings) ." FROM adm_app_$categoryname ". implode(' ', $wherestring) . ($contentid ? " WHERE adm_app_$categoryname.id=$contentid" : " $order $limit");
+            # preparing where string
+            $isWhere = $contentid || $filter['like'];
+            $contentWhere = $contentid ? "adm_app_$categoryname.id=$contentid" : null;
+            $likeWhere = isset($filter['like']) ? implode(' OR ', $likestring) : null;
+            $whereString = $isWhere ? 'WHERE ' . implode(' AND ', array_filter([$contentWhere, $likeWhere])) : '';
+
+            # preparing count string
+            $categoryname = str_replace('adm_app_', '', $categoryname);
+            $countString = $count ? "COUNT(adm_app_$categoryname.id) as countlines" : false;
+
+            return "SELECT $countString". ($countString ? '' : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
         }
 
         private function getFilter($filter)
         {
-            $limit = ''; $order = '';
+            $limit = ''; $order = ''; $like = false;
             if ($filter) {
-                if (isset($filter['limit'])) {
+                if (isset($filter['limit']) && $filter['limit']) {
                     $limit = "LIMIT " .$filter['limit'];
                 }
                 if (isset($filter['order'])) {
                     $order = "ORDER BY " .$filter['order'];
                 }
+                if (isset($filter['like'])) {
+                    $like = $filter['like'];
+                }
             }
-            return ["limit" => $limit, "order" => $order];
+            return ["limit" => $limit, "order" => $order, "like" => $like];
         }
     }
     
