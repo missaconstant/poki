@@ -1,3 +1,5 @@
+<?php $categoryOfficialFields = []; ?>
+
 <input type="hidden" id="categoryname" value="<?= $category_name ?>">
 <div class="col-md-12 col-lg-12 col-xl-12 align-self-center">
     <div class="card bg-white m-b-30">
@@ -26,6 +28,7 @@
                             <?php endif ?>
                             <?php foreach ($category_fields as $k => $field): ?>
                                 <th class="border-top-0"><?= $field['name'] ?></th>
+                                <?php $categoryOfficialFields[]/*declared at top of this file*/ = $field['name']; ?>
                             <?php endforeach ?>
                         </tr>
                     </thead>
@@ -46,7 +49,7 @@
                                 foreach ($content as $field => $value):
                                     $value = Helpers::checkLinkedLabel($category_name, $field, $value);
                                     $value = preg_match("#&lt;(.*)&gt;#", $value) ? 'html content' : (preg_match("#([a-zA-Z0-9_]+[.]{1}[jpg|gif|png|bmp]{2})+#i", $value) ? 'Picture(s)':$value);
-                                    if (!in_array($field, ['id', 'added_at', 'active'])):
+                                    if (in_array($field, $categoryOfficialFields) && !in_array($field, ['id', 'added_at', 'active'])):
                             ?>
                             <td style="max-width: 130px;">
                                 <?= strlen($value)>25 ? substr($value, 0, 30) . '...' : ($value=='html content' ? '<span class="badge badge-primary badge-pill">html content</span>':$value) ?>

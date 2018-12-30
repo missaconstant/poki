@@ -70,7 +70,6 @@
                 $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(PDO::FETCH_ASSOC);
                 $q->closeCursor();
-                
                 return $r;
             }
             catch (Exception $e) {
@@ -194,14 +193,6 @@
             }
         }
 
-        public function something($categoryname)
-        {
-            # getting joining table
-            $joining = $this->getCategoryParams($categoryname);
-            $joining['name'] = $categoryname;
-            return $string = $this->getQueryStringFromCategoryParams($joining, $categoryname, false, ['like' => 'Hello'], true);
-        }
-
         public function getQueryStringFromCategoryParams($joining, $categoryname, $contentid=false, $filter=false, $count=false)
         {
             # list of table to take in select query
@@ -257,7 +248,7 @@
             $categoryname = str_replace('adm_app_', '', $categoryname);
             $countString = $count ? "COUNT(adm_app_$categoryname.id) as countlines" : false;
 
-            return "SELECT $countString". ($countString ? '' : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
+            return "SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
         }
 
         private function getFilter($filter)
