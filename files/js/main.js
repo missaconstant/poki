@@ -187,7 +187,7 @@ var autocomplete = {
     doSeach(keyword) {
         var datas = [];
         $.get({
-            url: autosearchroute + '/' + encodeURIComponent(keyword),
+            url: baseroute + '/categories/search-count-key-in-all-categories/' + encodeURIComponent(keyword),
             dataType: 'json',
             success: function (datas) {
                 var list = '';
@@ -217,7 +217,7 @@ var autocomplete = {
     },
 
     getTemplate: function (item) {
-        return '<a href="/categories/list-contents/'+ item.category +'/1/'+ item.keyword +'" class="pk-item-link">'+
+        return '<a href="'+ baseroute +'/categories/list-contents/'+ item.category +'/1/'+ item.keyword +'" class="pk-item-link">'+
                     '<div class="pk-item">' +
                         '<div class="pk-left">'+
                             '<img src="http://via.placeholder.com/50x50" alt="">'+

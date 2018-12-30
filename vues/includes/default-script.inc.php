@@ -1,6 +1,6 @@
 <?php include INCLUDES . 'modal-add-category.inc.php' ?>
 <!-- auto search route -->
-<script>var autosearchroute = '<?= Routes::find("auto-search") ?>';</script>
+<script>var baseroute = '<?= Routes::find("base-route") ?>';</script>
 <!-- jQuery  -->
 <script src="<?= THEME ?>assets/js/jquery.min.js"></script>
 <script src="<?= THEME ?>assets/js/popper.min.js"></script>

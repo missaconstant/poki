@@ -14,6 +14,7 @@
         static function getRoutes()
         {
             return [
+                "base-route" => "",
                 "default" => "/",
                 "install" => "/install",
                 "configure" => "/configure",
