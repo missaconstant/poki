@@ -47,6 +47,7 @@
                 "categories-create-act" => "/categories/create",
                 "categories-delete-act" => "/categories/delete",
                 "categories-link-act" => "/categories/link-field",
+                "auto-search" => "/categories/search-count-key-in-all-categories",
                 /* contents */
                 "content-add" => "/contents/add",
                 "content-edit" => "/contents/edit",

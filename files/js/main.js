@@ -187,7 +187,7 @@ var autocomplete = {
     doSeach(keyword) {
         var datas = [];
         $.get({
-            url: '/categories/search-count-key-in-all-categories/' + encodeURIComponent(keyword),
+            url: autosearchroute + '/' + encodeURIComponent(keyword),
             dataType: 'json',
             success: function (datas) {
                 var list = '';
