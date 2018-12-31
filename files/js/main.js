@@ -94,7 +94,7 @@ var autocomplete = {
         autocomplete.box.style.top = (options.parent.offsetTop + options.top) + 'px';
         autocomplete.box.style.left = options.parent.offSetLeft + 'px';
         autocomplete.box.style.width = '100%';
-        autocomplete.box.style.minHeight = '100px';
+        // autocomplete.box.style.minHeight = '100px';
         autocomplete.box.style.zIndex = '1';
         autocomplete.box.style.background = '#fff';
 
@@ -190,13 +190,16 @@ var autocomplete = {
             url: baseroute + '/categories/search-count-key-in-all-categories/' + encodeURIComponent(keyword),
             dataType: 'json',
             success: function (datas) {
-                var list = '';
+                var list = '', getted = 0;
                 for (var i=0; i<datas.length; i++) {
                     var categoryname = datas[i].category;
                     var number = datas[i].list[0].countlines;
-                    list += autocomplete.getTemplate({category: categoryname, number: number, keyword: keyword});
+                    if (parseInt(number) > 0) {
+                        list += autocomplete.getTemplate({category: categoryname, number: number, keyword: keyword});
+                        getted++;
+                    }
                 }
-                autocomplete.box.innerHTML = list;
+                autocomplete.box.innerHTML = getted ? list : '<p style="font-size: 15px; color:#777; padding: 20px; margin:0;">Nothing found for keyword <strong>'+ keyword +'</strong></p>';
                 autocomplete.showBox();
             },
             error: function (err) {

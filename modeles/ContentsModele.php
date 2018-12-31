@@ -220,7 +220,7 @@
             $likestring = [];
             $likeword = $filter['like'];
             foreach ($fields as $k => $field) {
-                if (!preg_match("#added_at#", $field) & !preg_match("#active#", $field) && !preg_match("#id#", $field)) {
+                if (!preg_match("#.added_at$#", $field) & !preg_match("#.active$#", $field) && !preg_match("#.id$#", $field)) {
                     $likestring[] = $field . " LIKE '%$likeword%'";
                 }
             }
