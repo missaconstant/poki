@@ -22,7 +22,7 @@
         {
             $categoryname = Posts::post('category');
             $category = $this->loadModele('categories')->trouverCategory($categoryname);
-            $edition = Posts::post('editing');
+            $edition = Posts::post(['editing']) ? Posts::post('editing') : '0';
 
             $content = $this->getContentObject($category);
 

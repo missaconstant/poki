@@ -70,6 +70,6 @@
         static function find($route)
         {
             $routes = self::getRoutes();
-            return isset($routes[$route]) ? Config::$appfolder . $routes[$route] : Config::$appfolder . $routes['default'];
+            return isset($routes[$route]) ? str_replace('noset', '', Config::$appfolder) . $routes[$route] : str_replace('noset', '', Config::$appfolder) . $routes['default'];
         }
     }
