@@ -85,7 +85,7 @@
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     title varchar(150) NOT NULL,
                     content text NOT NULL,
-                    active int(1) NOT NULL DEFAULT '1',
+                    active char(1) NOT NULL DEFAULT '1',
                     added_at varchar(100)
                 )";
                 $q2 = modele::$bd->query($sql2);
@@ -100,7 +100,7 @@
                 $sql5 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('language', 'default', 'english')";
                 $q5 = modele::$bd->exec($sql5);
 
-                $sql4 = "INSERT INTO adm_roles(role, active) VALUES ('admin', '1'), ('writer', '2'), ('viewer', '3')";
+                $sql4 = "INSERT INTO adm_roles(role, active) VALUES ('admin', '1'), ('writer', '1'), ('viewer', '1')";
                 $q4 = modele::$bd->exec($sql4);
 
                 $sql6 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete')";
@@ -109,11 +109,12 @@
                 $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
                 $q7 = modele::$bd->exec($sql7);
 
-                $sql8 = "INSERT INTO adm_app_default(title, content) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
+                $sql8 = "INSERT INTO adm_app_default(title, content, active, added_at) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
                 $q8 = modele::$bd->exec($sql8);
             }
             catch (Exception $e) {
                 $done = false;
+                die($e->getMessage());
             }
 
             return $done && $paramcreated;
