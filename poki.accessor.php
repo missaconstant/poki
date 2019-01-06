@@ -46,12 +46,13 @@
         public static function push()
         {
             if (!self::$inited) self::init();
-
             ob_start();
-            self::$ctr->add();
+
+            self::$ctr->add(false);
             $return = ob_get_contents();
+
             ob_clean();
-            return $return;
+            return json_decode($return);
         }
 
         public static function getPushRoute()

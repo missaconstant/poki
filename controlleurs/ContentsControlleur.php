@@ -18,7 +18,7 @@
             $this->cfg = $this->loadController('config');
         }
 
-        public function add()
+        public function add($doexit=true)
         {
             $categoryname = Posts::post('category');
             $category = $this->loadModele('categories')->trouverCategory($categoryname);
@@ -28,11 +28,11 @@
 
             if ($this->loadModele()->{ $edition!='0' && strlen(trim($edition)) ? 'modifierContent':'creerContent' }($content, $categoryname, $edition)) {
                 $this->json_success("Content saved succefully !", ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
+                if ($doexit) exit();
             }
             else {
                 $this->json_error("An error occured. Please try again later.", ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
+                if ($doexit) exit();
             }
         }
 
@@ -84,35 +84,33 @@
             return $this->loadModele()->trouverTousContents($category, false, $filter);
         }
 
-        public function delete()
+        public function delete($doexit=true)
         {
             $contentid = Posts::get(0);
             $categoryname = Posts::get(1);
 
             if ($this->loadModele()->supprimerContents($categoryname, $contentid)) {
                 $this->json_success("Content deleted !");
-                exit();
+                if ($doexit) exit();
             }
             else {
                 $this->json_error("An error occured. Please try again later.");
-                exit();
+                if ($doexit) exit();
             }
         }
 
         private function getContentObject($categoryItems) {
             $object = [];
+            $count  = 0;
             foreach ($categoryItems as $k => $item) {
                 if (!in_array($item['name'], ['id', 'active', 'added_at'])) {
                     if (Posts::post([$item['name']])) {
                         $object[$item['name']] = Posts::post($item['name']);
-                    }
-                    else {
-                        $object = false;
-                        break;
+                        $count++;
                     }
                 }
             }
-            return $object;
+            return $count ? $object : false;
         }
 
         public function getCsv()
