@@ -189,7 +189,7 @@
                 $q->closeCursor();
                 return $r;
             } catch (Exception $e) {
-                exit(json_encode(["error" => true, "message" => $e->getMessage()]));
+                echo json_encode(["error" => true, "message" => $e->getMessage()]);
             }
         }
 

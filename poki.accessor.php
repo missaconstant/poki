@@ -72,6 +72,12 @@
             return json_decode($return);
         }
 
+        public function search($categoryname, $keyword, $limit, $count)
+        {
+            if (!self::$inited) self::init();
+            return self::$mdl->searchInCategory($categoryname, $keyword, $limit, $count);
+        }
+
         public static function getCSRF()
         {
             return Posts::getCSRF();
