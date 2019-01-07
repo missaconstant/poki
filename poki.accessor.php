@@ -60,6 +60,18 @@
             return Routes::find('content-add');
         }
 
+        public static function upload($name)
+        {
+            if (!self::$inited) self::init();
+            ob_start();
+
+            self::$fls->uploadFile($name, false);
+            $return = ob_get_contents();
+
+            ob_clean();
+            return json_decode($return);
+        }
+
         public static function getCSRF()
         {
             return Posts::getCSRF();

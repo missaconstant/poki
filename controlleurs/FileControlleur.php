@@ -7,11 +7,11 @@
             // sleep(10);
         }
 
-        public function uploadFile($name='adm_file_upload') {
-            $this->proceedFiles($_FILES[$name]);
+        public function uploadFile($name='adm_file_upload', $doexit=true) {
+            $this->proceedFiles($_FILES[$name], $doexit);
         }
 
-        public function proceedFiles($files)
+        public function proceedFiles($files, $doexit=true)
         {
             $error = false;
             $filesname = [];
@@ -41,7 +41,7 @@
 
             if ($error) {
                 $this->json_error($error, ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
+                if ($doexit) exit();
             }
             else {
                 $this->json_success("Uploaded !", [
@@ -49,7 +49,7 @@
                     "names" => implode('|', $filesname),
                     "saved" => $filelist
                 ]);
-                exit();
+                if ($doexit) exit();
             }
         }
 
