@@ -225,5 +225,22 @@
             var_dump($r);*/
             $this->render('app/apitest');
         }
+
+        /**
+         * Go to external server to get information about remote asker
+         */
+        public function getAskerInfo() {
+            header("Access-Control-Allow-Origin: *");
+            header("Content-Type: application/json");
+            
+            $c = curl_init();
+            curl_setopt($c, CURLOPT_URL, 'http://ip-api.com/json/' . $_SERVER['REMOTE_ADDR']);
+            curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($c, CURLOPT_TIMEOUT, 2);
+            $r = curl_exec($c);
+            curl_close($c);
+            exit($r);
+        }
     }
     
