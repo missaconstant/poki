@@ -122,11 +122,11 @@
             # looping for header
             $head = [];
             foreach ($heads as $k => $col) {
-                $head[] = $col['name'];
+                $head[] = '"'. $col['name'] .'"';
             }
             # looping for lines
             foreach ($lines as $k => $line) {
-                $lines[$k] = implode(',', array_slice($line, 3));
+                $lines[$k] = implode(',', array_map(function ($item) { return '"'. $item .'"'; }, array_slice($line, 3)) );
             }
             # assembling
             $files[] = implode(',', $head);
