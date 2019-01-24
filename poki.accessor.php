@@ -1,6 +1,6 @@
 <?php
 
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) session_start();
 
     require __DIR__ . '/core/config.php';
     require __DIR__ . '/core/routes.php';
@@ -35,6 +35,7 @@
             }
             self::$mdl = new ContentsModele();
             self::$ctr = new ContentsControlleur();
+            Posts::disableCSRF();
         }
 
         public static function get($categoryname, $contentid=false, $filter=false, $joins=false)
@@ -58,6 +59,24 @@
         public static function getPushRoute()
         {
             return Routes::find('content-add');
+        }
+
+        public static function create($categoryname, $content)
+        {
+            if (!self::$inited) self::init();
+            return self::$mdl->creerContent($content, $categoryname);
+        }
+
+        public static function edit($categoryname, $content, $id)
+        {
+            if (!self::$inited) self::init();
+            return self::$mdl->modifierContent($content, $categoryname, $id);
+        }
+
+        public static function delete($categoryname, $id)
+        {
+            if (!self::$inited) self::init();
+            return self::$mdl->supprimerContents($categoryname, $id);
         }
 
         public static function upload($name)

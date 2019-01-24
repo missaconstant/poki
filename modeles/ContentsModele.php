@@ -64,7 +64,8 @@
                     $filter = $this->getFilter($filter);
                     $limit = $filter['limit'];
                     $order = $filter['order'];
-                    $sql = "SELECT * FROM adm_app_$categoryname $order $limit";
+                    $where = isset($filter['where']) && strlen(trim($filter['where'])) ? 'WHERE ' . $filter['where']:'';
+                    $sql = "SELECT * FROM adm_app_$categoryname $where $order $limit";
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
@@ -237,12 +238,14 @@
             $filter = $this->getFilter($filter);
             $limit = $filter['limit'];
             $order = $filter['order'];
+            $where = $filter['where'];
 
             # preparing where string
             $isWhere = $contentid || $filter['like'];
             $contentWhere = $contentid ? "adm_app_$categoryname.id=$contentid" : null;
             $likeWhere = isset($filter['like']) ? implode(' OR ', $likestring) : null;
             $whereString = $isWhere ? 'WHERE ' . implode(' AND ', array_filter([$contentWhere, $likeWhere])) : '';
+            $whereString .= strlen($where) ? (strlen($whereString) ? ' AND ' . $where : ' WHERE ' . $where) : '' ;
 
             # preparing count string
             $categoryname = str_replace('adm_app_', '', $categoryname);
@@ -253,19 +256,11 @@
 
         private function getFilter($filter)
         {
-            $limit = ''; $order = ''; $like = false;
-            if ($filter) {
-                if (isset($filter['limit']) && $filter['limit']) {
-                    $limit = "LIMIT " .$filter['limit'];
-                }
-                if (isset($filter['order'])) {
-                    $order = "ORDER BY " .$filter['order'];
-                }
-                if (isset($filter['like'])) {
-                    $like = $filter['like'];
-                }
-            }
-            return ["limit" => $limit, "order" => $order, "like" => $like];
+            return [
+                "limit" => $filter && isset($filter['limit']) && strlen(trim($filter['limit'])) ? "LIMIT " . $filter['limit'] : '',
+                "order" => $filter && isset($filter['order']) && strlen(trim($filter['order'])) ? "ORDER BY " . $filter['order'] : '',
+                "like" => $filter && isset($filter['like']) && strlen(trim($filter['like'])) ? $filter['like'] : false,
+                "where" => $filter && isset($filter['where']) && strlen(trim($filter['where'])) ? $filter['where'] : '',
+            ];
         }
     }
-    
