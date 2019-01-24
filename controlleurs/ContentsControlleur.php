@@ -28,6 +28,17 @@
 
             if ($this->loadModele()->{ $edition!='0' && strlen(trim($edition)) ? 'modifierContent':'creerContent' }($content, $categoryname, $edition)) {
                 $this->json_success("Content saved succefully !", ["newtoken" => Posts::getCSRFTokenValue()]);
+
+                # fire oncreate|onupdate event
+                $event =  $edition!='0' && strlen(trim($edition)) ? 'update':'create';
+                # call event
+                $this->fire($event, [
+                    "contentid" => $edition!='0' && strlen(trim($edition)) ? $edition : null,
+                    "content" => $content,
+                    "categoryname" => $categoryname
+                ]);
+                # end of listener call
+
                 if ($doexit) exit();
             }
             else {
@@ -91,6 +102,11 @@
 
             if ($this->loadModele()->supprimerContents($categoryname, $contentid)) {
                 $this->json_success("Content deleted !");
+
+                # call ondelete listener
+                $this->fire('delete', ['contentid' => $contentid, 'categoryname' => $categoryname]);
+                # end of listener call
+
                 if ($doexit) exit();
             }
             else {

@@ -10,6 +10,7 @@
     require __DIR__ . '/core/controlleur.php';
     require __DIR__ . '/modeles/ContentsModele.php';
     require __DIR__ . '/controlleurs/ContentsControlleur.php';
+    require __DIR__ . '/controlleurs/ListenerControlleur.php';
 
     define('ROOT', pathinfo(__FILE__, PATHINFO_DIRNAME) . '/');
     define('WROOT', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
@@ -20,6 +21,7 @@
         public static $cfg = [];
         public static $mdl = false;
         public static $ctr = false;
+        public static $listen = true;
 
         public static function init()
         {
@@ -64,19 +66,51 @@
         public static function create($categoryname, $content)
         {
             if (!self::$inited) self::init();
-            return self::$mdl->creerContent($content, $categoryname);
+            $result = self::$mdl->creerContent($content, $categoryname);
+
+            # fire oncreate event
+            if (self::$listen && $result)
+                self::$ctr->fire('create', [
+                    "contentid" => null,
+                    "content"   => $content,
+                    "categoryname" => $categoryname
+                ]);
+            # end of event
+
+            return $result;
         }
 
         public static function edit($categoryname, $content, $id)
         {
             if (!self::$inited) self::init();
-            return self::$mdl->modifierContent($content, $categoryname, $id);
+            $result = self::$mdl->modifierContent($content, $categoryname, $id);
+
+            # fire onupdate event
+            if (self::$listen && $result)
+                self::$ctr->fire('update', [
+                    "contentid" => $id,
+                    "content"   => $content,
+                    "categoryname" => $categoryname
+                ]);
+            # end of event
+                
+            return $result;
         }
 
         public static function delete($categoryname, $id)
         {
             if (!self::$inited) self::init();
-            return self::$mdl->supprimerContents($categoryname, $id);
+            $result = self::$mdl->supprimerContents($categoryname, $id);
+            
+            # fire ondelete event
+            if (self::$listen && $result)
+                self::$ctr->fire('delete', [
+                    "contentid" => $id,
+                    "categoryname" => $categoryname
+                ]);
+            # end of event
+                
+            return $result;
         }
 
         public static function upload($name)

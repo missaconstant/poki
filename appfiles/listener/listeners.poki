@@ -1,0 +1,10 @@
+{
+	"pk-hello": {
+		"name": "pk-hello",
+		"listener": "pk-mylistener",
+		"handle": ["create", "update", "delete", "read", "login", "logout"],
+		"version": "1.0",
+		"author": "Poki",
+		"licence": "MIT"
+	}
+}

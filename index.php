@@ -23,6 +23,7 @@
 	include_once ROOT.'core/routes.php' ;
 	include_once ROOT.'core/sessions.php' ;
 	include_once ROOT.'core/posts.php' ;
+	include_once ROOT.'core/listener.php';
 
     $_SERVER['REQUEST_URI'] = urldecode($_SERVER['REQUEST_URI']);
     

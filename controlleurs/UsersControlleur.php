@@ -23,6 +23,11 @@
             if ($user = $this->loadModele()->tryLogon($username, $password)) {
                 Session::set('admin', md5($user['id']));
                 $this->json_success('Login success !');
+
+                # fire onlogin event
+                $this->fire('login', ['email' => $user['email'], 'role' => $user['role']]);
+                # end of event
+
                 exit();
             }
             else {
@@ -33,6 +38,13 @@
 
         public function logout()
         {
+            $this->cfg->configSurvey(false);
+            $admin = $this->loginSurvey(false, 'login');
+            
+            # fire onlogout event
+            $this->fire('logout', ["username" => $admin->email]);
+            # end event
+
             Session::end();
             $this->redirTo(Routes::find('/'));
         }

@@ -77,6 +77,11 @@
 			return new $controlleur() ;
 		}
 
+		function fire($event, $params)
+		{
+			$this->loadController('listener')->on($event, $params);
+		}
+
 		function jsonize($array)
 		{
 			return json_encode($array);
