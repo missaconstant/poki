@@ -5,7 +5,7 @@
 	/**
 	* 
 	*/
-	class Mylistener implements Listener
+	class Mylistener extends Listener
 	{
 		
 		public static function onCreate($params)

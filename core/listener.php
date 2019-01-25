@@ -1,28 +1,28 @@
 <?php
 
-	Interface Listener {
+	abstract class Listener {
 
-		public static function onCreate($params);
+		abstract public static function onCreate($params);
 
 		// public static function onBeforeCreate($params);
 
-		public static function onUpdate($params);
+		abstract public static function onUpdate($params);
 
 		// public static function onBeforeUpdate($params);
 
-		public static function onDelete($params);
+		abstract public static function onDelete($params);
 
 		// public static function onBeforeDelete($params);
 
-		public static function onRead($params);
+		abstract public static function onRead($params);
 
 		// public static function onBeforeRead($params);
 
-		public static function onLogin($params);
+		abstract public static function onLogin($params);
 
 		// public static function onBeforeLogin($params);
 
-		public static function onLogout($params);
+		abstract public static function onLogout($params);
 
 		// public static function onBeforeLogout($params);
 
