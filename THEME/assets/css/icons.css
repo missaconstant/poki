@@ -9769,8 +9769,8 @@
 */
 @font-face {
   font-family: "Ionicons";
-  src: url("../fonts/ionicons.eot%3Fv=1.5.0");
-  src: url("../fonts/ionicons.eot%3Fv=1.5.0") format("embedded-opentype"), url("../fonts/ionicons.ttf%3Fv=1.5.0") format("truetype"), url("../fonts/ionicons.woff%3Fv=1.5.0") format("woff"), url("../fonts/ionicons.svg%3Fv=1.5.0") format("svg");
+  src: url("../fonts/ionicons.eot_v=1.5.0");
+  src: url("../fonts/ionicons.eot_v=1.5.0") format("embedded-opentype"), url("../fonts/ionicons.ttf_v=1.5.0") format("truetype"), url("../fonts/ionicons.woff_v=1.5.0") format("woff"), url("../fonts/ionicons.svg_v=1.5.0") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -12866,8 +12866,8 @@
 
 @font-face {
   font-family: 'themify';
-  src: url("../fonts/themify.eot%3F-fvbane");
-  src: url("../fonts/themify.eot%3F") format("embedded-opentype"), url("../fonts/themify.woff%3F-fvbane") format("woff"), url("../fonts/themify.ttf%3F-fvbane") format("truetype"), url("../fonts/themify.svg%3F-fvbane") format("svg");
+  src: url("../fonts/themify.eot_-fvbane");
+  src: url("../fonts/themify.eot_") format("embedded-opentype"), url("../fonts/themify.woff_-fvbane") format("woff"), url("../fonts/themify.ttf_-fvbane") format("truetype"), url("../fonts/themify.svg_-fvbane") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -14296,7 +14296,7 @@
 @font-face {
   font-family: "dripicons-v2";
   src: url("../fonts/dripicons-v2.eot");
-  src: url("../fonts/dripicons-v2.eot%3F") format("embedded-opentype"), url("../fonts/dripicons-v2.woff") format("woff"), url("../fonts/dripicons-v2.ttf") format("truetype"), url("../fonts/dripicons-v2.svg") format("svg");
+  src: url("../fonts/dripicons-v2.eot_") format("embedded-opentype"), url("../fonts/dripicons-v2.woff") format("woff"), url("../fonts/dripicons-v2.ttf") format("truetype"), url("../fonts/dripicons-v2.svg") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -15131,7 +15131,7 @@
   font-weight: normal;
   font-style: normal;
   src: url("../fonts/typicons.eot");
-  src: url("../fonts/typicons.eot%3F") format("embedded-opentype"), url("../fonts/typicons.woff") format("woff"), url("../fonts/typicons.ttf") format("truetype"), url("../fonts/typicons.svg") format("svg");
+  src: url("../fonts/typicons.eot_") format("embedded-opentype"), url("../fonts/typicons.woff") format("woff"), url("../fonts/typicons.ttf") format("truetype"), url("../fonts/typicons.svg") format("svg");
 }
 
 /* :before psuedo-selector inserts and styles icon */
