@@ -108,7 +108,7 @@
         </li>
         <li class="hide-phone app-search">
             <form role="search" class="pk-search" onsubmit="return false;">
-                <input type="text" placeholder="Search..." class="form-control" value="<?= $issearch ? $issearch : '' ?>">
+                <input type="text" placeholder="Search..." class="form-control" value="<?= isset($issearch) ? $issearch : '' ?>">
                 <a href="#"><i class="fa fa-search"></i></a>
             </form>
         </li>
