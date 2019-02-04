@@ -64,6 +64,8 @@
                 "api-change-key" => "/api/change-key",
                 "api-do" => "/api/do",
                 "api-watch" => "/api/watch",
+                /* plugins */
+                "plugins" => "/listener/app"
             ];
         }
 

@@ -1,0 +1,20 @@
+{
+	"pk-hello": {
+		"name": "pk-hello",
+		"listener": {
+            "name": "pk-mylistener",
+		    "handle": ["create", "update", "delete", "read", "login", "logout"]
+        },
+		"version": "1.0",
+		"author": "Poki",
+		"licence": "MIT",
+		"menulinks": {
+            "create": { "link": "create", "action": "/create", "view": "create" },
+            "edit": { "link": "edit", "action": "/edit", "view": "edit" },
+            "delete": { "link": "delete", "action": "/delete", "view": "delete" },
+            "read": { "link": "read", "action": "/read", "view": "read" }
+		},
+        "door": "start",
+		"active": 0
+	}
+}

@@ -117,7 +117,8 @@
 			$this->render('app/home', [
 				"admin" => $admin,
 				"pagetitle" => "",
-				"categories" => $this->loadController('categories')->list()
+				"categories" => $this->loadController('categories')->list(),
+				"pluglist" => $this->loadController('listener')->loadPlugins()
 			]);
 		}
 	}
