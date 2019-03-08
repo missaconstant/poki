@@ -12,7 +12,8 @@
 
         public function __construct()
         {
-            if (file_exists(ROOT . 'statics/config.php') && !isset($dbuser) && !isset($dbpass)) {
+            if (file_exists(ROOT . 'statics/config.php') && !isset($dbuser) && !isset($dbpass))
+            {
                 include ROOT . 'statics/config.php';
                 Config::$db_user = $dbuser;
                 Config::$db_host = $dbhost;
@@ -29,7 +30,8 @@
          */
         public function toggle()
         {
-            if ($this->loadModele()->toggleApi(Posts::get(0), Posts::get(1))) {
+            if ($this->loadModele()->toggleApi(Posts::get(0), Posts::get(1)))
+            {
                 $this->json_success("Change done !");
                 exit();
             }
@@ -48,7 +50,8 @@
             $allowed = Posts::post(['allowed']) ? trim(implode(',',$_POST['allowed'])) : '';
             $category = Posts::post('category');
 
-            if ($this->loadModele()->modifierApi($category, $allowed)) {
+            if ($this->loadModele()->modifierApi($category, $allowed))
+            {
                 $this->json_success("Done !", ["newtoken" => Posts::getCSRFTokenValue()]); exit();
             }
             else {
@@ -65,7 +68,8 @@
             $category = Posts::get(0);
             $action = Posts::get([1]) == false ? false : (Posts::get(1)=='unset' ? true : false);
 
-            if ($newapikey = $this->loadModele()->changerApi($category, $action)) {
+            if ($newapikey = $this->loadModele()->changerApi($category, $action))
+            {
                 $this->json_success("Done !", ["newapikey" => $newapikey]); exit();
             }
             else {
@@ -90,12 +94,15 @@
             $apikey = Posts::get([3]) ? Posts::get(3) : '';
 
             # get actions
-            if ($action && $action == 'get') {
-                if ($content && $content != 'all') {
+            if ($action && $action == 'get')
+            {
+                if ($content && $content != 'all')
+                {
                     # get one
                     $this->apiSurvey($category, 'get-one', $apikey);
                     $found = $this->loadModele('contents')->trouverContents($category, $content, true);
-                    if ($found) {
+                    if ($found)
+                    {
                         $this->json_answer(["error" => 0, "contents" => [$found]]);
                         exit();
                     }
@@ -107,7 +114,8 @@
                     # get all | get
                     $this->apiSurvey($category, 'get', $apikey);
                     $contents = $this->loadModele('contents')->trouverTousContents($category, true);
-                    if ($contents && count($content)) {
+                    if ($contents && count($content))
+                    {
                         $this->json_answer(["error" => 0, "contents" => $contents]);
                         exit();
                     }
@@ -116,21 +124,25 @@
                     }
                 }
             }
-            # cud action : create, update, ddelete
-            else if ($action && in_array($action, ['add', 'edit', 'delete'])) {
+            # cud action : create, update, delete, find
+            else if ($action && in_array($action, ['add', 'edit', 'delete', 'find']))
+            {
                 $categoryname = $category;
                 $apikey = Posts::post(['apikey']) ? Posts::post('apikey') : false;
                 $contentid = $content;
 
-                if (!$categoryname) {
+                if (!$categoryname)
+                {
                     $this->apiError(403, "Action not permitted or target omitted !");
                 }
 
                 $this->apiSurvey($categoryname, $action, $apikey);
 
                 # delete action
-                if ($action == 'delete') {
-                    if ($this->loadModele('contents')->supprimerContents($categoryname, $contentid)) {
+                if ($action == 'delete')
+                {
+                    if ($this->loadModele('contents')->supprimerContents($categoryname, $contentid))
+                    {
                         $this->json_answer(["error" => 0, "message" => "Action done !"]);
                     }
                     else {
@@ -138,13 +150,17 @@
                     }
                 }
                 # add and edit action
-                else if ($action == 'edit' || $action == 'add') {
+                else if ($action == 'edit' || $action == 'add')
+                {
                     $content = [];
                     $queryfields = ['apikey'];
     
-                    foreach ($_POST as $k => $value) {
-                        if ($k != 'id' && $k != 'added_at') {
-                            if (!in_array($k, $queryfields)) {
+                    foreach ($_POST as $k => $value)
+                    {
+                        if ($k != 'id' && $k != 'added_at')
+                        {
+                            if (!in_array($k, $queryfields))
+                            {
                                 $content[$k] = $value;
                             }
                         }
@@ -154,8 +170,30 @@
                         }
                     }
                     
-                    if ($this->loadModele('contents')->{ $action=='edit' ? 'modifierContent':'creerContent' }($content, $categoryname, $contentid)) {
+                    if ($this->loadModele('contents')->{ $action=='edit' ? 'modifierContent':'creerContent' }($content, $categoryname, $contentid))
+                    {
                         $this->json_answer(["error" => 0, "message" => "Action done !"]);
+                    }
+                    else {
+                        $this->apiError(404, "Error found !");
+                    }
+                }
+                else if ($action == 'find')
+                {
+                    $wherestring = [];
+                     
+                    foreach ($_POST as $k => $value)
+                    {
+                        if ($k == 'apikey') continue;
+                        
+                        $wherestring[] = "$k='$value'";
+                    }
+                    
+                    if ($contents = $this->loadModele('contents')->trouverTousContents($categoryname, false, [ "where" => implode(' AND ', $wherestring) ]))
+                    {
+                        exit(json_encode($contents));
+                        $this->json_answer(["error" => 0, "contents" => $contents]);
+                        exit();
                     }
                     else {
                         $this->apiError(404, "Error found !");
@@ -173,17 +211,22 @@
          * @param permission access level asked
          * @param apikey api key provided
          */
-        public function apiSurvey($categoryname, $permission, $apikey) {
+        public function apiSurvey($categoryname, $permission, $apikey)
+        {
             $api = $this->loadModele()->trouverApi($categoryname);
-            if ($api && $api->active == '1') {
-                if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey != 'noset' && $apikey != $api->apikey) {
+            if ($api && $api->active == '1')
+            {
+                if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey != 'noset' && $apikey != $api->apikey)
+                {
                     $this->apiError(401, "You don't have this permission level without an api key.");
                 }
-                else if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey == 'noset') {
+                else if (!in_array($permission, explode(',', $api->allowed)) && $api->apikey == 'noset')
+                {
                     $this->apiError(402, "This authorisation level is disabled.");
                 }
             }
-            else if ($api && $api->active != '1') {
+            else if ($api && $api->active != '1')
+            {
                 $this->apiError(405, "Access not allowed !");
             }
             else {
@@ -229,7 +272,8 @@
         /**
          * Go to external server to get information about remote asker
          */
-        public function getAskerInfo() {
+        public function getAskerInfo()
+        {
             header("Access-Control-Allow-Origin: *");
             header("Content-Type: application/json");
             

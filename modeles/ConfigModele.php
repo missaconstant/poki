@@ -103,7 +103,7 @@
                 $sql4 = "INSERT INTO adm_roles(role, active) VALUES ('admin', '1'), ('writer', '1'), ('viewer', '1')";
                 $q4 = modele::$bd->exec($sql4);
 
-                $sql6 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete')";
+                $sql6 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete,find')";
                 $q6 = modele::$bd->exec($sql6);
 
                 $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
