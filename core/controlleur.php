@@ -82,6 +82,11 @@
 			$this->loadController('listener')->on($event, $params);
 		}
 
+		function getWastedTime()
+		{
+			return (getdate())[0] - REQUEST_START_TIME;
+		}
+
 		function jsonize($array)
 		{
 			return json_encode($array);

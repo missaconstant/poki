@@ -96,3 +96,7 @@
     </div>
     <!-- Column -->
 </div>
+
+<div>
+    <a href="<?= $base_url . '/create/12' ?>">One link</a>
+</div>

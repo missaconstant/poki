@@ -65,6 +65,13 @@
                             <li class="menu-title">Admin Settings</li>
 
                             <li>
+                                <a href="<?= Routes::find('plugin-list') ?>" class="waves-effect">
+                                    <i class="mdi mdi-tag"></i>
+                                    <span> Manage plugins <!-- <span class="badge badge-pill badge-primary float-right">7</span> --></span>
+                                </a>
+                            </li>
+
+                            <li>
                                 <a href="<?= Routes::find('users-list') ?>" class="waves-effect">
                                     <i class="mdi mdi-account-multiple"></i>
                                     <span> Users <!-- <span class="badge badge-pill badge-primary float-right">7</span> --></span>

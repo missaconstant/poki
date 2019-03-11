@@ -4,6 +4,9 @@
 
 	session_start();
 
+	/* request start time */
+	define('REQUEST_START_TIME', $_SERVER['REQUEST_TIME_FLOAT']);
+
 	define('ROOT', str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']));
 	define('WROOT', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 	define('INCLUDES', ROOT.'/vues/includes/');
@@ -23,6 +26,9 @@
 	include_once ROOT.'core/routes.php' ;
 	include_once ROOT.'core/sessions.php' ;
 	include_once ROOT.'core/posts.php' ;
+	include_once ROOT.'core/plugers/pluger.php';
+	include_once ROOT.'core/plugers/pluger.php';
+	include_once ROOT.'core/plugers/view.provider.php';
 	include_once ROOT.'core/listener.php';
 
     $_SERVER['REQUEST_URI'] = urldecode($_SERVER['REQUEST_URI']);

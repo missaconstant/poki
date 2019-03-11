@@ -121,4 +121,9 @@
 				"pluglist" => $this->loadController('listener')->loadPlugins()
 			]);
 		}
+
+		public function performances()
+		{
+			echo $this->getWastedTime();
+		}
 	}

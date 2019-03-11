@@ -65,7 +65,8 @@
                 "api-do" => "/api/do",
                 "api-watch" => "/api/watch",
                 /* plugins */
-                "plugins" => "/listener/app"
+                "plugins" => "/listener/app",
+                "plugin-list" => "/listener/list"
             ];
         }
 

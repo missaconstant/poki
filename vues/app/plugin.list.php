@@ -2,8 +2,6 @@
 <html>
     <head>
         <?php include INCLUDES . 'default-head.inc.php' ?>
-        <link rel="stylesheet" href="<?= THEME . 'assets/plugins/summernote/summernote-bs4.css' ?>">
-        <link rel="stylesheet" href="<?= THEME . 'assets/plugins/datatables/dataTables.bootstrap4.min.css' ?>">
     </head>
 
 
@@ -30,14 +28,11 @@
 
                             <?php include INCLUDES . 'page-title.inc.php' ?>
 
-                            <!-- <div class="row"> -->
+                            <div class="row">
                                 
-                                <?php include $view ?>
+                                <?php include INCLUDES . 'plugin-list.inc.php' ?>
 
-                                <br>
-                                <br>
-                                
-                            <!-- </div> -->
+                            </div>
 
                         </div><!-- container -->
 
@@ -54,19 +49,5 @@
         <!-- END wrapper -->
 
         <?php include INCLUDES . 'default-script.inc.php' ?>
-        <script src="<?= THEME . 'assets/plugins/summernote/summernote-bs4.min.js' ?>"></script>
-        <script src="<?= THEME . 'assets/plugins/datatables/jquery.dataTables.min.js' ?>"></script>
-        <script src="<?= THEME . 'assets/plugins/datatables/dataTables.bootstrap4.min.js' ?>"></script>
-        <script>
-            $(function () {
-                $('.summernote').summernote({
-                    height: 200,
-                    minHeight: null,
-                    minWidth: null
-                });
-
-                $('.pk-datatable').DataTable();
-            });
-        </script>
     </body>
 </html>
