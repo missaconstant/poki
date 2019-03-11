@@ -49,5 +49,6 @@
         <!-- END wrapper -->
 
         <?php include INCLUDES . 'default-script.inc.php' ?>
+        <script src="<?= Files::script('_plugins.manage') ?>"></script>
     </body>
 </html>

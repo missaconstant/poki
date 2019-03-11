@@ -27,7 +27,7 @@
 
         protected function redirToSelf($route)
         {
-            $this->redirTo(Routes::find('plugins') . '/' . $GLOBALS['plugname'] . '/' . $route);
+            $this->redirTo(Routes::find('plugins') . '/' . $GLOBALS['plugid'] . '/' . $route);
         }
 
     }

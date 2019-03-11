@@ -45,15 +45,15 @@
 
                             <li class="menu-title">Plugins</li>
 
-                            <?php foreach ($pluglist as $plugname => $parmas): if($parmas['active'] != 0): ?>
+                            <?php foreach ($pluglist as $plugname => $params): if($params['active'] != 0): ?>
                             <li class="has_sub">
                                 <a href="javascript:void(0)" class="waves-effect">
                                     <i class="mdi mdi-account-check"></i>
                                     <span class="float-right"><i class="mdi mdi-chevron-right"></i></span>
-                                    <span> <?= $plugname ?> </span>
+                                    <span> <?= $params['label_name'] ?> </span>
                                 </a>
                                 <ul class="list-unstyled">
-                                    <?php foreach ($parmas['menulinks'] as $k => $item): ?>
+                                    <?php foreach ($params['menulinks'] as $k => $item): ?>
                                     <li><a href="<?= Routes::find('plugins') .'/'. $plugname . $item['action'] ?>"> <?= $item['link'] ?> </a></li>
                                     <?php endforeach; ?>
                                 </ul>

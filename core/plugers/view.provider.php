@@ -10,7 +10,7 @@
 
         public static function includeViewHTML($viewpath)
         {
-            include ROOT . 'pk-plugins/'. $GLOBALS['plugname'] .'/views/includes/'. $viewpath .'.php';
+            include ROOT . 'pk-plugins/'. $GLOBALS['plugid'] .'/views/includes/'. $viewpath .'.php';
         }
 
         private static function serialize($array, $jump)
@@ -31,7 +31,7 @@
         {
             $lines     = $options['fields'];
             $attrs     = self::serialize($options['attributes'], ['action']);
-            $action    = Routes::find('plugins') . '/' . $GLOBALS['plugname'] . '/' . $options['attributes']['action'];
+            $action    = Routes::find('plugins') . '/' . $GLOBALS['plugid'] . '/' . $options['attributes']['action'];
             $buttons   = (object) $options['buttons'];
             $formtitle = $options['title'];
             $formdesc  = $options['description'];

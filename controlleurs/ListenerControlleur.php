@@ -42,10 +42,10 @@
 
 		}
 
-		public function loadPlugins($plugname=false)
+		public function loadPlugins($plugid=false)
 		{
 			$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
-			return $plugname ? $plugins[$plugname] : $plugins;
+			return $plugid ? $plugins[$plugid] : $plugins;
 		}
 
 		public function getParmas()
@@ -80,14 +80,16 @@
 			$this->cfg->configSurvey(false);
 			$admin = $this->usr->loginSurvey(false, 'login');
 
-			$plugname = Posts::get(0);
+			$plugid = Posts::get(0);
 			$action   = Posts::get(1);
-			$plugin   = $this->loadPlugins($plugname);
+			$plugin   = $this->loadPlugins($plugid);
 			$name     = $plugin['name'];
-			$door     = ROOT . 'pk-plugins/' . $plugname . '/' . $plugin['door'] . '.php';
+			$l_name   = $plugin['label_name'];
+			$door     = ROOT . 'pk-plugins/' . $plugid . '/' . $plugin['door'] . '.php';
 
 			if ($plugin['active'] == 0) $this->redirTo(Routes::find('home'));
 
+			$GLOBALS['plugid']   = $plugid;
 			$GLOBALS['plugname'] = $name;
 
 			include $door;
@@ -100,17 +102,17 @@
 				$varbs = $class->{ $action }( $this->getParmas() );
 			}
 
-			if (isset($plugin['menulinks'][$action]['view']) && file_exists($view = ROOT . 'pk-plugins/' . $plugname . '/views/' . $plugin['menulinks'][$action]['view'] . '.view.php'))
+			if (isset($plugin['menulinks'][$action]['view']) && file_exists($view = ROOT . 'pk-plugins/' . $plugid . '/views/' . $plugin['menulinks'][$action]['view'] . '.view.php'))
 			{
 				$this->render('app/plugview', [
 					"admin"             => $admin,
-					"pagetitle"         => ucfirst($name),
+					"pagetitle"         => ucfirst($l_name),
 					"categories"        => $this->loadController('categories')->list(),
 					"pluglist"          => $this->loadController('listener')->loadPlugins(),
 					"view"              => $view,
 					"app_base_url"      => Routes::find('base-route'),
-					"plugin_base_url"   => Routes::find('plugins') .'/'. $plugname,
-					"plugin_base_path"  => ROOT . 'pk-plugins/' . $plugname,
+					"plugin_base_url"   => Routes::find('plugins') .'/'. $plugid,
+					"plugin_base_path"  => ROOT . 'pk-plugins/' . $plugid,
 					// variables from action
 					"vars"              => (object) $varbs
 				]);
