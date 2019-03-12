@@ -66,7 +66,7 @@
 
                 if (file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins)))
                 {
-                    @unlink(ROOT . 'pk-plugins/' . $plugid);
+                    $this->delDir(ROOT . 'pk-plugins/' . $plugid);
 
                     $this->json_success("Plugin deleted");
                     exit();
@@ -81,4 +81,20 @@
                 exit();
             }
         }
+
+        public function add()
+        {
+            $zip = new ZipArchive();
+            var_dump($zip); exit();
+        }
+
+        private function delDir($dir) { 
+            $files = array_diff(scandir($dir), array('.','..')); 
+            
+            foreach ($files as $file) { 
+                (is_dir("$dir/$file")) ? $this->delDir("$dir/$file") : unlink("$dir/$file"); 
+            }
+
+            return rmdir($dir); 
+        } 
     }

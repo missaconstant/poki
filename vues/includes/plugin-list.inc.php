@@ -1,3 +1,18 @@
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <button class="btn btn-sm btn-round btn-primary pull-right toggle-install-form"><i class="mdi mdi-menu"></i></button>
+            <h5 class="card-title">Add new plugin</h5>
+            <p class="text-muted">Upload a new plugin that can help you in your works</p>
+            <div class="install-fields m-t-20" style="display: none;">
+                <input type="file" name="" id="pluginfile" class="form-control">
+                <button class="btn btn-primary m-t-20 installbtn">Install plugin</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
 <?php foreach ($pluglist as $k => $plugin): ?>
     
 <div class="col-md-6 col-lg-6 col-xl-4">
