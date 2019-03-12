@@ -44,13 +44,14 @@
                     $this->json_success("Plugin " . ($plugins[$plugid]['active']==1 ? "enabled" : "disabled"));
                     exit();
                 }
-                else {
-                    $this->json_error("An error occured. Please try again.");
+                else
+                {
+                    $this->tell_error("An error occured. Please try again.");
                     exit();
                 }
             }
             else {
-                $this->json_error("Plugin with ID: ". $plugid ." not found !");
+                $this->tell_error("Plugin with ID: ". $plugid ." not found !");
                 exit();
             }
         }
@@ -71,30 +72,140 @@
                     $this->json_success("Plugin deleted");
                     exit();
                 }
-                else {
-                    $this->json_error("An error occured. Please try again.");
+                else
+                {
+                    $this->tell_error("An error occured. Please try again.");
                     exit();
                 }
             }
-            else {
-                $this->json_error("Plugin with ID: ". $plugid ." not found !");
+            else
+            {
+                $this->tell_error("Plugin with ID: ". $plugid ." not found !");
                 exit();
             }
         }
 
         public function add()
         {
-            $zip = new ZipArchive();
-            var_dump($zip); exit();
+            $file = Posts::file('plugin');
+
+            if ( ! $file['error'])
+            {
+                $zip  = new ZipArchive();
+                $zgot = $zip->open($file['tmp_name']);
+                $temp = md5($file['tmp_name']);
+                $tdir = ROOT . 'appfiles/temp/' . $temp;
+                $pdir = ROOT . 'pk-plugins/' . $temp;
+                
+                if ($zgot)
+                {
+                    if ($zip->extractTo( $tdir ))
+                    {
+                        if ($package = file_get_contents($tdir . '/package.poki'))
+                        {
+                            $this->checkPluginArchive($temp, $package, $tdir);
+
+                            if (rename($tdir, $pdir))
+                            {
+                                $this->json_success("Plugin correctly installed !");
+                            }
+                            else
+                            {
+                                $this->tell("An error occured while installation. Please try again.");
+                            }
+                        }
+                        else
+                        {
+                            $this->tell("Bad plugin zip file.");
+                        }
+
+                        $this->delDir($tdir);
+                    }
+                    else
+                    {
+                        $this->tell("An error occured while installation. Please try again.");
+                    }
+                    
+                    $zip->close();
+                }
+            }
+            else
+            {
+                $this->tell("The zip file contains errors.");
+            }
         }
 
-        private function delDir($dir) { 
+        private function delDir($dir)
+        { 
             $files = array_diff(scandir($dir), array('.','..')); 
             
-            foreach ($files as $file) { 
+            foreach ($files as $file)
+            { 
                 (is_dir("$dir/$file")) ? $this->delDir("$dir/$file") : unlink("$dir/$file"); 
             }
 
             return rmdir($dir); 
         } 
+
+        private function checkPluginArchive($id, $json_package, $tdir)
+        {
+            // parsing package file
+            $package = json_decode($json_package, true);
+
+            // checking fields
+            if (
+                !$this->notEmpty($package['name']) || !$this->notEmpty($package['label_name']) || !$this->notEmpty($package['version']) || 
+                !$this->notEmpty($package['licence']) || !$this->notEmpty($package['description']) || !$this->notEmpty($package['menulinks']) || 
+                !$this->notEmpty($package['door'])
+            ) {
+                $this->tell_error("Plugin package file not complete !");
+                $this->delDir($tdir);
+                exit();
+            }
+
+            // checking door
+            if ( ! file_exists($tdir . '/' . $package['door'] . '.php') && ! file_exists($tdir . '/' . $package['door']))
+            {
+                $this->tell_error("Plugin door not found !");
+                $this->delDir($tdir);
+                exit();
+            }
+
+            // getting plugins list for saving
+            if ($plugins = file_get_contents(ROOT . 'appfiles/listener/plugins.poki'))
+            {
+                // parsing plugins list
+                $plugins = json_decode($plugins, true);
+
+                // deactiving the package to let the user active
+                $package['active'] = 0;
+
+                // put package in plugins list
+                $plugins[$id] = $package;
+
+                // save updated list
+                if ( ! file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins)))
+                {
+                    $this->tell_error("An error occured. Please try again.");
+                    $this->delDir($tdir);
+                    exit();
+                }
+            }
+            else
+            {
+                $this->tell_error("An error occured. Please try again.");
+                $this->delDir($tdir);
+                exit();
+            }
+        }
+
+        private function tell_error($message)
+        {
+            $this->json_error($message, [ "newtoken" => Posts::getCSRFTokenValue() ]);
+        }
+
+        private function notEmpty($val)
+        {
+            return (isset($val) && !empty($val)) || (isset($val) && strlen(trim($val)));
+        }
     }

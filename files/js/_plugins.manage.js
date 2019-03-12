@@ -45,6 +45,7 @@ $(function () {
         else {
             var fd = new FormData();
                 fd.append("plugin", files[0]);
+                fd.append('_token', $('input[name="_token"]').val());
             
             loader.show();
 
@@ -57,11 +58,20 @@ $(function () {
                 data: fd,
                 dataType: 'json',
                 success: function (datas) {
-                    console.log(datas);
-                    loader.hide();
+                    if (datas.error) {
+                        $('input[name="_token"]').val(datas.newtoken);
+
+                        alerter.error(datas.message);
+                        loader.hide();
+                    }
+                    else {
+                        alerter.success(datas.message);
+
+                        setTimeout(function () { window.location.reload() }, 1500);
+                    }
                 },
                 error: function (err) {
-                    console.log(err);
+                    alerter.error("An error just occured !");
                     loader.hide();
                 }
             });

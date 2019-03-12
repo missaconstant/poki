@@ -111,6 +111,7 @@
 					"pluglist"          => $this->loadController('listener')->loadPlugins(),
 					"view"              => $view,
 					"app_base_url"      => Routes::find('base-route'),
+					"app_files_path"    => ROOT . 'appfiles/fields_files',
 					"plugin_base_url"   => Routes::find('plugins') .'/'. $plugid,
 					"plugin_base_path"  => ROOT . 'pk-plugins/' . $plugid,
 					// variables from action

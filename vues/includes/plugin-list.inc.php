@@ -1,4 +1,4 @@
-<div class="col-12">
+<div class="col-12 m-b-30">
     <div class="card">
         <div class="card-body">
             <button class="btn btn-sm btn-round btn-primary pull-right toggle-install-form"><i class="mdi mdi-menu"></i></button>
@@ -6,12 +6,12 @@
             <p class="text-muted">Upload a new plugin that can help you in your works</p>
             <div class="install-fields m-t-20" style="display: none;">
                 <input type="file" name="" id="pluginfile" class="form-control">
+                <?= Posts::getCSRF() ?>
                 <button class="btn btn-primary m-t-20 installbtn">Install plugin</button>
             </div>
         </div>
     </div>
 </div>
-<br>
 
 <?php foreach ($pluglist as $k => $plugin): ?>
     
