@@ -96,37 +96,46 @@
                 $temp = md5($file['tmp_name']);
                 $tdir = ROOT . 'appfiles/temp/' . $temp;
                 $pdir = ROOT . 'pk-plugins/' . $temp;
-                
-                if ($zgot)
-                {
-                    if ($zip->extractTo( $tdir ))
-                    {
-                        if ($package = file_get_contents($tdir . '/package.poki'))
-                        {
-                            $this->checkPluginArchive($temp, $package, $tdir);
 
-                            if (rename($tdir, $pdir))
+                if ( ! file_exists(ROOT . 'appfiles/temp')) @mkdir(ROOT . 'appfiles/temp');
+                if ( ! file_exists(ROOT . 'pk-plugins')) @mkdir(ROOT . 'pk-plugins');
+                
+                if (file_exists(ROOT . 'pk-plugins') && file_exists(ROOT . 'pk-plugins'))
+                {
+                    if ($zgot)
+                    {
+                        if ($zip->extractTo( $tdir ))
+                        {
+                            if ($package = file_get_contents($tdir . '/package.poki'))
                             {
-                                $this->json_success("Plugin correctly installed !");
+                                $this->checkPluginArchive($temp, $package, $tdir);
+
+                                if (rename($tdir, $pdir))
+                                {
+                                    $this->json_success("Plugin correctly installed !");
+                                }
+                                else
+                                {
+                                    $this->tell("An error occured while installation. Please try again.");
+                                }
                             }
                             else
                             {
-                                $this->tell("An error occured while installation. Please try again.");
+                                $this->tell("Bad plugin zip file.");
                             }
+
+                            $this->delDir($tdir);
                         }
                         else
                         {
-                            $this->tell("Bad plugin zip file.");
+                            $this->tell("An error occured while installation. Please try again.");
                         }
-
-                        $this->delDir($tdir);
+                        
+                        $zip->close();
                     }
-                    else
-                    {
-                        $this->tell("An error occured while installation. Please try again.");
-                    }
-                    
-                    $zip->close();
+                }
+                else {
+                    $this->tell("Permission error. Can't add plugins.");
                 }
             }
             else
