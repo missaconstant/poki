@@ -178,7 +178,7 @@
                         $this->apiError(404, "Error found !");
                     }
                 }
-                else if ($action == 'find')
+                else if ($action && $action == 'find')
                 {
                     $wherestring = [];
                      
@@ -199,6 +199,20 @@
                         $this->apiError(404, "Error found !");
                     }
                 }
+            }
+            else if ($action && $action == 'app')
+            {
+                $plg_id  = $category;
+                $plg_act = $content;
+                
+                $resonse = (object) $this->loadController('listener')->plugin($plg_id, $plg_act, Posts::get(), Posts::post());
+                
+                if ($resonse->error)
+                {
+                    $this->apiError(403, $resonse->message);
+                }
+
+                exit();
             }
             else {
                 $this->apiError(403, "You're asking for impossible !");

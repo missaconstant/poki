@@ -50,38 +50,56 @@
 
 
 
-		static function post($value)
+		static function post($value=false)
 		{
 			self::csrfWare();
 
-			if (is_string($value)) {
-				return self::getRequestValue($_POST, $value);
+			if ($value)
+			{
+				if (is_string($value)) {
+					return self::getRequestValue($_POST, $value);
+				}
+				else if (is_array($value)) {
+					return self::setted($_POST, $value);
+				}
 			}
-			else if (is_array($value)) {
-				return self::setted($_POST, $value);
+			else {
+				return $_POST;
 			}
 		}
 
-		static function get($value)
+		static function get($value=false)
 		{
-            if (is_string($value) || is_numeric($value)) {
-                return self::getRequestValue($_GET, $value);
-            }
-            else if (is_array($value)) {
-                return self::setted($_GET, $value);
-            }
+			if ($value || $value == 0)
+			{
+				if (is_string($value) || is_numeric($value)) {
+					return self::getRequestValue($_GET, $value);
+				}
+				else if (is_array($value)) {
+					return self::setted($_GET, $value);
+				}
+			}
+			else {
+				return $_GET;
+			}
         }
 
-		static function file($value)
+		static function file($value=false)
 		{
 		    self::csrfWare();
 
-            if (is_string($value)) {
-                return self::getRequestValue($_FILES, $value);
-            }
-            else if (is_array($value)) {
-                return self::setted($_FILES, $value);
-            }
+			if ($value)
+			{
+				if (is_string($value)) {
+					return self::getRequestValue($_FILES, $value);
+				}
+				else if (is_array($value)) {
+					return self::setted($_FILES, $value);
+				}
+			}
+			else {
+				return $_FILES;
+			}
 		}
 
 		static private function csrfWare()

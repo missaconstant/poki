@@ -120,6 +120,34 @@
 			}
 		}
 
+		public function plugin($plugid, $action, $gets, $posts)
+		{
+			if ($plg = $this->loadPlugins($plugid))
+			{	
+				if ( ! file_exists(ROOT . 'pk-plugins/' . $plugid . '/' . $plg['apidoor'] . '.php') || !$plg['active'])
+				{
+					return ["error" => true, "message" => "No door found !"];
+				}
+				else {
+					include ROOT . 'pk-plugins/' . $plugid . '/' . $plg['apidoor'] . '.php';
+					
+					$class = new ApiEntry();
+
+					if (method_exists($class, $action))
+					{
+						$class->{ $action }($gets, $posts);
+						return ["error" => false];
+					}
+					else {
+						return ["error" => true, "message" => "Action not found !"];
+					}
+				}
+			}
+			else {
+				return ["error" => true, "message" => "App not found !"];
+			}
+		}
+
 		public function list()
 		{
 			$this->loadController('plugins')->listPlugins();

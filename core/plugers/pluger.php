@@ -20,6 +20,11 @@
             return $this->loadModele('contents')->modifierContent($content, $categoryname, $contentid);
         }
 
+        protected function addContent($categoryname, $content)
+        {
+            return $this->loadModele('contents')->creerContent($content, $categoryname);
+        }
+
         protected function redirToApp($route)
         {
             $this->redirTo(Routes::find('base-route') . '/' . $route);
