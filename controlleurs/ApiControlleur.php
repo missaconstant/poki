@@ -191,7 +191,6 @@
                     
                     if ($contents = $this->loadModele('contents')->trouverTousContents($categoryname, false, [ "where" => implode(' AND ', $wherestring) ]))
                     {
-                        exit(json_encode($contents));
                         $this->json_answer(["error" => 0, "contents" => $contents]);
                         exit();
                     }
