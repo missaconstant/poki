@@ -199,22 +199,25 @@
                     }
                 }
             }
-            else if ($action && $action == 'app')
+            else
             {
-                $plg_id  = $category;
-                $plg_act = $content;
-                
-                $resonse = (object) $this->loadController('listener')->plugin($plg_id, $plg_act, Posts::get(), Posts::post());
-                
-                if ($resonse->error)
+                if ($category && $category == 'app')
                 {
-                    $this->apiError(403, $resonse->message);
+                    $plg_id  = $action;
+                    $plg_act = $content;
+                    
+                    $resonse = (object) $this->loadController('listener')->plugin($plg_id, $plg_act, Posts::get(), Posts::post());
+                    
+                    if ($resonse->error)
+                    {
+                        $this->apiError(403, $resonse->message);
+                    }
+    
+                    exit();
                 }
-
-                exit();
-            }
-            else {
-                $this->apiError(403, "You're asking for impossible !");
+                else {
+                    $this->apiError(403, "You're asking for impossible !");
+                }
             }
         }
 
