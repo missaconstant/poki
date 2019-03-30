@@ -32,9 +32,7 @@
                 Config::$db_password = $dbpass;
                 Config::$db_host = $dbhost;
                 Config::$appfolder = $appfolder;
-                Config::$fields_files_path = $fields_files_path;
                 Config::$fields_files_webpath = $fields_files_webpath;
-                Config::$jsonp_files_path = $jsonp_files_path;
 
                 if (self::$mdl = new modele()) {
                     self::$inited = true;

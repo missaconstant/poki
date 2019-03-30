@@ -128,9 +128,7 @@
                 \n\n\t\$dbpass = \"$pass\";
                 \n\n\t\$dbname = \"$dbname\";
                 \n\n\t\$appfolder = \"$appfolder\";
-                \n\n\t\$fields_files_path  = ROOT . substr(\$appfolder, 1, strlen(\$appfolder)) . \"/appfiles/fields_files/\";
-                \n\t\$fields_files_webpath = WROOT . substr(\$appfolder, 1, strlen(\$appfolder)) . \"/appfiles/fields_files/\";
-                \n\t\$jsonp_files_path     = WROOT . substr(\$appfolder, 1, strlen(\$appfolder)) . \"/appfiles/category_params_files/\";
+                \n\n\t\$fields_files_webpath = WROOT . substr(\$appfolder, 1, strlen(\$appfolder)) . \"/appfiles/fields_files/\";
             ";
             
             return file_put_contents(ROOT . 'statics/config.php', $config);
