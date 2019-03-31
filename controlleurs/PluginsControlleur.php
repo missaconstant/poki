@@ -99,8 +99,9 @@
 
                 if ( ! file_exists(ROOT . 'appfiles/temp')) @mkdir(ROOT . 'appfiles/temp');
                 if ( ! file_exists(ROOT . 'pk-plugins')) @mkdir(ROOT . 'pk-plugins');
+                if ( ! file_exists(ROOT . 'appfiles/listener/plugins.poki')) @file_put_contents(ROOT . 'appfiles/listener/plugins.poki', '[]');
                 
-                if (file_exists(ROOT . 'pk-plugins') && file_exists(ROOT . 'pk-plugins'))
+                if (file_exists(ROOT . 'pk-plugins') && file_exists(ROOT . 'appfiles/temp') && file_exists(ROOT . 'appfiles/temp') && file_exists(ROOT . 'appfiles/listener/plugins.poki'))
                 {
                     if ($zgot)
                     {

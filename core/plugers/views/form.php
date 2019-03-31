@@ -18,7 +18,7 @@
 
                 <?php if (in_array($line->type, ['text', 'email', 'date', 'number', 'file'])): ?>
                     <!--  -->
-                    <input type="<?= $line->type ?>" name="<?= $k . (isset($line->multiple) && $line->multiple ? '[]':'') ?>" id="<?= isset($line->id) ? $line->id:'' ?>" value="<?= isset($line->value) ? $line->value:'' ?>" <?= isset($line->multiple) && $line->multiple ? 'multiple':'' ?> class="form-control">
+                    <input type="<?= $line->type ?>" name="<?= $k . (isset($line->multiple) && $line->multiple ? '[]':'') ?>" id="<?= isset($line->id) ? $line->id:'' ?>" value="<?= isset($line->value) ? $line->value:'' ?>" <?= isset($line->multiple) && $line->multiple ? 'multiple':'' ?> placeholder="<?= isset($line->placeholder) ? $line->placeholder:'' ?>" class="form-control">
                     <!--  -->
                 <?php elseif ($line->type == 'checkbox'): ?>
                     <!--  --> 
@@ -46,7 +46,7 @@
                     <!--  -->
                 <?php elseif ($line->type == 'wysiwyg'): ?>
                     <!--  -->
-                    <div class="summernote">Something</div>
+                    <div class="summernote"></div>
                     <!--  -->
                 <?php else: ?>
                     <!--  -->

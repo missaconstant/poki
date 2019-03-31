@@ -60,4 +60,12 @@
             include self::getViewHTML('alert');
         }
 
+        public static function highlight($options)
+        {
+            $language  = $options['lang'];
+            $code      = $options['content'];
+
+            include self::getViewHTML('highlight');
+        }
+
     }

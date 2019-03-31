@@ -12,6 +12,7 @@
     <link href="<?= THEME ?>assets/css/icons.css" rel="stylesheet" type="text/css">
     <link href="<?= THEME ?>assets/css/style.css" rel="stylesheet" type="text/css">
     <link href="<?= THEME ?>assets/plugins/select2/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="<?= THEME ?>assets/plugins/prism/prism.css" rel="stylesheet" type="text/css">
     <link href="<?= Files::style('main') ?>" rel="stylesheet" type="text/css">
     <link href="<?= Files::style('fakeload.plugin') ?>" rel="stylesheet" type="text/css">
     <link href="<?= Files::style('jquery.confirm.min') ?>" rel="stylesheet" type="text/css">

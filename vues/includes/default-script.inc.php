@@ -14,6 +14,7 @@
 <script src="<?= THEME ?>assets/js/jquery.nicescroll.js"></script>
 <script src="<?= THEME ?>assets/js/jquery.scrollTo.min.js"></script>
 <script src="<?= THEME ?>assets/plugins/select2/select2.min.js"></script>
+<script src="<?= THEME ?>assets/plugins/prism/prism.js"></script>
 
 <!-- App js -->
 <script src="<?= Files::script('fakeload.plugin') ?>"></script>
