@@ -44,8 +44,14 @@
 
 		public function loadPlugins($plugid=false)
 		{
-			$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
-			return $plugid ? $plugins[$plugid] : $plugins;
+			if (file_exists(ROOT . 'appfiles/listener/plugins.poki'))
+			{
+				$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
+				return $plugid ? $plugins[$plugid] : $plugins;
+			}
+			else {
+				return [];
+			}
 		}
 
 		public function getParmas()
