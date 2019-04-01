@@ -205,8 +205,16 @@
                 {
                     $plg_id  = $action;
                     $plg_act = $content;
+                    $get_val = [];
+                    $i       = 3;
                     
-                    $resonse = (object) $this->loadController('listener')->plugin($plg_id, $plg_act, Posts::get(), Posts::post());
+                    while (Posts::get([$i]))
+                    {
+                        $get_val[] = Posts::get($i);
+                        $i++;
+                    }
+                    
+                    $resonse = (object) $this->loadController('listener')->plugin($plg_id, $plg_act, $get_val, Posts::post());
                     
                     if ($resonse->error)
                     {
