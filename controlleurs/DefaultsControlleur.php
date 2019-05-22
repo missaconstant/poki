@@ -1,4 +1,6 @@
 <?php
+
+    namespace Poki;
 	
 	class DefaultsControlleur extends controlleur
 	{

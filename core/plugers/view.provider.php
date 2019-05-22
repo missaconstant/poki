@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class ViewProvider extends controlleur
     {
 

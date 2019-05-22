@@ -1,4 +1,7 @@
 <?php
+
+	namespace Poki;
+	
 	/**
 	* classe Files permettra de gerer les appels sur les fichiers
 	*/

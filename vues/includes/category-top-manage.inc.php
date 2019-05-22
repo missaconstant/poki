@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <div class="row category-top-manage" style="display:<?= $category_fields && count($category_fields) ? 'auto':'none' ?>">
     <!-- Column -->
     <div class="col-md-6 col-lg-6 col-xl-4">

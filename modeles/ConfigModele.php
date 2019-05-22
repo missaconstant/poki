@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class ConfigModele extends modele
     {
         public function createUserTable($username, $password)
@@ -19,7 +21,7 @@
                 $q = modele::$bd->query($sql);
                 $q->closeCursor();
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 $done = false;
             }
 
@@ -29,7 +31,7 @@
                 $q = modele::$bd->query($sql);
                 $q->closeCursor();
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 $done = false;
             }
 
@@ -91,7 +93,7 @@
                 $q2 = modele::$bd->query($sql2);
                 $q2->closeCursor();
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 $done = false;
             }
 
@@ -112,7 +114,7 @@
                 $sql8 = "INSERT INTO adm_app_default(title, content, active, added_at) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
                 $q8 = modele::$bd->exec($sql8);
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 $done = false;
                 die($e->getMessage());
             }
@@ -130,7 +132,7 @@
                 $q->closeCursor();
                 return count($r);
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }

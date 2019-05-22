@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
 	/**
 	*  Le modele principal !
 	*/
@@ -9,8 +11,8 @@
 
 		public function __construct(){
 			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION ;
-				modele::$bd = new PDO(Config::$db_type . ':dbname=' . Config::$db_name . '; host=' . Config::$db_host, Config::$db_user, Config::$db_password, $pdo_options) ;
+				$pdo_options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION ;
+				modele::$bd = new \PDO(Config::$db_type . ':dbname=' . Config::$db_name . '; host=' . Config::$db_host, Config::$db_user, Config::$db_password, $pdo_options) ;
 				modele::$bd->exec("set names utf8");
 			} 
 			catch(Exception $e){
@@ -47,7 +49,7 @@
 					return $results[0] ;
 				else
 					return false ;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				die('Erreur tryLogin : '.$e->getMessage()) ;
 			}
 		}
@@ -73,7 +75,7 @@
 					return false;
 				}
 			}
-			catch(Exception $e){
+			catch(\Exception $e){
 				die($e->getMessage()) ;
 			}
 		}

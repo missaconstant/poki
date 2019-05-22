@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class FileControlleur extends controlleur {
 
         public function __construct()

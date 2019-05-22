@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class Config {
 
         public static $db_user = "root";

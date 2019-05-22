@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     /**
      * @class ApiControlleur
      * @extends controlleur

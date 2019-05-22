@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
             <!-- ========== Left Sidebar Start ========== -->
             <div class="left side-menu">
                 <button type="button" class="button-menu-mobile button-menu-mobile-topbar open-left waves-effect">

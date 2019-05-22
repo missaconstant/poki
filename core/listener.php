@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
 	abstract class Listener {
 
 		abstract public static function onCreate($params);

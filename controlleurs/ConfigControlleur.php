@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class ConfigControlleur extends controlleur
     {
 
@@ -44,10 +46,10 @@
         public function connectDatabase($dbhost, $dbname, $user, $pass)
         {
             try {
-                $db = new PDO("mysql:host=$dbhost; dbname=$dbname", $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+                $db = new \PDO("mysql:host=$dbhost; dbname=$dbname", $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
                 return $db;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -123,6 +125,7 @@
         public function setConfigs($dbhost, $dbname, $user, $pass, $appfolder)
         {
             $config = "<?php
+                \n\n\tnamespace Poki;
                 \n\n\t\$dbuser = \"$user\";
                 \n\n\t\$dbhost = \"$dbhost\";
                 \n\n\t\$dbpass = \"$pass\";

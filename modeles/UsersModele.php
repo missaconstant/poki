@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class UsersModele extends modele
     {
         public function creerUser($user)
@@ -15,7 +17,7 @@
                 $q->closeCursor();
                 return modele::$bd->lastInsertId();
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -36,7 +38,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 // echo json_encode(["error" => true, "message" => $e->getMessage()]); exit();
                 return false;
             }
@@ -50,7 +52,7 @@
                 $q->closeCursor();
                 return count($r) ? (object) $r[0] : false;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -65,11 +67,11 @@
         {
             try {
                 $q = modele::$bd->query("SELECT adm_users.id, adm_users.name, adm_users.email, adm_users.password, adm_users.active, adm_users.role as roleid, adm_roles.role FROM adm_users, adm_roles WHERE adm_roles.id=adm_users.role");
-                $r = $q->fetchAll(PDO::FETCH_OBJ);
+                $r = $q->fetchAll(\PDO::FETCH_OBJ);
                 $q->closeCursor();
                 return $r;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -80,7 +82,7 @@
                 $q = modele::$bd->exec("UPDATE adm_users SET active='$newstate' WHERE md5(id)='$id'");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -91,7 +93,7 @@
                 $q = modele::$bd->exec("DELETE FROM adm_users WHERE md5(id)='$id'");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -100,11 +102,11 @@
         {
             try {
                 $q = modele::$bd->query('SELECT * FROM adm_roles');
-                $r = $q->fetchAll(PDO::FETCH_OBJ);
+                $r = $q->fetchAll(\PDO::FETCH_OBJ);
                 $q->closeCursor();
                 return $r;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }

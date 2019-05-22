@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <?php include INCLUDES . 'modal-add-category.inc.php' ?>
 <!-- auto search route -->
 <script>var baseroute = '<?= Routes::find("base-route") ?>';</script>

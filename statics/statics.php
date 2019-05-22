@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     function statics()
     {
         return [

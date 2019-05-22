@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class CategoriesModele extends modele
     {
 
@@ -7,7 +9,7 @@
         {
             $dbname = Config::$db_name;
             $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app'");
-            $r = $q->fetchAll(PDO::FETCH_ASSOC);
+            $r = $q->fetchAll(\PDO::FETCH_ASSOC);
             $q->closeCursor();
             return $r;
         }
@@ -26,7 +28,7 @@
         {
             $dbname = Config::$db_name;
             $q = modele::$bd->query("SELECT table_name as tab_name, column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema='$dbname' AND TABLE_NAME REGEXP '^adm_app' AND column_name!='active' AND column_name!='added_at'");
-            $r = $q->fetchAll(PDO::FETCH_ASSOC);
+            $r = $q->fetchAll(\PDO::FETCH_ASSOC);
             $q->closeCursor();
             return $r;
         }
@@ -46,7 +48,7 @@
 
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -60,7 +62,7 @@
                 $q1 = modele::$bd->exec("UPDATE adm_api_access SET category='" . $category->name ."' WHERE category='". $category->oldname ."'");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -71,7 +73,7 @@
                 $q = modele::$bd->exec("DROP TABLE $name");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -97,7 +99,7 @@
                 }
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 //return false;
                 exit(json_encode(["error" => true, "message" => $e->getMessage()]));
             }
@@ -114,7 +116,7 @@
                 $q = modele::$bd->query("ALTER TABLE $category CHANGE $oldname $fieldname $fieldtype $fieldlength");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -125,7 +127,7 @@
                 $q = modele::$bd->exec("ALTER TABLE adm_app_$category DROP $fieldname");
                 return $q;
             }
-            catch(Exception $e) {
+            catch(\Exception $e) {
                 return false;
             }
         }

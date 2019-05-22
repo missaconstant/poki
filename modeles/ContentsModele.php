@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class ContentsModele extends modele
     {
         public function creerContent($content, $categoryname, $edition=false)
@@ -22,7 +24,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -43,7 +45,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -69,11 +71,11 @@
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
-                $r = $q->fetchAll(PDO::FETCH_ASSOC);
+                $r = $q->fetchAll(\PDO::FETCH_ASSOC);
                 $q->closeCursor();
                 return $r;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -95,12 +97,12 @@
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
-                $r = $q->fetchAll(PDO::FETCH_ASSOC);
+                $r = $q->fetchAll(\PDO::FETCH_ASSOC);
                 $q->closeCursor();
 
                 return count($r) ? $r[0]:false;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 echo json_encode([$e->getMessage()]); exit();
             }
         }
@@ -115,7 +117,7 @@
                 $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$contentid'");
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -128,7 +130,7 @@
                 $q->closeCursor();
                 return $r[0]['els_count'];
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -156,11 +158,11 @@
                 $c_name = 'adm_app_' . $name;
                 $norestrictstring = $norestrict ? " AND column_name!='id' AND column_name!='active' AND column_name!='added_at'" : '';
                 $q = modele::$bd->query("SELECT column_name as name FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' $norestrictstring");
-                $r = $q->fetchAll(PDO::FETCH_COLUMN);
+                $r = $q->fetchAll(\PDO::FETCH_COLUMN);
                 $q->closeCursor();
                 return count($r) ? $r : false;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 // exit(json_encode([$e->getMessage()]));
             }
         }
@@ -186,10 +188,10 @@
                     "limit" => $limit ? $limit : false,
                 ], $count);
                 $q = modele::$bd->query($query);
-                $r = $q->fetchAll(PDO::FETCH_ASSOC);
+                $r = $q->fetchAll(\PDO::FETCH_ASSOC);
                 $q->closeCursor();
                 return $r;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 echo json_encode(["error" => true, "message" => $e->getMessage()]);
             }
         }

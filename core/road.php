@@ -1,5 +1,7 @@
 <?php
 
+namespace Poki;
+
 /**
  * Decompose l'url pour en extraire les informations de route: controlleur, action, variables globales éventuelles
  */
@@ -17,7 +19,7 @@ class Road
 		// check for controlleur exists
 		if ($this->findControlleur($controlleur)) {
 			include_once ROOT.'controlleurs/'.ucfirst($controlleur).'Controlleur.php';
-			$ctrl = ucfirst($controlleur).'Controlleur';
+			$ctrl = "Poki\\" . ucfirst($controlleur).'Controlleur';
 			$ctrl = new $ctrl();
 			if (method_exists($ctrl, $action)) {
 				$ctrl->$action();
@@ -28,7 +30,7 @@ class Road
 					$ctrl->$action();
 				}
 				else {
-					throw new Exception("Action Introuvable !", 1);
+					throw new \Exception("Action Introuvable !", 1);
 				}
 				
 			}
@@ -36,13 +38,13 @@ class Road
 		else {
 			if ($this->findControlleur('defaults')) {
 				include_once ROOT.'controlleurs/DefaultsControlleur.php';
-				$ctrl = new DefaultsControlleur();
+				$ctrl = new \Poki\DefaultsControlleur();
 				$action = $this->parseActionSeparator($controlleur);
 				if (method_exists($ctrl, $action)) {
 					$ctrl->$action();
 				}
 				else {
-					throw new Exception("Controlleur Introuvable", 1);
+					throw new \Exception("Controlleur Introuvable", 1);
 				}
 			}
 			else {

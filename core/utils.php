@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
 	/**
 	* Some tools to help developpers for some actions
 	* Why not a dm(do_more) tool ???

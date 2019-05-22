@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

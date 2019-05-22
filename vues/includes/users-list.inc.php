@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <div class="col-md-12 col-lg-12 col-xl-12 align-self-center">
     <div class="card bg-white m-b-30">
         <div class="card-body new-user">

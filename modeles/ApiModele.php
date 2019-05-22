@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class ApiModele extends modele
     {
         public function creerApi($categoryname)
@@ -14,7 +16,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -30,7 +32,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -47,7 +49,7 @@
                 $q->closeCursor();
                 return $newapikey;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -62,7 +64,7 @@
                 $q->closeCursor();
                 return true;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }
@@ -75,7 +77,7 @@
                 $q->closeCursor();
                 return count($r) ? (object) $r[0] : false;
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return false;
             }
         }

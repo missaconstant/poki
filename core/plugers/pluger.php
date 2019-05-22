@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class Pluger extends controlleur
     {
 

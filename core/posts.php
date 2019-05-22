@@ -1,5 +1,7 @@
 <?php
 
+	namespace Poki;
+
 	/**
 	* Le gerant des posts
 	*/

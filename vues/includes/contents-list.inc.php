@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <?php $categoryOfficialFields = []; ?>
 
 <input type="hidden" id="categoryname" value="<?= $category_name ?>">

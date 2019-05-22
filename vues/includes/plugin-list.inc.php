@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <div class="col-12 m-b-30">
     <div class="card">
         <div class="card-body">

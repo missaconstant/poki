@@ -1,3 +1,5 @@
+<?php namespace Poki; ?>
+
 <div class="modal fade" id="addcategorymodal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
     <div class="modal-dialog  pulse  animated" role="document">
         <div class="modal-content">

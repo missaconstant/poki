@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class CategoriesControlleur extends controlleur
     {
         private $usr;

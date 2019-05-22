@@ -1,5 +1,7 @@
 <?php
 
+    namespace Poki;
+
     class PluginsControlleur extends controlleur
     {
         private $cfg;
