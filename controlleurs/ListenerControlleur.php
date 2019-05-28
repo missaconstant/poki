@@ -25,7 +25,7 @@
 				if (in_array($event, $params['listener']['handle'])) {
 					require_once ROOT .'pk-plugins/'. $plugin .'/listeners/'. $params['listener']['name'] .'.php';
 
-					$class = ucfirst(str_replace('pk-', '', $params['listener']['name']));
+					$class = 'Poki\\' . ucfirst(str_replace('pk-', '', $params['listener']['name']));
 					$evt   = 'on' . ucfirst($event);
 					$class::$evt($datas);
 				}
@@ -122,8 +122,12 @@
 					"app_files_path"    => ROOT . 'appfiles/fields_files',
 					"plugin_base_url"   => Routes::find('plugins') .'/'. $plugid,
 					"plugin_base_path"  => ROOT . 'pk-plugins/' . $plugid,
+					"plugin_base_web"  	=> WROOT . 'pk-plugins/' . $plugid,
 					// variables from action
-					"vars"              => (object) $varbs
+					"vars"              => (object) $varbs,
+					// styles and scripts
+					"styles"			=> $plugin['styles'] ?? [],
+					"scripts"			=> $plugin['scripts'] ?? []
 				]);
 			}
 		}

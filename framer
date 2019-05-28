@@ -1,6 +1,7 @@
 #!/usr/bin/php
-
 <?php
+
+	namespace Poki;
 
 	if (strtolower(php_sapi_name()) != 'cli') exit();
 

@@ -42,6 +42,7 @@
 
                 </div> <!-- content -->
 
+                <?php include INCLUDES . 'plugin.generate.modal.inc.php' ?>
                 <?php include INCLUDES . 'footer.inc.php' ?>
 
             </div>

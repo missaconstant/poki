@@ -93,7 +93,7 @@
 
             if ( ! $file['error'])
             {
-                $zip  = new ZipArchive();
+                $zip  = new \ZipArchive();
                 $zgot = $zip->open($file['tmp_name']);
                 $temp = md5($file['tmp_name']);
                 $tdir = ROOT . 'appfiles/temp/' . $temp;
@@ -119,31 +119,115 @@
                                 }
                                 else
                                 {
-                                    $this->tell("An error occured while installation. Please try again.");
+                                    $this->tell_error("An error occured while installation. Please try again.");
                                 }
                             }
                             else
                             {
-                                $this->tell("Bad plugin zip file.");
+                                $this->tell_error("Bad plugin zip file.");
                             }
 
                             $this->delDir($tdir);
                         }
                         else
                         {
-                            $this->tell("An error occured while installation. Please try again.");
+                            $this->tell_error("An error occured while installation. Please try again.");
                         }
                         
                         $zip->close();
                     }
                 }
                 else {
-                    $this->tell("Permission error. Can't add plugins.");
+                    $this->tell_error("Permission error. Can't add plugins.");
                 }
             }
             else
             {
-                $this->tell("The zip file contains errors.");
+                $this->tell_error("The zip file contains errors.");
+            }
+        }
+
+        public function generate()
+        {
+            $name        = Posts::post('pg_name');
+            $label       = Posts::post('pg_lb_name');
+            $author      = Posts::post('pg_author');
+            $licence     = Posts::post('pg_licence');
+            $description = Posts::post('pg_description');
+
+            if ( ! strlen($name) || ! strlen($label) || ! strlen($author) || ! strlen($licence) || ! strlen($description) )
+            {
+                $this->tell_error("Veiller à remplir correctement les champs.");
+            }
+            else {
+                $package = [
+                    "name"          => $name,
+                    "label_name"    => $label,
+                    "version"       => "1.0",
+                    "licence"       => $licence,
+                    "description"   => $description,
+                    "listener"      => [ "name" => "pk-mylistener", "handle" => [ "create", "update", "delete" ] ],
+                    "menulinks"     => [
+                        "hello"     => [ "link" => "Hello", "action" => "/hello", "view" => "hello" ],
+                        "about"     => [ "link" => "About", "action" => "/about", "view" => "about" ]
+                    ],
+                    "styles"        => [],
+                    "scripts"       => [],
+                    "handlers"      => [ "actions" ],
+                    "door"          => "start",
+                    "apidoor"       => "apistart",
+                    "active"        => 0
+                ];
+
+                // creating tmp folder if doesn't exists
+                if ( ! file_exists(ROOT . 'appfiles/temp') ) @mkdir(ROOT . 'appfiles/temp');
+
+                // creating new plugin folder
+                if ( ! file_exists(ROOT . 'appfiles/temp/' . $name) )
+                {
+                    @mkdir(ROOT . 'appfiles/temp/' . $name, 0777);
+                }
+                else {
+                    @$this->delDir(ROOT . 'appfiles/temp/' . $name);
+                    @mkdir(ROOT . 'appfiles/temp/' . $name, 0777);
+                }
+
+                // creating under folders
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/listeners', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/views', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/views/includes', 0777);
+
+                // creating files
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/listeners/pk-mylistener.php', Generator::listenerFile() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/views/hello.view.php', Generator::helloView() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/views/about.view.php', Generator::aboutView() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/start.php', Generator::startFile() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/apistart.php', Generator::apiStartFile() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/package.poki', json_encode($package) );
+
+                $zipper = new FlxZipArchive();
+                $bname  = ROOT . 'appfiles/temp/' . $name;
+                $res = $zipper->open( $bname . '.zip', \ZipArchive::CREATE );
+
+                if ( $res === TRUE )
+                {
+                    $dir = @opendir( $bname . '/' );
+
+                    while ($file = readdir( $dir ))
+                    {
+                        if ($file == '..' || $file == '.') continue;
+                        $zipper->{ filetype( $bname .'/'. $file ) == 'dir' ? 'addDir' : 'addFile' }( $bname .'/'.$file, $file );
+                    }
+
+                    closedir($dir);
+                    $zipper->close();
+
+                    exit( $this->json_success("Done !", [ "link" => WROOT . 'appfiles/temp/'. $name .'.zip', "newtoken" => Posts::getCSRFTokenValue() ]) );
+                }
+                else {
+                    $this->delDir( $bname );
+                    $this->tell_error( "Cannot create the plugin !" );
+                }
             }
         }
 

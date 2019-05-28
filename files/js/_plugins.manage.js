@@ -78,4 +78,27 @@ $(function () {
         }
     });
 
+    $('.generatebtn').on('click', function () {
+        $('#plugin_generate_modal').modal('show');
+    });
+
+    $('#generation_form').on('submit', function() {
+        loader.show();
+
+        postize( baseroute + '/plugins/generate', 'post', $(this).serialize(), function (response) {
+            loader.hide();
+            alerter.success(response.message);
+
+            $('#plugin_generate_modal').modal('hide');
+            $('#generation_form')[0].reset();
+
+            var a = document.createElement('a');
+                a.href = response.link;
+                a.click();
+        },
+        function (err) {
+            alerter.error(err.message);
+        } );
+    });
+
 });
