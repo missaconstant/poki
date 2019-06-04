@@ -134,7 +134,7 @@
                 \n\n\t\$fields_files_webpath = WROOT . substr(\$appfolder, 1, strlen(\$appfolder)) . \"/appfiles/fields_files/\";
             ";
             
-            return file_put_contents(ROOT . 'statics/config.php', $config);
+            return file_put_contents(ROOT . 'statics/config.php', $config) && file_put_contents(ROOT . 'appfiles/listener/plugins.poki', "[]");
         }
 
         /**

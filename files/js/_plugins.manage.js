@@ -14,13 +14,13 @@ $(function () {
         }, true);
     });
 
-    $('.delete-plugin').on('click', function (e) {
+    $('.delete-plugin, .update-plugin').on('click', function (e) {
         e.preventDefault();
 
-        var self = this;
+        var self = this, action = this.classList.contains('delete-plugin') ? 'delete' : 'update';
 
         warningAction(function () {
-            postize(baseroute + '/plugins/delete/' + self.parentNode.id, 'get', false, function (datas) {
+            postize(baseroute + '/plugins/'+ action +'/' + self.parentNode.id, 'get', false, function (datas) {
                 alerter.success(datas.message);
                 setTimeout(function () { window.location.href = '/listener/list' }, 1500);
             },

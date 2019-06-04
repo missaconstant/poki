@@ -33,6 +33,7 @@
                         <p class="mb-0 text-muted"><?= $plugin['description'] ?></p>
                         <div class="buttons m-t-10" id="pkpg-<?= $k ?>">
                             <button class="btn btn-sm btn-outline-danger pull-right delete-plugin" style="border-radius:20px;"><i class="mdi mdi-delete"></i></button>
+                            <button class="btn btn-sm btn-outline-primary pull-right update-plugin mr-1" title="Update the plugin" style="border-radius:20px;"><i class="mdi mdi-reload"></i></button>
                             <button class="btn btn-sm btn-outline-info toggle-plugin" style="border-radius:20px;"><?= $plugin['active']==1 ? 'Deactive' : 'Active' ?> this</button>
                         </div>
                     </div>

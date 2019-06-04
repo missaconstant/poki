@@ -17,7 +17,12 @@
 		{
 			$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
 			return $plugid ? (isset($plugins[$plugid]) ? $plugins[$plugid] : false) : $plugins;
-		}
+        }
+        
+        private function loadDevPlugin($plugid)
+        {
+            return json_decode(file_get_contents(ROOT . 'pk-plugins/'. $plugid .'/package.poki'), true);
+        }
 
         public function listPlugins()
         {
@@ -41,7 +46,7 @@
             {
                 $plugins[$plugid]['active'] = $plugins[$plugid]['active'] == 1 ? 0 : 1;
 
-                if (file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins)))
+                if (file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins, JSON_PRETTY_PRINT)))
                 {
                     $this->json_success("Plugin " . ($plugins[$plugid]['active']==1 ? "enabled" : "disabled"));
                     exit();
@@ -67,7 +72,7 @@
             {
                 unset($plugins[$plugid]);
 
-                if (file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins)))
+                if (file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins, JSON_PRETTY_PRINT)))
                 {
                     $this->delDir(ROOT . 'pk-plugins/' . $plugid);
 
@@ -147,6 +152,29 @@
             }
         }
 
+        public function update()
+        {
+            $plugid  = str_replace('pkpg-', '', Posts::get(0));
+            $plugins = $this->loadPlugins();
+            $package = $this->loadDevPlugin( $plugid );
+
+            $this->checkPluginArchive( $plugid, $package, ROOT . 'pk-plugins/' . $plugid, false );
+
+            if ( $app = $plugins[ $plugid ] )
+            {
+                $package['active']  = $app['active'];
+                $plugins[ $plugid ] = $package;
+                
+                if ( file_put_contents( ROOT . 'appfiles/listener/plugins.poki', json_encode( $plugins, JSON_PRETTY_PRINT ) ) )
+                    $this->json_success("Plugin correctly updated !");
+                else
+                    $this->tell_error("Update failed !");
+            }
+            else {
+                $this->tell_error("No normal !");
+            }
+        }
+
         public function generate()
         {
             $name        = Posts::post('pg_name');
@@ -203,7 +231,7 @@
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/views/about.view.php', Generator::aboutView() );
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/start.php', Generator::startFile() );
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/apistart.php', Generator::apiStartFile() );
-                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/package.poki', json_encode($package) );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/package.poki', json_encode($package, JSON_PRETTY_PRINT) );
 
                 $zipper = new FlxZipArchive();
                 $bname  = ROOT . 'appfiles/temp/' . $name;
@@ -243,10 +271,10 @@
             return rmdir($dir); 
         } 
 
-        private function checkPluginArchive($id, $json_package, $tdir)
+        private function checkPluginArchive($id, $json_package, $tdir, $firstinstall=true)
         {
             // parsing package file
-            $package = json_decode($json_package, true);
+            $package = ! is_array($json_package) ? json_decode($json_package, true) : $json_package;
 
             // checking fields
             if (
@@ -255,7 +283,7 @@
                 !$this->notEmpty($package['door'])
             ) {
                 $this->tell_error("Plugin package file not complete !");
-                $this->delDir($tdir);
+                if ($firstinstall) $this->delDir($tdir);
                 exit();
             }
 
@@ -263,35 +291,38 @@
             if ( ! file_exists($tdir . '/' . $package['door'] . '.php') && ! file_exists($tdir . '/' . $package['door']))
             {
                 $this->tell_error("Plugin door not found !");
-                $this->delDir($tdir);
+                if ($firstinstall) $this->delDir($tdir);
                 exit();
             }
 
             // getting plugins list for saving
-            if ($plugins = file_get_contents(ROOT . 'appfiles/listener/plugins.poki'))
+            if ( $firstinstall )
             {
-                // parsing plugins list
-                $plugins = json_decode($plugins, true);
+                if ($plugins = file_get_contents(ROOT . 'appfiles/listener/plugins.poki'))
+                {
+                    // parsing plugins list
+                    $plugins = json_decode($plugins, true);
 
-                // deactiving the package to let the user active
-                $package['active'] = 0;
+                    // deactiving the package to let the user active
+                    $package['active'] = 0;
 
-                // put package in plugins list
-                $plugins[$id] = $package;
+                    // put package in plugins list
+                    $plugins[$id] = $package;
 
-                // save updated list
-                if ( ! file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins)))
+                    // save updated list
+                    if ( ! file_put_contents(ROOT . 'appfiles/listener/plugins.poki', json_encode($plugins, JSON_PRETTY_PRINT)))
+                    {
+                        $this->tell_error("An error occured. Please try again.");
+                        if ($firstinstall) $this->delDir($tdir);
+                        exit();
+                    }
+                }
+                else
                 {
                     $this->tell_error("An error occured. Please try again.");
-                    $this->delDir($tdir);
+                    if ($firstinstall) $this->delDir($tdir);
                     exit();
                 }
-            }
-            else
-            {
-                $this->tell_error("An error occured. Please try again.");
-                $this->delDir($tdir);
-                exit();
             }
         }
 

@@ -6,9 +6,9 @@
 
         public static $db_user = "root";
 
-        public static $db_password = "root";
+        public static $db_password = "";
 
-        public static $db_name = "showmedb";
+        public static $db_name = "";
 
         public static $db_host = "localhost";
 
