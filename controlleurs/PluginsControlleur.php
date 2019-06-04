@@ -185,7 +185,7 @@
 
             if ( ! strlen($name) || ! strlen($label) || ! strlen($author) || ! strlen($licence) || ! strlen($description) )
             {
-                $this->tell_error("Veiller à remplir correctement les champs.");
+                $this->tell_error("You have to fill correctly all fields !");
             }
             else {
                 $package = [
