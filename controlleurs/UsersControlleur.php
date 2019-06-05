@@ -59,7 +59,8 @@
                 "admin" => $admin,
 				"pagetitle" => "Users",
                 "categories" => $this->loadController('categories')->list(),
-                "users" => $this->loadModele()->findAll()
+                "users" => $this->loadModele()->findAll(),
+				"pluglist" => $this->loadController('listener')->loadPlugins()
             ]);
         }
 
@@ -71,7 +72,8 @@
                 "admin" => $admin,
 				"pagetitle" => "Create new user",
                 "categories" => $this->loadController('categories')->list(),
-                "roles" => $this->loadModele()->trouverTousRoles()
+                "roles" => $this->loadModele()->trouverTousRoles(),
+				"pluglist" => $this->loadController('listener')->loadPlugins()
             ]);
         }
 
@@ -86,7 +88,8 @@
                     "pagetitle" => "Create new user",
                     "categories" => $this->loadController('categories')->list(),
                     "roles" => $this->loadModele()->trouverTousRoles(),
-                    "user" => $user
+                    "user" => $user,
+                    "pluglist" => $this->loadController('listener')->loadPlugins()
                 ]);
             }
             else {
@@ -101,7 +104,8 @@
             $this->render('app/account', [
                 "admin" => $admin,
 				"pagetitle" => "Account settings",
-                "categories" => $this->loadController('categories')->list()
+                "categories" => $this->loadController('categories')->list(),
+				"pluglist" => $this->loadController('listener')->loadPlugins()
             ]);
         }
 

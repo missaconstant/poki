@@ -116,7 +116,7 @@
                     # get all | get
                     $this->apiSurvey($category, 'get', $apikey);
                     $contents = $this->loadModele('contents')->trouverTousContents($category, true);
-                    if ($contents && count($content))
+                    if ($contents && @count($content))
                     {
                         $this->json_answer(["error" => 0, "contents" => $contents]);
                         exit();

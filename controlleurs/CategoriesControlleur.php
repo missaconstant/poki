@@ -115,7 +115,8 @@
                     "category_fields" => $categorie,
                     "all_category_fileds" => $allfields,
                     "apitypes" => explode(',', $apitypes->content),
-                    "api" => $category_api
+                    "api" => $category_api,
+                    "pluglist" => $this->loadController('listener')->loadPlugins()
                 ]);
             }
         }
@@ -233,7 +234,8 @@
                     "categories" => $this->list(),
                     "category_name" => $name,
                     "category_fields" => $categorie,
-                    "content" => $content
+                    "content" => $content,
+                    "pluglist" => $this->loadController('listener')->loadPlugins()
                 ]);
             }
         }
@@ -275,7 +277,8 @@
                     "maxcontentperpage" => $contentMax,
                     "actualcontentspage" => Posts::get([1]) ? Posts::get(1) : 1,
                     "issearch" => $search,
-                    "contents" => $contents
+                    "contents" => $contents,
+                    "pluglist" => $this->loadController('listener')->loadPlugins()
                 ]);
             }
         }

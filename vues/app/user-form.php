@@ -40,11 +40,11 @@
                                             <form action="<?= Routes::find('users-add-act') ?>" id="newuser" method="post">
                                                 <div class="form-group">
                                                     <label>Name</label>
-                                                    <input type="text" class="form-control" name="name" placeholder="User name" value="<?= Helpers::eie($user,'name') ?>">
+                                                    <input type="text" class="form-control" name="name" placeholder="User name" value="<?= isset($user) ? Helpers::eie($user,'name'):'' ?>">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input type="text" class="form-control" name="email" placeholder="User email" value="<?= Helpers::eie($user,'email') ?>">
+                                                    <input type="text" class="form-control" name="email" placeholder="User email" value="<?= isset($user) ? Helpers::eie($user,'email'):'' ?>">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Password</label>
@@ -55,7 +55,7 @@
                                                     <select name="role" id="" class="form-control">
                                                         <option value="0" selected>Give role to user</option>
                                                         <?php foreach ($roles as $k => $role): ?>
-                                                            <option value="<?= $role->id ?>" <?= Helpers::eie($user,'roleid')==$role->id ? 'selected':'' ?>><?= $role->role ?></option>
+                                                            <option value="<?= $role->id ?>" <?= isset($user) && Helpers::eie($user,'roleid')==$role->id ? 'selected':'' ?>><?= $role->role ?></option>
                                                         <?php endforeach ?>
                                                     </select>
                                                 </div>
