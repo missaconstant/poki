@@ -116,8 +116,8 @@
             }
 
             function addNewFields(fields) {
-                var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary", "date": "warning"};
-                var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field", "date": "Date field"};
+                var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary", "date": "warning", "tinytext": "default"};
+                var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field", "date": "Date field", "tinytext": "Multiple field"};
 
                 for (var field in fields) {
                     var line = '<tr id="field_'+ ($('.category-fields-table tbody tr').length+1) +'">' +
@@ -158,8 +158,8 @@
             }
 
             function editField(name, type) {
-                var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary", "date": "warning"};
-                var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field", "date": "Date field"};
+                var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary", "date": "warning", "tinytext": "default"};
+                var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field", "date": "Date field", "tinytext": "Multiple field"};
                 $editline.find('.field_name').text(name);
                 $editline.find('.field_type').html('<span class="p-2 bagde badge-pill badge-'+ vars[type] +'">'+ types[type] +'</span>');
             }

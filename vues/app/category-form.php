@@ -178,6 +178,7 @@
                 });
 
                 $('.linkchoose').select2();
+                // $('.linkchoose_m').select2();
             });
 
             function setLoading(where) {
@@ -209,6 +210,11 @@
             }
 
             function bindSelectChange(field, value) {
+                $('#' + field).val(value);
+            }
+
+            function bindMultipleSelectChange(field, el) {
+                var value = $(el).select2("val").join(';');
                 $('#' + field).val(value);
             }
         </script>

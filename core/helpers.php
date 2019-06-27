@@ -9,11 +9,12 @@
          * Corresponding types
          */
         public static $types = [
-            "varchar" => "Alphanumeric",
-            "int" => "Numeric",
-            "text" => "Text field",
-            "char" => "File field",
-            "date" => "Date field"
+            "varchar"   => "Alphanumeric",
+            "int"       => "Numeric",
+            "text"      => "Text field",
+            "char"      => "File field",
+            "date"      => "Date field",
+            "tinytext"  => "Multiple field"
         ];
 
         /**
@@ -30,7 +31,7 @@
          */
         public static function getFieldPseudoType($oname, $withbagde=false)
         {
-            $vars = ["varchar" => "info", "int" => "danger", "text" => "success", "char" => "primary", "date" => "warning"];
+            $vars = ["varchar" => "info", "int" => "danger", "text" => "success", "char" => "primary", "date" => "warning", "tinytext" => "default"];
             $rets = $withbagde ? '<span class="p-2 bagde badge-pill badge-'. $vars[$oname] .'">'. self::$types[$oname] .'</span>' : self::$types[$oname];
             return $rets;
         }
@@ -51,12 +52,15 @@
                     case 'int':
                         return '<input type="number" max-length="255" class="form-control" name="'. $name .'" value="'. ($value ? $value:'') .'">';
                         break;
+
                     case 'varchar':
                         return '<input type="text" max-length="255" class="form-control" name="'. $name .'" value="'. ($value ? $value:'') .'">';
                         break;
+
                     case 'date':
                         return '<input type="date" class="form-control" name="'. $name .'" value="'. ($value ? $value:'') .'">';
                         break;
+
                     case 'char':
                         $files = explode('|', $value);
                         $items = [];
@@ -75,6 +79,9 @@
                                 <div class="file-uploaded mt-2">'. implode('', $items) .'</div>
                             ';
                         break;
+                        
+                        break;
+
                     case 'text':
                         return '<textarea class="form-control summerable '. (self::isHtmlContent($value) ? 'summered':'') .'" name="'. $name .'">'. ($value ? $value:'') .'</textarea>';
                         break;
@@ -88,12 +95,21 @@
                 $options = ['<option value="0"></option>'];
                 
                 foreach ($foreigns as $k => $foreign) {
-                    $selected = $value == $foreign['id'] ? 'selected' : '';
-                    $options[] = '<option value="'. $foreign['id'] .'" '. $selected .'>'. $foreign[$linked['label']] .'</option>';
+                    $group      = explode(';', $value);
+                    $selected   = in_array($foreign['id'], $group) ? 'selected' : '';
+                    $options[]  = '<option value="'. $foreign['id'] .'" '. $selected .'>'. $foreign[$linked['label']] .'</option>';
+                }
+
+                if ($type == 'tinytext')
+                {
+                    $field = '<select class="form-control block linkchoose" name="choose1[]" multiple onchange="bindMultipleSelectChange(\''. $field_id .'\', this)" style="width:100%;">'. implode("", $options) .'</select>';
+                    $field.= '<input type="hidden" name="'. $name .'" id="'. $field_id .'" value="'. ($value ? $value:'') .'">';
+                }
+                else {
+                    $field = '<select class="form-control block linkchoose" onchange="bindSelectChange(\''. $field_id .'\', this.value)" style="width:100%;">'. implode("", $options) .'</select>';
+                    $field.= '<input type="hidden" name="'. $name .'" id="'. $field_id .'" value="'. ($value ? $value:'') .'">';
                 }
                 
-                $field = '<select class="form-control block linkchoose" onchange="bindSelectChange(\''. $field_id .'\', this.value)" style="width:100%;">'. implode("", $options) .'</select>';
-                $field.= '<input type="hidden" name="'. $name .'" id="'. $field_id .'" value="'. ($value ? $value:'') .'">';
 
                 return $field;
             }
@@ -111,8 +127,8 @@
             if ($linked = self::isLinked($categoryname, $field)) {
                 require_once ROOT . 'modeles/ContentsModele.php';
 
-                $mdl = new ContentsModele();
-                $foreign = $mdl->trouverContents($linked['linkedto'], $value);
+                $mdl        = new ContentsModele();
+                $foreign    = $mdl->trouverContents($linked['linkedto'], $value);
                 return $foreign ? $foreign[$linked['label']] : '';
             }
             else {

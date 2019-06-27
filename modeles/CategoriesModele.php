@@ -94,7 +94,7 @@
                     $category = 'adm_app_' . $field->category;
                     $fieldname = $field->name;
                     $fieldtype = $field->type;
-                    $fieldlength = $field->type != 'text' && $field->type != 'date' ? '(255)' : '';
+                    $fieldlength = $field->type != 'text' && $field->type != 'date' && $field->type != 'tinytext' ? '(255)' : '';
                     $q = modele::$bd->exec("ALTER TABLE $category ADD $fieldname $fieldtype $fieldlength");
                 }
                 return true;

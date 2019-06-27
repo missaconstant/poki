@@ -50,7 +50,11 @@
                             <?php
                                 foreach ($content as $field => $value):
                                     $value = Helpers::checkLinkedLabel($category_name, $field, $value);
-                                    $value = preg_match("#&lt;(.*)&gt;#", $value) ? 'html content' : (preg_match("#([a-zA-Z0-9_]+[.]{1}[jpg|gif|png|bmp]{2})+#i", $value) ? 'Picture(s)':$value);
+
+                                    $value = preg_match("#&lt;(.*)&gt;#", $value) ? 'html content' : (
+                                                                                        preg_match("#([a-zA-Z0-9_]+[.]{1}[jpg|gif|png|bmp]{2})+#i", $value) ? 'Picture(s)' : $value
+                                                                                    );
+
                                     if (in_array($field, $categoryOfficialFields) && !in_array($field, ['id', 'added_at', 'active'])):
                             ?>
                             <td style="max-width: 130px;">
