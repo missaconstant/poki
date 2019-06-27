@@ -10,8 +10,9 @@
             return ROOT . 'core/plugers/views/' . $viewpath . '.php';
         }
 
-        public static function includeViewHTML($viewpath)
+        public static function includeViewHTML($viewpath, $scopeVars=[])
         {
+            extract($scopeVars);
             include ROOT . 'pk-plugins/'. $GLOBALS['plugid'] .'/views/includes/'. $viewpath .'.php';
         }
 

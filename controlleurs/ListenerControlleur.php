@@ -88,12 +88,13 @@
 			$this->cfg->configSurvey(false);
 			$admin = $this->usr->loginSurvey(false, 'login');
 
-			$plugid = Posts::get(0);
-			$action   = Posts::get(1);
-			$plugin   = $this->loadPlugins($plugid);
-			$name     = $plugin['name'];
-			$l_name   = $plugin['label_name'];
-			$door     = ROOT . 'pk-plugins/' . $plugid . '/' . $plugin['door'] . '.php';
+			$plugid 	= Posts::get(0);
+			$link_key   = Posts::get(1);
+			$plugin   	= $this->loadPlugins($plugid);
+			$name     	= $plugin['name'];
+			$l_name   	= $plugin['label_name'];
+			$m_links  	= $plugin['menulinks'];
+			$door     	= ROOT . 'pk-plugins/' . $plugid . '/' . $plugin['door'] . '.php';
 
 			if ($plugin['active'] == 0) $this->redirTo(Routes::find('home'));
 
@@ -105,14 +106,19 @@
 			$class = new Main();
 			$varbs = null;
 
-			if (method_exists($class, $action))
+			if (isset($m_links[$link_key]) && method_exists($class, $m_links[$link_key]['action']))
 			{
-				$varbs = $class->{ $action }( $this->getParmas() );
+				$varbs = $class->{ $m_links[$link_key]['action'] }( $this->getParmas() );
+			}
+			else if (method_exists($class, str_replace('-', '', $link_key)))
+			{
+				$varbs = $class->{ str_replace('-', '', $link_key) }( $this->getParmas() );
 			}
 
-			if (isset($plugin['menulinks'][$action]['view']) && file_exists($view = ROOT . 'pk-plugins/' . $plugid . '/views/' . $plugin['menulinks'][$action]['view'] . '.view.php'))
+			if (isset($m_links[$link_key]['view']) && file_exists($view = ROOT . 'pk-plugins/' . $plugid . '/views/' . $m_links[$link_key]['view'] . '.view.php'))
 			{
-				$this->render('app/plugview', [
+				// creating scope vars array
+				$scope_vars = [
 					"admin"             => $admin,
 					"pagetitle"         => ucfirst($l_name),
 					"categories"        => $this->loadController('categories')->list(),
@@ -128,7 +134,16 @@
 					// styles and scripts
 					"styles"			=> $plugin['styles'] ?? [],
 					"scripts"			=> $plugin['scripts'] ?? []
-				]);
+				];
+
+				// all vars in a same array as scope var
+				$scope_vars["scope"] = $scope_vars;
+
+				// rendering
+				$this->render('app/plugview', $scope_vars);
+			}
+			else {
+				// somthing to do
 			}
 		}
 

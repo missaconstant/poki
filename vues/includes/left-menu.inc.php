@@ -56,7 +56,7 @@
                                 </a>
                                 <ul class="list-unstyled">
                                     <?php foreach ($params['menulinks'] as $k => $item): ?>
-                                    <li><a href="<?= Routes::find('plugins') .'/'. $plugname . $item['action'] ?>"> <?= $item['link'] ?> </a></li>
+                                    <li><a href="<?= Routes::find('plugins') .'/'. $plugname . '/' . $k ?>"> <?= $item['link'] ?> </a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
@@ -67,10 +67,12 @@
                             <li class="menu-title">Admin Settings</li>
 
                             <li>
+                                <?php if ($admin->role == 'admin'): ?>
                                 <a href="<?= Routes::find('plugin-list') ?>" class="waves-effect">
                                     <i class="mdi mdi-tag"></i>
                                     <span> Manage plugins <!-- <span class="badge badge-pill badge-primary float-right">7</span> --></span>
                                 </a>
+                                <?php endif ?>
                             </li>
 
                             <li>
