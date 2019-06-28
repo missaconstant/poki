@@ -48,7 +48,27 @@
         public static function get($categoryname, $contentid=false, $filter=false, $joins=false)
         {
             if (!self::$inited) self::init();
-            return self::$mdl->{$contentid ? 'trouverContentsAccessor' : 'trouverTousContents'}($categoryname, $joins, ($contentid ? $contentid : $filter));
+
+            if ($contentid)
+            {
+                if ( $contentid && is_array($contentid) )
+                {
+                    $list = [];
+
+                    foreach ($contentid as $k => $id)
+                    {
+                        $list[] = self::$mdl->trouverContentsAccessor($categoryname, $joins, $id);
+                    }
+
+                    return $list;
+                }
+                else {
+                    return self::$mdl->trouverContentsAccessor($categoryname, $joins, $contentid);
+                }
+            }
+            else {
+                return self::$mdl->trouverTousContents($categoryname, $joins, $filter);
+            }
         }
 
         public static function push()

@@ -57,6 +57,10 @@
                 $joining = $this->getCategoryParams($categoryname);
                 $joining['name'] = $categoryname;
 
+                # setting the joining keys to replace the defaul one "id"
+                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
+                
+
                 # searching right query string
                 $sql = '';
                 if ($checkJoin && count($joining['links'])) {
@@ -73,6 +77,7 @@
                 $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(\PDO::FETCH_ASSOC);
                 $q->closeCursor();
+                
                 return $r;
             }
             catch (\Exception $e) {
@@ -86,6 +91,9 @@
                 # getting joining table
                 $joining = $this->getCategoryParams($categoryname);
                 $joining['name'] = $categoryname;
+
+                # setting the joining keys to replace the defaul one "id"
+                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
                 
                 # searching right query string
                 $sql = '';
@@ -221,7 +229,7 @@
 
             # preparing LIKE condition
             $likestring = [];
-            $likeword = $filter['like'];
+            $likeword = isset($filter['like']) ? $filter['like'] : '';
             foreach ($fields as $k => $field) {
                 if (!preg_match("#.added_at$#", $field) & !preg_match("#.active$#", $field) && !preg_match("#.id$#", $field)) {
                     $likestring[] = $field . " LIKE '%$likeword%'";
@@ -230,10 +238,13 @@
 
             # preparing WHERE condition
             $joinedstring = [];
-            foreach ($joining['links'] as $fieldlinked => $link) {
-                $linkedto = 'adm_app_'. $link['linkedto'];
-                $linked = 'adm_app_'. $joining['name'];
-                $joinedstring[] = "LEFT JOIN $linkedto ON $linkedto.id=$linked.$fieldlinked";
+            foreach ($joining['links'] as $fieldlinked => $link)
+            {
+                $linkedto       = 'adm_app_'. $link['linkedto'];
+                $linked         = 'adm_app_'. $joining['name'];
+                $joinkey        = isset( $joining['joining_keys'][$fieldlinked] ) ? $joining['joining_keys'][$fieldlinked] : 'id';
+
+                $joinedstring[] = "LEFT JOIN $linkedto ON $linkedto.".  $joinkey  ."=$linked.$fieldlinked";
             }
 
             # preparing filters instruction
@@ -252,6 +263,8 @@
             # preparing count string
             $categoryname = str_replace('adm_app_', '', $categoryname);
             $countString = $count ? "COUNT(adm_app_$categoryname.id) as countlines" : false;
+
+            // exit("SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit");
 
             return "SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
         }
