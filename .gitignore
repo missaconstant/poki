@@ -6,3 +6,6 @@ statics/
 THEME/
 traces/
 tests/
+test.*
+tests.*
+test_*
