@@ -46,7 +46,7 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                die(json_encode([ "error" => true, "message" => $e->getMessage() ]));
             }
         }
 
@@ -85,7 +85,14 @@
             }
         }
 
-        public function trouverContents($categoryname, $contentid, $checkJoin=false)
+        /**
+         * @method trouverContents
+         * @param string categoryname
+         * @param string|int find - id or content value to check (check in specified to another value than id)
+         * @param boolean checkJoin - wether to do joinning
+         * @param string check_in  - where to check for search
+         */
+        public function trouverContents($categoryname, $find, $checkJoin=false, $check_in='id')
         {
             try {
                 # getting joining table
@@ -98,10 +105,10 @@
                 # searching right query string
                 $sql = '';
                 if ($checkJoin && count($joining['links'])) {
-                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $contentid);
+                    $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $find);
                 }
                 else {
-                    $sql = "SELECT * FROM adm_app_$categoryname WHERE id='$contentid'";
+                    $sql = "SELECT * FROM adm_app_$categoryname WHERE $check_in='$find'";
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
@@ -120,13 +127,13 @@
             return $this->trouverContents($categoryname, $contentid, $checkJoin);
         }
 
-        public function trouverIdsContents($categoryname, $idlist)
+        public function trouverValuesContents($categoryname, $check_in, $contentlist)
         {
             $list = [];
 
-            foreach ($idlist as $k => $id)
+            foreach ($contentlist as $k => $value)
             {
-                $content = $this->trouverContents($categoryname, $id);
+                $content = $this->trouverContents($categoryname, $value, false, $check_in);
                 $newctnt = [];
 
                 foreach ($content as $k => $value)
@@ -139,6 +146,13 @@
 
                 $list[] = $newctnt;
             }
+
+            return $list;
+        }
+
+        public function trouverIdsContents($categoryname, $idlist)
+        {
+            $list = $this->trouverValuesContents($categoryname, 'id', $idlist);
 
             return $list;
         }

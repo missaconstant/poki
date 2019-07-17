@@ -96,9 +96,31 @@
                 
                 foreach ($foreigns as $k => $foreign) {
                     $group      = explode(';', $value);
-                    $selected   = in_array($foreign['id'], $group) ? 'selected' : '';
-                    $_value     = isset($foreign['name']) ? $foreign['name'] : ( isset($foreign['label']) ? $foreign['label'] : $foreign[$linked['label']] );
-                    $options[]  = '<option value="'. $foreign['id'] .'" '. $selected .'>'. $_value .'</option>';
+                    $selected   = in_array($foreign[ $linked['label'] ], $group) ? 'selected' : '';
+
+                    # searching for default label
+                    
+                    $_value = '';
+
+                    if ( isset($foreign['name']) || isset($foreign['label']) )
+                    {
+                        $_value = isset($foreign['name']) ? $foreign['name'] : isset($foreign['label']);
+                    }
+                    else {
+                        foreach ($foreign as $k => $v)
+                        {
+                            if ( preg_match("#nom|name#", $k) )
+                            {
+                                $_value = $k;
+                                break;
+                            }
+                        }
+
+                        // exit($_value);
+                        $_value = strlen($_value) ? $foreign[$_value] : $foreign[ $linked['label'] ];
+                    }
+
+                    $options[]  = '<option value="'. $foreign[ $linked['label'] ] .'" '. $selected .'>'. $_value .'</option>';
                 }
 
                 if ($type == 'tinytext')
@@ -129,13 +151,36 @@
                 require_once ROOT . 'modeles/ContentsModele.php';
 
                 $mdl        = new ContentsModele();
-                $foreign    = $mdl->trouverContents($linked['linkedto'], $value);
+                $foreigns   = $mdl->trouverValuesContents($linked['linkedto'], $linked['label'], [$value]);
+
+                // var_dump($foreign); exit();
                 
-                if ($foreign)
+                if (count($foreigns))
                 {
+                    $foreign = $foreigns[0];
                     # return $foreign ? $foreign[$linked['label']] : '';
                     # changed for now check for name or label
-                    $key = isset($foreign['name']) ? 'name' : ( isset($foreign['label']) ? 'label' : $linked['label'] );
+                    $key = '';
+
+                    if ( isset($foreign['name']) || isset($foreign['label']) )
+                    {
+                        $key = isset($foreign['name']) ? 'name' : 'label';
+                    }
+                    else {
+                        foreach ($foreign as $k => $v)
+                        {
+                            if ( preg_match("#nom|name#", $k) )
+                            {
+                                $key = $k;
+                                break;
+                            }
+                            else {
+                                echo $k;
+                            }
+                        }
+
+                        $key = strlen($key) ? $key : $foreign[ $linked['label'] ];
+                    }
 
                     return $foreign[ $key ];
                 }
