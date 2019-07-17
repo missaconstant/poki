@@ -109,7 +109,7 @@
                     else {
                         foreach ($foreign as $k => $v)
                         {
-                            if ( preg_match("#nom|name|label#", $k) )
+                            if ( preg_match("#nom|name|label|libelle|lib#", $k) )
                             {
                                 $_value = $k;
                                 break;
@@ -166,7 +166,7 @@
                     else {
                         foreach ($foreign as $k => $v)
                         {
-                            if ( preg_match("#nom|name|label#", $k) )
+                            if ( preg_match("#nom|name|label|libelle|lib#", $k) )
                             {
                                 $key = $k;
                                 break;
