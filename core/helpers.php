@@ -104,19 +104,18 @@
 
                     if ( isset($foreign['name']) || isset($foreign['label']) )
                     {
-                        $_value = isset($foreign['name']) ? $foreign['name'] : isset($foreign['label']);
+                        $_value = isset($foreign['name']) ? $foreign['name'] : $foreign['label'];
                     }
                     else {
                         foreach ($foreign as $k => $v)
                         {
-                            if ( preg_match("#nom|name#", $k) )
+                            if ( preg_match("#nom|name|label#", $k) )
                             {
                                 $_value = $k;
                                 break;
                             }
                         }
 
-                        // exit($_value);
                         $_value = strlen($_value) ? $foreign[$_value] : $foreign[ $linked['label'] ];
                     }
 
@@ -151,9 +150,7 @@
                 require_once ROOT . 'modeles/ContentsModele.php';
 
                 $mdl        = new ContentsModele();
-                $foreigns   = $mdl->trouverValuesContents($linked['linkedto'], $linked['label'], [$value]);
-
-                // var_dump($foreign); exit();
+                $foreigns   = $mdl->trouverValuesContents($linked['linkedto'], $linked['label'], explode(';', $value));
                 
                 if (count($foreigns))
                 {
@@ -169,16 +166,16 @@
                     else {
                         foreach ($foreign as $k => $v)
                         {
-                            if ( preg_match("#nom|name#", $k) )
+                            if ( preg_match("#nom|name|label#", $k) )
                             {
                                 $key = $k;
                                 break;
                             }
                             else {
-                                echo $k;
+                                // echo $k;
                             }
                         }
-
+                        
                         $key = strlen($key) ? $key : $foreign[ $linked['label'] ];
                     }
 

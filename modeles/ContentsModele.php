@@ -134,17 +134,21 @@
             foreach ($contentlist as $k => $value)
             {
                 $content = $this->trouverContents($categoryname, $value, false, $check_in);
-                $newctnt = [];
 
-                foreach ($content as $k => $value)
+                if ($content)
                 {
-                    if ($k != 'active' && $k != 'added_at' && $k != 'combined_fields')
-                    {
-                        $newctnt[ $categoryname .'_' .$k ] = $value;
-                    }
-                }
+                    $newctnt = [];
 
-                $list[] = $newctnt;
+                    foreach ($content as $k => $value)
+                    {
+                        if ($k != 'active' && $k != 'added_at' && $k != 'combined_fields')
+                        {
+                            $newctnt[ $categoryname .'_' .$k ] = $value;
+                        }
+                    }
+
+                    $list[] = $newctnt;
+                }
             }
 
             return $list;
