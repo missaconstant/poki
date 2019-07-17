@@ -16,7 +16,7 @@
                 $link = explode('/', $link);
                 $linkto = $link[0];
                 $label = $link[1];
-                $params['links'][$field] = ["linkedto" => $linkto, "label" => $label];
+                $params['links'][$field] = [ "linkedto" => $linkto, "label" => $label, "joined_on" => $label ];
             }
             return $this->saveCategoryParams($categoryname, $params);
         }

@@ -120,6 +120,29 @@
             return $this->trouverContents($categoryname, $contentid, $checkJoin);
         }
 
+        public function trouverIdsContents($categoryname, $idlist)
+        {
+            $list = [];
+
+            foreach ($idlist as $k => $id)
+            {
+                $content = $this->trouverContents($categoryname, $id);
+                $newctnt = [];
+
+                foreach ($content as $k => $value)
+                {
+                    if ($k != 'active' && $k != 'added_at' && $k != 'combined_fields')
+                    {
+                        $newctnt[ $categoryname .'_' .$k ] = $value;
+                    }
+                }
+
+                $list[] = $newctnt;
+            }
+
+            return $list;
+        }
+
         public function supprimerContents($categoryname, $contentid) {
             try {
                 $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$contentid'");

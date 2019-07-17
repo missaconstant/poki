@@ -214,4 +214,20 @@
 			}
 			return $array;
 		}
+
+		static function dump($vars)
+		{
+			if ( is_array($vars) )
+			{
+				for ($i=0; $i<count($vars); $i++)
+				{
+					var_dump($vars[$i]);
+				}
+			}
+			else {
+				var_dump($vars);
+			}
+
+			exit;
+		}
 	}

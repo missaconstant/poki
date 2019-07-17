@@ -26,7 +26,11 @@
             $category = $this->loadModele('categories')->trouverCategory($categoryname);
             $edition = Posts::post(['editing']) ? Posts::post('editing') : '0';
 
-            $content = $this->getContentObject($category);
+            $content        = $this->getContentObject($category);
+            $contentfilled  = $this->fillObject($categoryname, $content);
+            $contentfilled  = json_encode($contentfilled);
+
+            $content['combined_fields'] = $contentfilled;
 
             if ($this->loadModele()->{ $edition!='0' && strlen(trim($edition)) ? 'modifierContent':'creerContent' }($content, $categoryname, $edition)) {
                 $this->json_success("Content saved succefully !", ["newtoken" => Posts::getCSRFTokenValue()]);
@@ -128,7 +132,32 @@
                     }
                 }
             }
+
             return $count ? $object : false;
+        }
+
+        /**
+         * @method fillObject : to replace joins ids by values
+         * @param categoryname
+         * @param object
+         */
+        private function fillObject($categoryname, $object)
+        {
+            $params = $this->loadModele('params')->getCategoryParams($categoryname);
+            $newobj = $object;
+
+            foreach ($params['links'] as $k => $link)
+            {
+                if ( isset($newobj[ $k ]) )
+                {
+                    $joining_key    = $link['joined_on'] ?? 'id';
+                    $ids            = explode( ';', $newobj[$k] );
+                    $joined_datas   = $this->loadModele('contents')->trouverIdsContents($link['linkedto'], $ids);
+                    $newobj[$k]     = $joined_datas;
+                }
+            }
+
+            return $newobj;
         }
 
         public function getCsv()

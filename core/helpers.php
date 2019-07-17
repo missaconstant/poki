@@ -97,7 +97,8 @@
                 foreach ($foreigns as $k => $foreign) {
                     $group      = explode(';', $value);
                     $selected   = in_array($foreign['id'], $group) ? 'selected' : '';
-                    $options[]  = '<option value="'. $foreign['id'] .'" '. $selected .'>'. $foreign[$linked['label']] .'</option>';
+                    $_value     = isset($foreign['name']) ? $foreign['name'] : ( isset($foreign['label']) ? $foreign['label'] : $foreign[$linked['label']] );
+                    $options[]  = '<option value="'. $foreign['id'] .'" '. $selected .'>'. $_value .'</option>';
                 }
 
                 if ($type == 'tinytext')
@@ -129,7 +130,18 @@
 
                 $mdl        = new ContentsModele();
                 $foreign    = $mdl->trouverContents($linked['linkedto'], $value);
-                return $foreign ? $foreign[$linked['label']] : '';
+                
+                if ($foreign)
+                {
+                    # return $foreign ? $foreign[$linked['label']] : '';
+                    # changed for now check for name or label
+                    $key = isset($foreign['name']) ? 'name' : ( isset($foreign['label']) ? 'label' : $linked['label'] );
+
+                    return $foreign[ $key ];
+                }
+                else {
+                    return '';
+                }
             }
             else {
                 return $value;
