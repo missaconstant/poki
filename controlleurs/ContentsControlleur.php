@@ -22,9 +22,9 @@
 
         public function add($doexit=true)
         {
-            $categoryname = Posts::post('category');
-            $category = $this->loadModele('categories')->trouverCategory($categoryname);
-            $edition = Posts::post(['editing']) ? Posts::post('editing') : '0';
+            $categoryname   = Posts::post('category');
+            $category       = $this->loadModele('categories')->trouverCategory($categoryname);
+            $edition        = Posts::post(['editing']) ? Posts::post('editing') : '0';
 
             $content        = $this->getContentObject($category);
             $contentfilled  = $this->fillObject($categoryname, $content);
@@ -151,8 +151,8 @@
                 if ( isset($newobj[ $k ]) )
                 {
                     $joining_key    = $link['joined_on'] ?? 'id';
-                    $ids            = explode( ';', $newobj[$k] );
-                    $joined_datas   = $this->loadModele('contents')->trouverIdsContents($link['linkedto'], $ids);
+                    $values         = explode( ';', $newobj[$k] );
+                    $joined_datas   = $this->loadModele('contents')->trouverValuesContents($link['linkedto'], $joining_key, $values);
                     $newobj[$k]     = $joined_datas;
                 }
             }
