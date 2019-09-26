@@ -26,5 +26,9 @@
 
         public static $jsonp_files_path = ROOT . 'appfiles/category_params_files/';
 
+        public static $plugin_base_path = ROOT . 'pk-plugins/';
+
+        public static $plugin_base_webpath = WROOT . 'pk-plugins/';
+
         public static $appfolder = "noset";
     }

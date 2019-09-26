@@ -283,7 +283,7 @@
             {
                 $linkedto       = 'adm_app_'. $link['linkedto'];
                 $linked         = 'adm_app_'. $joining['name'];
-                $joinkey        = isset( $joining['joining_keys'][$fieldlinked] ) ? $joining['joining_keys'][$fieldlinked] : 'id';
+                $joinkey        = isset( $joining['joining_keys'][$fieldlinked] ) ? $joining['joining_keys'][$fieldlinked] : $link['joined_on'];
 
                 $joinedstring[] = "LEFT JOIN $linkedto ON $linkedto.".  $joinkey  ."=$linked.$fieldlinked";
             }

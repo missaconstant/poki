@@ -47,16 +47,24 @@
 
                             <li class="menu-title">Plugins</li>
 
-                            <?php foreach ($pluglist as $plugname => $params): if($params['active'] != 0): ?>
+                            <?php foreach ($pluglist as $plugid => $params): if($params['active'] != 0): ?>
                             <li class="has_sub">
                                 <a href="javascript:void(0)" class="waves-effect">
-                                    <i class="mdi mdi-account-check"></i>
-                                    <span class="float-right"><i class="mdi mdi-chevron-right"></i></span>
-                                    <span> <?= $params['label_name'] ?> </span>
+                                    <i class="mdi -mdi-account-check">
+                                        <img 
+                                            src="<?= 
+                                                strlen($params['icon']) && file_exists(Config::$plugin_base_path .'/'. $plugid .'/assets/'. $params['icon']) ? 
+                                                WROOT .'pk-plugins/'. $plugid .'/assets/'. $params['icon'] : Files::image('pkicon.png')
+                                            ?>" 
+                                            width="25" alt="" style="border-radius: 3px;"
+                                        />
+                                    </i>
+                                    <span style="margin-top: 4px;" class="float-right"><i class="mdi mdi-chevron-right"></i></span>
+                                    <span style="vertical-align: middle;"> <?= $params['label_name'] ?> </span>
                                 </a>
                                 <ul class="list-unstyled">
                                     <?php foreach ($params['menulinks'] as $k => $item): ?>
-                                    <li><a href="<?= Routes::find('plugins') .'/'. $plugname . '/' . $k ?>"> <?= $item['link'] ?> </a></li>
+                                    <li><a href="<?= Routes::find('plugins') .'/'. $plugid . '/' . $k ?>"> <?= $item['link'] ?> </a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </li>

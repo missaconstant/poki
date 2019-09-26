@@ -4,18 +4,23 @@
 
     if (session_status() == PHP_SESSION_NONE) session_start();
 
-    require __DIR__ . '/core/config.php';
-    require __DIR__ . '/core/routes.php';
-    require __DIR__ . '/core/modele.php';
-    require __DIR__ . '/core/sessions.php';
-    require __DIR__ . '/core/posts.php';
-    require __DIR__ . '/core/controlleur.php';
+    if ( ! isset($dontload) )
+    {
+        require __DIR__ . '/core/config.php';
+        require __DIR__ . '/core/routes.php';
+        require __DIR__ . '/core/modele.php';
+        require __DIR__ . '/core/sessions.php';
+        require __DIR__ . '/core/posts.php';
+        require __DIR__ . '/core/controlleur.php';
+    
+        define('ROOT', pathinfo(__FILE__, PATHINFO_DIRNAME) . '/');
+        define('WROOT', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
+    }
+    
     require __DIR__ . '/modeles/ContentsModele.php';
     require __DIR__ . '/controlleurs/ContentsControlleur.php';
     require __DIR__ . '/controlleurs/ListenerControlleur.php';
 
-    define('ROOT', pathinfo(__FILE__, PATHINFO_DIRNAME) . '/');
-    define('WROOT', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 
     class Poki extends modele
     {
@@ -27,7 +32,7 @@
 
         public static function init()
         {
-            if (file_exists(__DIR__ . '/statics/config.php')) {
+            if ( file_exists(__DIR__ . '/statics/config.php') && !isset($dontload) ) {
                 require __DIR__ . '/statics/config.php';
                 Config::$db_user = $dbuser;
                 Config::$db_name = $dbname;
@@ -40,6 +45,7 @@
                     self::$inited = true;
                 }
             }
+            
             self::$mdl = new ContentsModele();
             self::$ctr = new ContentsControlleur();
             Posts::disableCSRF();

@@ -24,10 +24,16 @@
             <div class="row">
                 <div class="col-2">
                     <div class="text-center">
-                        <img src="<?= THEME ?>assets/images/small/img-2.jpg" width="55" height="55" class="" style="border-radius:100%;">
+                        <img 
+                        src="<?= 
+                                strlen($plugin['icon']) && file_exists(Config::$plugin_base_path .'/'. $k .'/assets/'. $plugin['icon']) ? 
+                                WROOT .'pk-plugins/'. $k .'/assets/'. $plugin['icon'] : Files::image('pkicon.png')
+                            ?>"
+                            width="55" height="55" class="" style="border-radius:5px;"
+                        />
                     </div>
                 </div>
-                <div class="col-10" style="border-left:1px solid #ddd;">
+                <div class="col-10" style="border-left:0px solid #ddd;">
                     <div class="m-l-10">
                         <h6 class="mt-0 round-inner"><?= $plugin['label_name'] ?> <i class="mdi mdi-<?= $plugin['active'] ? 'check':'close' ?>-circle text-<?= $plugin['active'] ? 'success':'danger' ?>"></i></h6>
                         <p class="mb-0 text-muted"><?= $plugin['description'] ?></p>

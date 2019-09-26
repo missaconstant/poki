@@ -7,9 +7,9 @@
         <link rel="stylesheet" href="<?= THEME . 'assets/plugins/summernote/summernote-bs4.css' ?>">
         <link rel="stylesheet" href="<?= THEME . 'assets/plugins/datatables/dataTables.bootstrap4.min.css' ?>">
         <!-- Plugins styles -->
-        <?php foreach ( $styles as $k => $style ): ?>
-            <link rel="stylesheet" href="<?= $plugin_base_web . '/' . $style ?>">
-        <?php endforeach; ?>
+        <?php if (isset($styles)): foreach ( $styles as $k => $style ): ?>
+            <link rel="stylesheet" href="<?= Config::$plugin_base_webpath . $plugin_id .'/'. $style ?>">
+        <?php endforeach; endif; ?>
     </head>
 
 
@@ -75,8 +75,8 @@
             });
         </script>
         <!-- Plugins styles -->
-        <?php foreach ( $scripts as $k => $script ): ?>
-            <script src="<?= $plugin_base_web . '/' . $script ?>"></script>
-        <?php endforeach; ?>
+        <?php if (isset($scripts)): foreach ( $scripts as $k => $script ): ?>
+            <script src="<?= Config::$plugin_base_webpath . $plugin_id .'/'. $script ?>"></script>
+        <?php endforeach; endif; ?>
     </body>
 </html>

@@ -193,14 +193,15 @@
                     "label_name"    => $label,
                     "version"       => "1.0",
                     "licence"       => $licence,
+                    "icon"          => "icon.png",
                     "description"   => $description,
                     "listener"      => [ "name" => "pk-mylistener", "handle" => [ "create", "update", "delete" ] ],
                     "menulinks"     => [
                         "hello"     => [ "link" => "Hello", "action" => "/hello", "view" => "hello" ],
                         "about"     => [ "link" => "About", "action" => "/about", "view" => "about" ]
                     ],
-                    "styles"        => [],
-                    "scripts"       => [],
+                    "styles"        => [ 'main.css' ],
+                    "scripts"       => [ 'main.js' ],
                     "handlers"      => [ "actions" ],
                     "door"          => "start",
                     "apidoor"       => "apistart",
@@ -224,8 +225,16 @@
                 @mkdir(ROOT . 'appfiles/temp/' . $name . '/listeners', 0777);
                 @mkdir(ROOT . 'appfiles/temp/' . $name . '/views', 0777);
                 @mkdir(ROOT . 'appfiles/temp/' . $name . '/views/includes', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/assets', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/assets/images', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/assets/styles', 0777);
+                @mkdir(ROOT . 'appfiles/temp/' . $name . '/assets/scripts', 0777);
 
                 // creating files
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/assets/styles/main.css', '/* here goes styles */' );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/assets/scripts/main.js', '/* here goes scripts */' );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/listeners/pk-mylistener.php', Generator::listenerFile() );
+                @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/listeners/pk-mylistener.php', Generator::listenerFile() );
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/listeners/pk-mylistener.php', Generator::listenerFile() );
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/views/hello.view.php', Generator::helloView() );
                 @file_put_contents( ROOT . 'appfiles/temp/' . $name . '/views/about.view.php', Generator::aboutView() );

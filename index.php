@@ -29,7 +29,6 @@
 	include_once ROOT.'core/sessions.php' ;
 	include_once ROOT.'core/posts.php' ;
 	include_once ROOT.'core/plugers/pluger.php';
-	include_once ROOT.'core/plugers/pluger.php';
 	include_once ROOT.'core/plugers/view.provider.php';
 	include_once ROOT.'core/listener.php';
 
