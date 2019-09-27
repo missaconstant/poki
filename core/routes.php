@@ -55,6 +55,7 @@
                 "content-add" => "/contents/add",
                 "content-edit" => "/contents/edit",
                 "content-delete" => "/contents/delete",
+                "content-toggle" => "/contents/toggle-content",
                 "content-list" => "/contents/list",
                 "content-from-csv" => "/contents/add-from-csv",
                 "content-get-csv" => "/contents/get-csv",

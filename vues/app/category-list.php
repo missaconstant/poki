@@ -52,12 +52,92 @@
     </body>
 
     <script>
+        var checkedcontent = [];
+
         $(function () {
-            
+
+            // checkboxes for contents
+            $('.content-check-all').on('change', function () {
+                var top = this;
+                
+                // empty previousely checked
+                checkedcontent = [];
+
+                $('.content-check-one').each(function (x, elt) {
+                    elt.checked = top.checked;
+                    $('#dropdownMenuBtn2')[ top.checked ? 'removeClass' : 'addClass' ]('d-none');
+
+                    // put this in checked array if check-all is checked
+                    if (top.checked) checkedcontent.push(elt.id.split('_')[1]);
+                });
+            });
+
+            $('.content-check-one').on('change', function () {
+                var id = this.id.split('_')[1];
+
+                // global action dropdown button toggling
+                if ($('.content-check-one:checked').length == 1) {
+                    $('#dropdownMenuBtn2').removeClass('d-none');
+                }
+                else if ($('.content-check-one:checked').length < 1) {
+                    $('#dropdownMenuBtn2').addClass('d-none');
+                }
+
+                // manage actions by state
+                $('.content-check-all')[0].checked = !this.checked ? false : $('.content-check-all')[0].checked;
+
+                if (this.checked) {
+                    checkedcontent.push(id);
+                }
+                else {
+                    checkedcontent = checkedcontent.filter(function (item) {
+                        return item != id
+                    });
+                }
+            });
         });
 
-        function deleteContent(btn, categoryname) {
-            var id = $(btn).parent().parent()[0].id.substring(8);
+        function toggleContent(btn, categoryname, fromselection) {
+            var id = null;
+            var st = null;
+
+            if (fromselection) {
+                id = checkedcontent.join('-');
+                st = fromselection == 'enable' ? 0 : 1;
+            }
+            else {
+                id = $(btn).parent().parent()[0].id.substring(8);
+                st = $(btn).parent().parent()[0].getAttribute('data-state');
+            }
+
+            postize('<?= Routes::find('content-toggle') ?>/' + id + '/' + categoryname + '/' + st, 'get', false, function (response) {
+                if (fromselection) {
+                    checkedcontent.forEach(function (item) {
+                        $('#customCheck')[0].checked            = false;
+                        $('#customCheck_' + item)[0].checked    = false;
+
+                        $('#dropdownMenuBtn2').addClass('d-none');
+                        $('#content_' + item)[0].setAttribute('data-state', response.newstate);
+                        $('#content_' + item).find('.toggle-btn i.mdi')[0].className = 'mdi mdi-eye' + (response.newstate ? '':'-off');
+                    });
+
+                    checkedcontent = fromselection ? [] : checkedcontent;
+                }
+                else {
+                    $(btn).parent().parent()[0].setAttribute('data-state', response.newstate);
+                    $(btn).find('i')[0].className = 'mdi mdi-eye' + (response.newstate ? '' : '-off');
+                }
+
+                alerter.success('Content(s) correctely '+ (response.newstate ? 'disabled' : 'enabled') +' !');
+            },
+            function (err) {
+                alerter.error(err.message);
+            });
+        }
+
+        function deleteContent(btn, categoryname, fromselection) {
+            var id =  null;
+
             $.confirm({
                 title: 'Are you sure ?',
                 content: 'You are deleting this element.<br>You could not come back after this action.',
@@ -68,26 +148,21 @@
                     delete: {
                         btnClass: 'btn btn-danger',
                         action: function () {
-                            loader.show();
-                            $.ajax({
-                                url: '<?= Routes::find('content-delete') ?>/' + id + '/' + categoryname,
-                                type: 'get',
-                                datatype: 'json',
-                                success: function (response) {
-                                    if (!response.error) {
-                                        loader.hide();
-                                        alerter.success("Content deleted !");
-                                        $('#content_' + id).parent().fadeOut();
-                                    }
-                                    else {
-                                        loader.hide();
-                                        alerter.error(response.message);
-                                    }
-                                },
-                                error: function (err) {
-                                    alerter.error("An error occured ! Check your connexion and try again later.");
-                                    loader.hide();
-                                }
+                            id = fromselection ? checkedcontent.join('-') : $(btn).parent().parent()[0].id.substring(8);
+
+                            postize('<?= Routes::find('content-delete') ?>/' + id + '/' + categoryname, 'get', false, function (response) {
+                                checkedcontent = fromselection ? checkedcontent : [ id ];
+
+                                checkedcontent.forEach(function (item) {
+                                    $('#content_' + item).parent().remove();
+                                });
+
+                                checkedcontent = fromselection ? [] : checkedcontent;
+                                
+                                alerter.success("Content(s) correctely deleted !");
+                            },
+                            function (err) {
+                                alerter.error(err.message);
                             });
                         }
                     },
@@ -150,32 +225,19 @@
 
         function getCSV(categoryname)
         {
-            loader.show();
-            $.ajax({
-                url: '<?= Routes::find('content-get-csv') ?>/' + categoryname,
-                type: 'get',
-                dataType: 'json',
-                success: function (response) {
-                    if (!response.error) {
-                        if (!$('#linkdowncsv').length) {
-                            var el = document.createElement('a');
-                                el.href = response.message;
-                                el.id = 'linkdowncsv';
-                                el.setAttribute('download', '');
-                                el.style.display = 'none';
-                            $(document.body).append(el);
-                        }
-                        $('#linkdowncsv')[0].click();
-                    }
-                    else {
-                        alerter.error("An error occured ! Please try again later.");
-                    }
-                    loader.hide();
-                },
-                error: function (err) {
-                    alerter.error("An error occured ! Please try again later.");
-                    loader.hide();
+            postize('<?= Routes::find('content-get-csv') ?>/' + categoryname, 'get', false, function (response) {
+                if (!$('#linkdowncsv').length) {
+                    var el = document.createElement('a');
+                        el.href = response.message;
+                        el.id = 'linkdowncsv';
+                        el.setAttribute('download', '');
+                        el.style.display = 'none';
+                    $(document.body).append(el);
                 }
+                $('#linkdowncsv')[0].click();
+            },
+            function (err) {
+                alerter.error(err.message);
             });
         }
     </script>

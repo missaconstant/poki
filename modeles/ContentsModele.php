@@ -163,7 +163,12 @@
 
         public function supprimerContents($categoryname, $contentid) {
             try {
-                $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$contentid'");
+                $ids = is_array($contentid) ? $contentid : [ $contentid ];
+
+                foreach ($ids as $k => $id) {
+                    $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$id'");
+                }
+                
                 return true;
             }
             catch (\Exception $e) {
@@ -213,6 +218,22 @@
             }
             catch (\Exception $e) {
                 // exit(json_encode([$e->getMessage()]));
+            }
+        }
+
+        public function toggleContent($categoryname, $contentid, $newstate)
+        {
+            try {
+                $contentids = is_array($contentid) ? $contentid : [ $contentid ];
+
+                foreach ($contentids as $k => $id) {
+                    modele::$bd->exec("UPDATE adm_app_$categoryname SET active=$newstate WHERE id=$id");
+                }
+
+                return true;
+            }
+            catch(Exception $e) {
+                return false;
             }
         }
 

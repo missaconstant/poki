@@ -101,9 +101,24 @@
             return $this->loadModele()->trouverTousContents($category, false, $filter);
         }
 
+        public function toggleContent()
+        {
+            $category   = Posts::get(1);
+            $contentid  = explode('-', Posts::get(0));
+            $state      = Posts::get(2) == 1 ? 0 : 1;
+
+            if ($this->loadModele()->toggleContent($category, $contentid, $state))
+            {
+                $this->json_success('Done', [ "newstate" => $state ]);
+            }
+            else {
+                $this->json_error("An error occured. Please try again later !");
+            }
+        }
+
         public function delete($doexit=true)
         {
-            $contentid = Posts::get(0);
+            $contentid = explode('-', Posts::get(0));
             $categoryname = Posts::get(1);
 
             if ($this->loadModele()->supprimerContents($categoryname, $contentid)) {
