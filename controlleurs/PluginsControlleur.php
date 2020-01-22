@@ -18,7 +18,7 @@
 			$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
 			return $plugid ? (isset($plugins[$plugid]) ? $plugins[$plugid] : false) : $plugins;
         }
-        
+
         private function loadDevPlugin($plugid)
         {
             return json_decode(file_get_contents(ROOT . 'pk-plugins/'. $plugid .'/package.poki'), true);
@@ -28,7 +28,7 @@
         {
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
-            
+
             $this->render('app/plugin.list', [
                 "admin"             => $admin,
                 "pagetitle"         => 'Plugins',
@@ -107,7 +107,7 @@
                 if ( ! file_exists(ROOT . 'appfiles/temp')) @mkdir(ROOT . 'appfiles/temp');
                 if ( ! file_exists(ROOT . 'pk-plugins')) @mkdir(ROOT . 'pk-plugins');
                 if ( ! file_exists(ROOT . 'appfiles/listener/plugins.poki')) @file_put_contents(ROOT . 'appfiles/listener/plugins.poki', '[]');
-                
+
                 if (file_exists(ROOT . 'pk-plugins') && file_exists(ROOT . 'appfiles/temp') && file_exists(ROOT . 'appfiles/temp') && file_exists(ROOT . 'appfiles/listener/plugins.poki'))
                 {
                     if ($zgot)
@@ -138,7 +138,7 @@
                         {
                             $this->tell_error("An error occured while installation. Please try again.");
                         }
-                        
+
                         $zip->close();
                     }
                 }
@@ -164,7 +164,7 @@
             {
                 $package['active']  = $app['active'];
                 $plugins[ $plugid ] = $package;
-                
+
                 if ( file_put_contents( ROOT . 'appfiles/listener/plugins.poki', json_encode( $plugins, JSON_PRETTY_PRINT ) ) )
                     $this->json_success("Plugin correctly updated !");
                 else
@@ -269,16 +269,16 @@
         }
 
         private function delDir($dir)
-        { 
-            $files = array_diff(scandir($dir), array('.','..')); 
-            
+        {
+            $files = array_diff(scandir($dir), array('.','..'));
+
             foreach ($files as $file)
-            { 
-                (is_dir("$dir/$file")) ? $this->delDir("$dir/$file") : unlink("$dir/$file"); 
+            {
+                (is_dir("$dir/$file")) ? $this->delDir("$dir/$file") : unlink("$dir/$file");
             }
 
-            return rmdir($dir); 
-        } 
+            return rmdir($dir);
+        }
 
         private function checkPluginArchive($id, $json_package, $tdir, $firstinstall=true)
         {
@@ -287,8 +287,8 @@
 
             // checking fields
             if (
-                !$this->notEmpty($package['name']) || !$this->notEmpty($package['label_name']) || !$this->notEmpty($package['version']) || 
-                !$this->notEmpty($package['licence']) || !$this->notEmpty($package['description']) || !$this->notEmpty($package['menulinks']) || 
+                !$this->notEmpty($package['name']) || !$this->notEmpty($package['label_name']) || !$this->notEmpty($package['version']) ||
+                !$this->notEmpty($package['licence']) || !$this->notEmpty($package['description']) || !$this->notEmpty($package['menulinks']) ||
                 !$this->notEmpty($package['door'])
             ) {
                 $this->tell_error("Plugin package file not complete !");

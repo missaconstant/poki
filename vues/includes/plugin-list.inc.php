@@ -17,16 +17,16 @@
 </div>
 
 <?php foreach ($pluglist as $k => $plugin): ?>
-    
+
 <div class="col-md-6 col-lg-6 col-xl-4">
     <div class="card m-b-30">
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
                     <div class="text-center">
-                        <img 
-                        src="<?= 
-                                strlen($plugin['icon']) && file_exists(Config::$plugin_base_path .'/'. $k .'/assets/'. $plugin['icon']) ? 
+                        <img
+                        src="<?=
+                                strlen($plugin['icon']) && file_exists(Config::$plugin_base_path .'/'. $k .'/assets/'. $plugin['icon']) ?
                                 WROOT .'pk-plugins/'. $k .'/assets/'. $plugin['icon'] : Files::image('pkicon.png')
                             ?>"
                             width="55" height="55" class="" style="border-radius:5px;"
