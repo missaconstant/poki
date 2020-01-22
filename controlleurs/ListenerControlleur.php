@@ -3,14 +3,14 @@
     namespace Poki;
 
 	/**
-	* 
+	*
 	*/
 	class ListenerControlleur extends controlleur
 	{
 		private $cfg;
 		private $usr;
 		private $plg;
-		
+
 		function __construct()
 		{
 			$this->cfg = $this->loadController('config');
@@ -49,10 +49,10 @@
 			if (file_exists(ROOT . 'appfiles/listener/plugins.poki'))
 			{
 				$plugins = json_decode(file_get_contents(ROOT . 'appfiles/listener/plugins.poki'), true);
-				return $plugid ? $plugins[$plugid] : $plugins;
+				return isset($plugid) && $plugid!==false ? ( $plugins[$plugid] ?? false ) : $plugins;
 			}
 			else {
-				return [];
+				return $plugid ? [] : false;
 			}
 		}
 
@@ -88,9 +88,14 @@
 			$this->cfg->configSurvey(false);
 			$admin = $this->usr->loginSurvey(false, 'login');
 
-			$plugid 	= Posts::get([0]) ? Posts::get(0) : false;
+			$plugid 	= Posts::get([0]) ? Posts::get(0) : 'noplugin';
 			$link_key   = Posts::get([1]) ? Posts::get(1) : false;
-			$plugin   	= $this->loadPlugins($plugid);
+
+            // does the plugin exists
+            $plugin   	= $this->loadPlugins($plugid);
+
+            if ( !$plugin ) $this->redirTo(Routes::find('home'));
+
 			$name     	= $plugin['name'];
 			$l_name   	= $plugin['label_name'];
 			$m_links  	= $plugin['menulinks'];
@@ -166,14 +171,14 @@
 		public function plugin($plugid, $action, $gets, $posts)
 		{
 			if ($plg = $this->loadPlugins($plugid))
-			{	
+			{
 				if ( ! file_exists(ROOT . 'pk-plugins/' . $plugid . '/' . $plg['apidoor'] . '.php') || !$plg['active'])
 				{
 					return ["error" => true, "message" => "No door found !"];
 				}
 				else {
 					include ROOT . 'pk-plugins/' . $plugid . '/' . $plg['apidoor'] . '.php';
-					
+
 					$class = new ApiEntry();
 
 					if (method_exists($class, $action))

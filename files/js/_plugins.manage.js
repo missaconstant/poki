@@ -17,12 +17,13 @@ $(function () {
     $('.delete-plugin, .update-plugin').on('click', function (e) {
         e.preventDefault();
 
-        var self = this, action = this.classList.contains('delete-plugin') ? 'delete' : 'update';
+        var self    = this;
+        var action  = this.classList.contains('delete-plugin') ? 'delete' : 'update';
 
         warningAction(function () {
             postize(baseroute + '/plugins/'+ action +'/' + self.parentNode.id, 'get', false, function (datas) {
                 alerter.success(datas.message);
-                setTimeout(function () { window.location.href = '/listener/list' }, 1500);
+                setTimeout(function () { window.location.href = baseroute + '/listener/list' }, 1500);
             },
             function (err) {
                 alerter.error(err.message);

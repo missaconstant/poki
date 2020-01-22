@@ -123,7 +123,7 @@
                                 }
                                 else
                                 {
-                                    $this->tell_error("An error occured while installation. Please try again.");
+                                    $this->tell_error("An error occured while installation. Please try again.-00001");
                                 }
                             }
                             else
@@ -131,11 +131,16 @@
                                 $this->tell_error("Bad plugin zip file.");
                             }
 
-                            $this->delDir($tdir);
+                            // if temp dir exists, remove it
+                            if ( file_exists($tdir) )
+                            {
+                                $this->delDir($tdir);
+                            }
                         }
                         else
                         {
-                            $this->tell_error("An error occured while installation. Please try again.");
+                            $this->tell_error("An error occured while installation. Please try again.-00002");
+                            exit();
                         }
 
                         $zip->close();
