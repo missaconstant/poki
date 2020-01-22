@@ -1,12 +1,12 @@
 $(function () {
-    
+
     $('.toggle-plugin').on('click', function (e) {
         e.preventDefault();
         loader.show();
 
         postize(baseroute + '/plugins/toggle/' + this.parentNode.id, 'get', false, function (datas) {
             alerter.success(datas.message);
-            setTimeout(function () { window.location.href = '/listener/list' }, 1500);
+            setTimeout(function () { window.location.href = baseroute + '/listener/list' }, 1500);
         },
         function (err) {
             alerter.error(err.message);
@@ -35,7 +35,7 @@ $(function () {
 
     $('.installbtn').on('click', function () {
         var files = document.getElementById('pluginfile').files;
-        
+
         if (!files.length) {
             alerter.error("You have to choose a file !");
         }
@@ -46,7 +46,7 @@ $(function () {
             var fd = new FormData();
                 fd.append("plugin", files[0]);
                 fd.append('_token', $('input[name="_token"]').val());
-            
+
             loader.show();
 
             $.ajax({

@@ -51,8 +51,7 @@
                     $this->json_success("Plugin " . ($plugins[$plugid]['active']==1 ? "enabled" : "disabled"));
                     exit();
                 }
-                else
-                {
+                else{
                     $this->tell_error("An error occured. Please try again.");
                     exit();
                 }
