@@ -50,7 +50,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -64,7 +67,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -75,7 +81,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -118,7 +127,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -129,7 +141,10 @@
                 return $q;
             }
             catch(\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -142,4 +157,3 @@
             return count($r);
         }
     }
-    

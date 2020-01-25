@@ -18,7 +18,10 @@
                 return modele::$bd->lastInsertId();
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -40,7 +43,10 @@
             }
             catch (\Exception $e) {
                 // echo json_encode(["error" => true, "message" => $e->getMessage()]); exit();
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -53,7 +59,10 @@
                 return count($r) ? (object) $r[0] : false;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -72,7 +81,10 @@
                 return $r;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -83,7 +95,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -94,7 +109,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -107,8 +125,10 @@
                 return $r;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
     }
-    

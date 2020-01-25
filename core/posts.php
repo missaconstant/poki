@@ -36,7 +36,8 @@
 				return true;
 			}
 			else {
-				throw new \Exception("Wrong token detected !", 1);
+				if ( Config::$env == 'DEV' )
+					throw new \Exception("Wrong token detected !", 1);
 			}
 		}
 
@@ -112,7 +113,8 @@
 					self::disableCSRF();
 				}
 				else {
-					throw new \Exception("CSRF MISSING ERROR CODE 1", 1);
+					if ( Config::$env == 'DEV' )
+						throw new \Exception("CSRF MISSING ERROR CODE 1", 1);
 				}
 			}
 		}
@@ -133,7 +135,8 @@
 				return is_array($type[$index]) ? $type[$index] : htmlspecialchars($type[$index]);
 			}
 			else {
-				throw new \Exception("Index undefined", 1);
+				if ( Config::$env == 'DEV' )
+					throw new \Exception("Index undefined", 1);
 			}
 		}
 

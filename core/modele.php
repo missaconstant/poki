@@ -14,10 +14,14 @@
 				$pdo_options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION ;
 				modele::$bd = new \PDO(Config::$db_type . ':dbname=' . Config::$db_name . '; host=' . Config::$db_host, Config::$db_user, Config::$db_password, $pdo_options) ;
 				modele::$bd->exec("set names utf8");
-			} 
+			}
 			catch(Exception $e){
 				modele::$bd = false;
-				die('Erreur : '.$e->getMessage()) ;
+
+                if ( Config::$env == 'DEV' )
+                {
+                    die('Erreur : '.$e->getMessage()) ;
+                }
 			}
 		}
 
@@ -50,7 +54,8 @@
 				else
 					return false ;
 			} catch (\Exception $e) {
-				die('Erreur tryLogin : '.$e->getMessage()) ;
+                if ( Config::$env == 'DEV' )
+		            die('Erreur tryLogin : '.$e->getMessage()) ;
 			}
 		}
 
@@ -76,7 +81,8 @@
 				}
 			}
 			catch(\Exception $e){
-				die($e->getMessage()) ;
+                if ( Config::$env == 'DEV' )
+		            die($e->getMessage()) ;
 			}
 		}
 

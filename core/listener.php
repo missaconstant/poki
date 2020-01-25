@@ -16,15 +16,15 @@
 
 		// public static function onBeforeDelete($params);
 
-		abstract public static function onRead($params);
+		// abstract public static function onRead($params);
 
 		// public static function onBeforeRead($params);
 
-		abstract public static function onLogin($params);
+		// abstract public static function onLogin($params);
 
 		// public static function onBeforeLogin($params);
 
-		abstract public static function onLogout($params);
+		// abstract public static function onLogout($params);
 
 		// public static function onBeforeLogout($params);
 
@@ -34,7 +34,7 @@
 
 	class Generator
 	{
-		
+
 		public static function startFile ()
 		{
 			$content = 	"<?php \n\n" .
@@ -64,14 +64,14 @@
 						"\t\t\texit(json_encode( [ \"message\" => \"Hello World ! This is Poki !\" ] ));\n" .
 						"\t\t}\n" .
 						"\t}";
-						
+
 			return $content;
 		}
 
 		public static function helloView()
 		{
 			$content = 	"<h1>Hello World !</h1>";
-						
+
 			return $content;
 		}
 
@@ -81,7 +81,7 @@
 						"<p>\n" .
 							"\tLorem ipsum dolor, sit amet consectetur adipisicing elit. At hic esse non tenetur sit aperiam, suscipit consectetur placeat autem illo ex sint? Voluptatem ad laborum dolorum, officia porro fugiat pariatur.\n" .
 						"</p>";
-			
+
 			return $content;
 		}
 
@@ -93,37 +93,37 @@
 						"\t{\n" .
 						"\t\tpublic static function onCreate(\$params)\n" .
 						"\t\t{\n" .
-						"\t\t\tself::log(\"Un element a été ajouté dans la categorie \" . \$params['categoryname']);\n" .
+						"\t\t\t//self::log(\"Un element a été ajouté dans la categorie \" . \$params['categoryname']);\n" .
 						"\t\t}\n\n" .
 						"\t\tpublic static function onUpdate(\$params)\n" .
 						"\t\t{\n" .
-						"\t\t\tself::log(\"L'élement avec pour ID \". \$params['contentid'] .\" a été mis à jour dans la categorie \" . \$params['categoryname']);\n" .
+						"\t\t\t//self::log(\"L'élement avec pour ID \". \$params['contentid'] .\" a été mis à jour dans la categorie \" . \$params['categoryname']);\n" .
 						"\t\t}\n" .
 						"\t\tpublic static function onDelete(\$params)\n" .
 						"\t\t{\n" .
-						"\t\t\tself::log(\"L'élement avec pour ID \". \$params['contentid'] .\" a été supprimé dans la categorie \" . \$params['categoryname']);\n" .
+						"\t\t\t//self::log(\"L'élement avec pour ID \". \$params['contentid'] .\" a été supprimé dans la categorie \" . \$params['categoryname']);\n" .
 						"\t\t}\n" .
 						"\t}";
-						
+
 			return $content;
 		}
 
 	}
-	
-	class FlxZipArchive extends \ZipArchive 
+
+	class FlxZipArchive extends \ZipArchive
 	{
-		public function addDir($location, $name) 
+		public function addDir($location, $name)
 		{
 			$this->addEmptyDir($name);
 			$this->addDirDo($location, $name);
-		} 
+		}
 
-		private function addDirDo($location, $name) 
+		private function addDirDo($location, $name)
 		{
 			$name .= '/';
 			$location .= '/';
 			$dir = opendir($location);
-			
+
 			while ($file = readdir($dir))
 			{
 				if ($file == '.' || $file == '..') continue;
@@ -132,5 +132,5 @@
 			}
 
 			closedir($dir);
-		} 
+		}
 	}

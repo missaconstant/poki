@@ -30,9 +30,12 @@ class Road
 					$ctrl->$action();
 				}
 				else {
-					throw new \Exception("Action Introuvable !", 1);
+					if ( Config::$env == 'DEV' )
+						throw new \Exception("Action Introuvable !", 1);
+					else
+						(new DefaultsControlleur())->home();
 				}
-				
+
 			}
 		}
 		else {
@@ -44,11 +47,15 @@ class Road
 					$ctrl->$action();
 				}
 				else {
-					throw new \Exception("Controlleur Introuvable", 1);
+					if ( Config::$env == 'DEV' )
+						throw new \Exception("Controlleur Introuvable", 1);
+					else
+						(new DefaultsControlleur())->home();
 				}
 			}
 			else {
-				throw new Exception("Controlleur Introuvable", 1);
+				if ( Config::$dev )
+					throw new Exception("Controlleur Introuvable", 1);
 			}
 		}
 	}

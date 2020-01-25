@@ -4,6 +4,8 @@
 
     class Config {
 
+        public static $env = "DEV";
+
         public static $db_user = "root";
 
         public static $db_password = "";

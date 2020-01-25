@@ -20,8 +20,10 @@
                 return count($r) ? (object) $r[0] : false;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
     }
-    

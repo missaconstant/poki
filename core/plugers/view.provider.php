@@ -16,7 +16,7 @@
             include ROOT . 'pk-plugins/'. $GLOBALS['plugid'] .'/views/includes/'. $viewpath .'.php';
         }
 
-        private static function serialize($array, $jump)
+        private static function serialize($array, $jump=[])
         {
             $parts = [];
 
@@ -29,7 +29,7 @@
 
             return implode(' ', $parts);
         }
-        
+
         public static function form($options)
         {
             $lines     = $options['fields'];
@@ -69,6 +69,15 @@
             $code      = $options['content'];
 
             include self::getViewHTML('highlight');
+        }
+
+        public static function countbox($options)
+        {
+            $count  = $options['count'];
+            $label  = $options['label'];
+            $icon   = $options['icon'];
+
+            include self::getViewHTML('countbox');
         }
 
     }

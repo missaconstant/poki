@@ -25,7 +25,10 @@
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -59,7 +62,7 @@
 
                 # setting the joining keys to replace the defaul one "id"
                 $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
-                
+
 
                 # searching right query string
                 $sql = '';
@@ -77,11 +80,14 @@
                 $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(\PDO::FETCH_ASSOC);
                 $q->closeCursor();
-                
+
                 return $r;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -101,7 +107,7 @@
 
                 # setting the joining keys to replace the defaul one "id"
                 $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
-                
+
                 # searching right query string
                 $sql = '';
                 if ($checkJoin && count($joining['links'])) {
@@ -168,11 +174,14 @@
                 foreach ($ids as $k => $id) {
                     $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$id'");
                 }
-                
+
                 return true;
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -185,7 +194,10 @@
                 return $r[0]['els_count'];
             }
             catch (\Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 
@@ -233,7 +245,10 @@
                 return true;
             }
             catch(Exception $e) {
-                return false;
+                if ( Config::$env == 'DEV' )
+                    die( $e->getMessage() );
+                else
+                    return false;
             }
         }
 

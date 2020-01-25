@@ -21,15 +21,28 @@
 				$ch = $path[0];
 				$vu = $path[1];
 				if(file_exists(ROOT.'vues/'.$ch.'/'.$vu.'.php'))
+				{
 					include_once ROOT.'vues/'.$ch.'/'.$vu.'.php';
-				else
-					throw new \Exception("La vue demandée est introuvable.", 1);
+				}
+				else {
+					if ( Config::$env == 'DEV' )
+						throw new \Exception("La vue demandée est introuvable.", 1);
+					else
+						include_once ROOT.'vues/app/blank.php';
+				}
 			}
-			else if(preg_match("#[a-zA-Z0-9]+#", $path)){
+			else if (preg_match("#[a-zA-Z0-9]+#", $path))
+			{
 				if(file_exists(ROOT.'vues/'.$path.'.php'))
+				{
 					include_once ROOT.'vues/'.$path.'.php';
-				else
-					throw new \Exception("La vue ".$path." demandée est introuvable.", 1);
+				}
+				else {
+					if ( Config::$env == 'DEV' )
+						throw new \Exception("La vue ".$path." demandée est introuvable.", 1);
+					else
+						include_once ROOT.  'vues/app/blank.php';
+				}
 			}
 		}
 
@@ -56,7 +69,7 @@
 			else{
 				include_once ROOT.'modeles/'.ucfirst($modele).'Modele.php';
 				$model = "\\Poki\\" . ucfirst($modele).'Modele';
-				
+
 				return new $model();
 			}
 		}
@@ -72,7 +85,7 @@
 			else{
 				include_once ROOT.'classes/'.$classe.'.php';
 				$class = ucfirst($classe);
-				return new $class();	
+				return new $class();
 			}
 		}
 
