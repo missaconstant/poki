@@ -5,13 +5,24 @@
     class CategoriesModele extends modele
     {
 
-        public function trouverTousCategories()
+        public function trouverTousCategories($getone='')
         {
             $dbname = Config::$db_name;
-            $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app'");
+            $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app_". ( strlen($getone) ? $getone : '' ) ."'");
             $r = $q->fetchAll(\PDO::FETCH_ASSOC);
+
+            // associating label for each category
+            foreach ( $r as $k => $category )
+            {
+                // get category params
+                $params = json_decode(file_get_contents(Config::$jsonp_files_path .$category['field']. ".params"), true);
+                
+                // affecting label
+                $r[ $k ]['label'] = $params['label'] ?? '';
+            }
+
             $q->closeCursor();
-            return $r;
+            return $getone ? (count($r) ? $r[0] : false) : $r;
         }
 
         public function trouverCategory($name)
@@ -20,6 +31,7 @@
             $c_name = 'adm_app_' . $name;
             $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' AND column_name!='id' AND column_name!='active' AND column_name!='added_at' AND column_name!='combined_fields'");
             $r = $q->fetchAll();
+            
             $q->closeCursor();
             return count($r) ? $r : false;
         }
@@ -29,6 +41,7 @@
             $dbname = Config::$db_name;
             $q = modele::$bd->query("SELECT table_name as tab_name, column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema='$dbname' AND TABLE_NAME REGEXP '^adm_app' AND column_name!='active' AND column_name!='added_at' AND column_name!='combined_fields'");
             $r = $q->fetchAll(\PDO::FETCH_ASSOC);
+
             $q->closeCursor();
             return $r;
         }

@@ -98,7 +98,7 @@
                             $('#addfieldmodal').modal('hide');
                             alerter.success('Field(s) correctly '+(edition!=0 ? 'modified':'added')+' !');
                             if (!edition) addNewFields(response.addedfields);
-                            else editField(response.addedfields[0].name, response.addedfields[0].type);
+                            else editField(response.addedfields[0].name, response.addedfields[0].type, response.addedfields[0].fieldlabel);
                             $('#newfieldmodalform')[0].reset();
                         }
                         else {
@@ -125,7 +125,7 @@
                         '<td class="field_name">'+ fields[field].name +'</td>' +
                         '<td class="field_type"><span class="p-2 bagde badge-pill badge-'+ vars[fields[field].type] +'">'+ types[fields[field].type] +'</span></td>' +
                         '<td>Reload page to link</td>' +
-                        '<td>Unknown</td>' +
+                        '<td>'+ ( fields[field].fieldlabel || 'No Label' ) +'</td>' +
                         '<td style="white-space: nowrap; width: 15%;">' +
                             '<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">' +
                                 '<div class="btn-group btn-group-sm" style="float: none;">' +
@@ -148,7 +148,7 @@
                 $mainline = $('#newfieldmodalform .mainline');
                 $newline = null;
                 if (nblines >= 1) {
-                    $mainline.find('.form-group').removeClass('col-12').addClass('col-6');
+                    $mainline.find('.form-group').removeClass('col-12').addClass('col-4');
                 }
                 $newline = $($mainline[0].cloneNode(true));
                 $newline.removeClass('mainline').find('.field-name').val('');
@@ -157,10 +157,11 @@
                 $('#newfieldmodalform').append($newline);
             }
 
-            function editField(name, type) {
+            function editField(name, type, fieldlabel) {
                 var vars = {"varchar": "info", "int": "danger", "text": "success", "char": "primary", "date": "warning", "tinytext": "default"};
                 var types = {"varchar": "Alphanumeric", "int": "Numeric", "text": "Text field", "char": "File field", "date": "Date field", "tinytext": "Multiple field"};
                 $editline.find('.field_name').text(name);
+                $editline.find('.field_label').text(fieldlabel);
                 $editline.find('.field_type').html('<span class="p-2 bagde badge-pill badge-'+ vars[type] +'">'+ types[type] +'</span>');
             }
 
@@ -204,12 +205,14 @@
             }
 
             function openFieldEditor(category, btn) {
-                $parent = $(btn).parent().parent().parent().parent();
-                $oldname = $parent.find('.field_name').text();
-                $oldtype = $parent.find('.field_type span').text();
-                $editline = $parent;
+                $parent     = $(btn).parent().parent().parent().parent();
+                $oldname    = $parent.find('.field_name').text();
+                $oldtype    = $parent.find('.field_type span').text();
+                $oldlabel   = $parent.find('.field_label').text();
+                $editline   = $parent;
 
                 $('#newfieldmodalform input[name="fieldname"]').val($oldname);
+                $('#newfieldmodalform input[name="fieldlabel"]').val($oldlabel == 'No Label' ? '' : $oldlabel);
                 $('#newfieldmodalform #editingfield').val($oldname);
 
                 var selectoption = $('#newfieldmodalform select[name="fieldtype"]')[0].childNodes;
@@ -229,9 +232,10 @@
                 $('#addfieldmodal').modal('show');
             }
 
-            function openCategoryEditor(category) {
+            function openCategoryEditor(category, label) {
                 var oldname = category;
                 $('#newcategorymodalform input[name="name"]').val(oldname);
+                $('#newcategorymodalform input[name="label"]').val(label);
                 $('#newcategorymodalform #oldcategoryname').val(oldname);
                 $('#newcategorymodalform #editingcategory').val(oldname);
                 $('#addcategorymodal .modal-title').text('Edit category');

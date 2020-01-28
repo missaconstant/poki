@@ -15,6 +15,10 @@
                         <label>Category Name</label>
                         <input class="form-control" placeholder="Type something" type="text" name="name">
                     </div>
+                    <div class="form-group">
+                        <label>Category Label (shown in menu)</label>
+                        <input class="form-control" placeholder="Type something" type="text" name="label">
+                    </div>
                     <input type="hidden" name="oldname" value="<?= isset($category_name) ? $category_name:'' ?>" id="oldcategoryname">
                     <input type="hidden" name="editing" value="0" id="editingcategory">
                     <?= Posts::getCSRF() ?>

@@ -17,6 +17,10 @@
                             <input class="form-control field-name" placeholder="Type something" type="text" name="fieldname">
                         </div>
                         <div class="col-12 form-group">
+                            <label>Filed Label</label>
+                            <input class="form-control field-label" placeholder="Type something" type="text" name="fieldlabel">
+                        </div>
+                        <div class="col-12 form-group">
                             <label>Filed Type</label>
                             <select class="form-control field-type" name="fieldtype">
                                 <option value="0" selected>Choose field type</option>

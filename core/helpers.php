@@ -235,7 +235,7 @@
             if (!isset(self::$categoryparams[$categoryname]) || $renew) {
                 self::$categoryparams[$categoryname] = json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
             }
-            return self::$categoryparams[$categoryname][$param];
+            return self::$categoryparams[$categoryname][$param] ?? null;
         }
     }
     

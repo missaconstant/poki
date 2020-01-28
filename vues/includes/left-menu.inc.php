@@ -30,8 +30,17 @@
                             <li class="has_sub">
                                 <a href="javascript:void(0)" class="waves-effect"><i class="mdi mdi-layers"></i> <span> Categories </span> <span class="float-right"><i class="mdi mdi-chevron-right"></i></span></a>
                                 <ul class="list-unstyled">
-                                    <?php foreach ($categories as $k => $categorie): $field = substr($categorie['field'], 8); ?>
-                                        <li><a href="<?= Routes::find('category-show') .'/'. $field ?>"><?= $field ?></a></li>
+                                    <?php 
+                                        foreach ($categories as $k => $categorie): 
+                                            // get category name && use label if exists
+                                            $catname    = substr($categorie['field'], 8);
+                                            $field      = isset($categorie['label']) && strlen($categorie['label']) ? $categorie['label'] : $catname;
+                                    ?>
+                                        <li>
+                                            <a href="<?= Routes::find('category-show') .'/'. $catname ?>">
+                                                <?= $field ?>
+                                            </a>
+                                        </li>
                                     <?php endforeach ?>
                                 </ul>
                             </li>

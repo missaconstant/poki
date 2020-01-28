@@ -3,7 +3,7 @@
 <div class="card m-b-30">
     <div class="card-body">
 
-        <a href="#" class="btn btn-outline-danger btn-animation float-right" style="margin-left:10px;" onclick="openCategoryEditor('<?= $category_name ?>')">
+        <a href="#" class="btn btn-outline-danger btn-animation float-right" style="margin-left:10px;" onclick="openCategoryEditor('<?= $category_name ?>', '<?= $category_label ?>')">
             <span class="mdi mdi-pencil"></span>
         </a>
         <a href="#" class="btn btn-outline-info btn-animation float-right" data-animation="pulse" data-toggle="modal" data-target="#addfieldmodal">
@@ -21,7 +21,7 @@
                         <th>Field name</th>
                         <th style="width:200px;">Field type</th>
                         <th style="width:300px;">Linked to</th>
-                        <th>Created at</th>
+                        <th>Label</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -51,7 +51,7 @@
                                 ?>
                             </select>
                         </td>
-                        <td>Unknown</td>
+                        <td class="field_label"><?= ( Helpers::getCategoryParams($category_name, 'fields') ?? [] )[ $field['name'] ]['fieldlabel'] ?? 'No Label' ?></td>
                         <td style="white-space: nowrap; width: 15%;">
                             <div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
                                 <div class="btn-group btn-group-sm" style="float: none;">

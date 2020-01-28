@@ -29,29 +29,36 @@
                 exit();
             }
 
-            $name = Posts::post('name');
-            $edition = Posts::post('editing');
-            $category = (object) ["name" => $name, "oldname" => $edition];
-            if (!strlen(trim($name))) {
+            $name       = Posts::post('name');
+            $label      = Posts::post('label');
+            $edition    = Posts::post('editing');
+            $category   = (object) ["name" => $name, "label" => $label, "oldname" => $edition];
+
+            if (!strlen(trim($name)))
+            {
                 $this->json_error('Category name cannot be empty !', ["newtoken" => Posts::getCSRFTokenValue()]);
                 exit();
             }
-            else if (preg_match("#\s#", trim($name))) {
+            else if (preg_match("#\s#", trim($name)))
+            {
                 $this->json_error('A category should not contain whitespace !', ["newtoken" => Posts::getCSRFTokenValue()]);
                 exit();
             }
-            else if ($this->loadModele()->existsCategory($name) && $name != $edition) {
+            else if ($this->loadModele()->existsCategory($name) && $name != $edition)
+            {
                 $this->json_error('A category with this name already exists !', ["newtoken" => Posts::getCSRFTokenValue()]);
                 exit();
             }
-            else if ($name == $edition) {
-                $this->json_error('No change done !', ["newtoken" => Posts::getCSRFTokenValue()]);
-                exit();
-            }
+            // else if ($name == $edition)
+            // {
+            //     $this->json_error('No change done !', ["newtoken" => Posts::getCSRFTokenValue()]);
+            //     exit();
+            // }
             else {
-                if ($this->loadModele()->{ $edition != '0' ? 'modifierCategory':'creerCategory' }($category)) {
-                    $this->loadModele('params')->{ $edition != '0' ? 'updateCategoryParams':'createCategoryParams' }($category);
-                    $this->json_success('Category created !', ["newtoken" => Posts::getCSRFTokenValue(), "name" => $name]);
+                if ($this->loadModele()->{ $edition != '0' ? 'modifierCategory':'creerCategory' }($category))
+                {
+                    $this->loadModele('params')->createCategoryParams($category);
+                    $this->json_success('Category created !', [ "newtoken" => Posts::getCSRFTokenValue(), "name" => $name, "label" => $label ]);
                     exit();
                 }
                 else {
@@ -103,20 +110,23 @@
                 $this->redirTo(Routes::find('category-list') .'/'. Posts::get(0));
             }
             else {
-                $categorie = $this->loadModele()->trouverCategory(Posts::get(0));
-                $allfields = $this->loadModele()->trouverTousCategoryFields();
-                $category_api = $this->loadModele('api')->trouverApi(Posts::get(0));
-                $apitypes = $this->loadModele('settings')->get('apipermissiontypes');
+                $categorie      = $this->loadModele()->trouverCategory(Posts::get(0));
+                $categorie_infs = $this->loadModele()->trouverTousCategories(Posts::get(0));
+                $allfields      = $this->loadModele()->trouverTousCategoryFields();
+                $category_api   = $this->loadModele('api')->trouverApi(Posts::get(0));
+                $apitypes       = $this->loadModele('settings')->get('apipermissiontypes');
+
                 $this->render('app/category-show', [
-                    "admin" => $admin,
-                    "pagetitle" => "Category: " . Posts::get(0),
-                    "categories" => $this->list(),
-                    "category_name" => Posts::get(0),
-                    "category_fields" => $categorie,
-                    "all_category_fileds" => $allfields,
-                    "apitypes" => explode(',', $apitypes->content),
-                    "api" => $category_api,
-                    "pluglist" => $this->loadController('listener')->loadPlugins()
+                    "admin"                 => $admin,
+                    "pagetitle"             => "Category: " . Posts::get(0),
+                    "categories"            => $this->list(),
+                    "category_name"         => Posts::get(0),
+                    "category_label"        => $categorie_infs ? $categorie_infs['label'] : '',
+                    "category_fields"       => $categorie,
+                    "all_category_fileds"   => $allfields,
+                    "apitypes"              => explode(',', $apitypes->content),
+                    "api"                   => $category_api,
+                    "pluglist"              => $this->loadController('listener')->loadPlugins()
                 ]);
             }
         }
@@ -125,17 +135,19 @@
         {
             $admin = $this->usr->loginSurvey(false, 'login');
 
-            if ($admin->role != 'admin') {
+            if ($admin->role != 'admin')
+            {
                 $this->json_error('You cannot create category !');
                 exit();
             }
 
             $fields = [];
             $field_main = (object) [
-                "name" => Posts::post('fieldname'),
-                "type" => Posts::post('fieldtype'),
-                "category" => Posts::post('category'),
-                "oldname" => Posts::post('editing')
+                "name"      => Posts::post('fieldname'),
+                "type"      => Posts::post('fieldtype'),
+                "fieldlabel"=> Posts::post('fieldlabel'),
+                "category"  => Posts::post('category'),
+                "oldname"   => Posts::post('editing')
             ];
             $fields[] = $field_main;
 
@@ -143,10 +155,11 @@
                 $i = 1;
                 while (Posts::post(['fieldname_' . $i])) {
                     $fields[] = (object) [
-                        "name" => Posts::post('fieldname_' . $i),
-                        "type" => Posts::post('fieldtype_' . $i),
-                        "category" => Posts::post('category'),
-                        "oldname" => Posts::post('editing')
+                        "name"      => Posts::post('fieldname_' . $i),
+                        "type"      => Posts::post('fieldtype_' . $i),
+                        "fieldlabel"=> Posts::post('fieldlabel_' . $i),
+                        "category"  => Posts::post('category'),
+                        "oldname"   => Posts::post('editing')
                     ];
                     $i++;
                 }
@@ -154,7 +167,12 @@
 
             $this->checkFieldValues($fields);
             
-            if ($this->loadModele()->{ $edition ? 'modifierCategoryField' : 'creerCategoryField' }($edition ? $field_main : $fields)) {
+            if ($this->loadModele()->{ $edition ? 'modifierCategoryField' : 'creerCategoryField' }($edition ? $field_main : $fields))
+            {
+                // set field(s) label in fields params
+                $this->loadModele('params')->setFieldLabel( Posts::post('category'), $fields );
+
+                // answering
                 $this->json_success('New fields added to !', [
                     "newtoken" => Posts::getCSRFTokenValue(),
                     "addedfields" => $fields
@@ -196,9 +214,9 @@
         public function linkField()
         {
             if ($admin = $this->usr->loginSurvey(false, false, false)) {
-                $category = Posts::get(0);
-                $field = Posts::get(1);
-                $linkto = Posts::get(2) != '0' ? Posts::get(2) . '/' . Posts::get(3) : $linkto = '0';
+                $category   = Posts::get(0);
+                $field      = Posts::get(1);
+                $linkto     = Posts::get(2) != '0' ? Posts::get(2) . '/' . Posts::get(3) : $linkto = '0';
 
                 if ($this->loadModele('params')->setLink($category, $field, $linkto)) {
                     echo $this->json_success("Link correctely setted !");
@@ -214,9 +232,9 @@
 
         public function form()
         {
-            $name = Posts::get(0);
-            $contentid = Posts::get([1]) ? Posts::get(1) : false;
-            $content = false;
+            $name       = Posts::get(0);
+            $contentid  = Posts::get([1]) ? Posts::get(1) : false;
+            $content    = false;
 
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
@@ -243,11 +261,11 @@
         public function listContents()
         {
             $contentsNumber = 0;
-            $content = null;
-            $contentMax = 10;
-            $name = Posts::get(0);
-            $limit = Posts::get([1]) && strlen(Posts::get(1)) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
-            $search = Posts::get([2]) && strlen(Posts::get(2)) ? Posts::get(2) : false;
+            $content        = null;
+            $contentMax     = 10;
+            $name           = Posts::get(0);
+            $limit          = Posts::get([1]) && strlen(Posts::get(1)) ? (((Posts::get(1)-1)*$contentMax) . ", $contentMax") : "0, $contentMax";
+            $search         = Posts::get([2]) && strlen(Posts::get(2)) ? Posts::get(2) : false;
 
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
