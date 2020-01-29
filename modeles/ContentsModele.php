@@ -63,7 +63,6 @@
                 # setting the joining keys to replace the defaul one "id"
                 $joining['joining_keys'] = $checkJoin && is_array($checkJoin) && $joining ? $checkJoin : [];
 
-
                 # searching right query string
                 $sql = '';
                 if ($checkJoin && count($joining['links'])) {
@@ -76,6 +75,7 @@
                     $where = isset($filter['where']) && strlen(trim($filter['where'])) ? 'WHERE ' . $filter['where']:'';
                     $sql = "SELECT * FROM adm_app_$categoryname $where $order $limit";
                 }
+
                 #doing query
                 $q = modele::$bd->query($sql);
                 $r = $q->fetchAll(\PDO::FETCH_ASSOC);
@@ -84,10 +84,7 @@
                 return $r;
             }
             catch (\Exception $e) {
-                if ( Config::$env == 'DEV' )
-                    die( $e->getMessage() );
-                else
-                    return false;
+                return [];
             }
         }
 
@@ -106,11 +103,11 @@
                 $joining['name'] = $categoryname;
 
                 # setting the joining keys to replace the defaul one "id"
-                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) && $joining ? $checkJoin : [];
+                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
 
                 # searching right query string
                 $sql = '';
-                if ($checkJoin && count($joining['links']) && $joining) {
+                if ($checkJoin && count($joining['links'])) {
                     $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $find);
                 }
                 else {
@@ -124,6 +121,7 @@
                 return count($r) ? $r[0]:false;
             }
             catch (\Exception $e) {
+                // return false;
                 echo json_encode([$e->getMessage()]); exit();
             }
         }
@@ -136,28 +134,37 @@
         public function trouverValuesContents($categoryname, $check_in, $contentlist)
         {
             $list = [];
+            $cats = $this->trouverCategory( $categoryname );
 
-            foreach ($contentlist as $k => $value)
+            // if category do not exists stop process and tell it
+            if ( !$cats )
             {
-                $content = $this->trouverContents($categoryname, $value, false, $check_in);
-
-                if ($content)
-                {
-                    $newctnt = [];
-
-                    foreach ($content as $k => $value)
-                    {
-                        if ($k != 'active' && $k != 'added_at' && $k != 'combined_fields')
-                        {
-                            $newctnt[ $categoryname .'_' .$k ] = $value;
-                        }
-                    }
-
-                    $list[] = $newctnt;
-                }
+                return 'NOEXISTS';
             }
+            // else continue
+            else {
+                foreach ($contentlist as $k => $value)
+                {
+                    $content = $this->trouverContents($categoryname, $value, false, $check_in);
 
-            return $list;
+                    if ($content)
+                    {
+                        $newctnt = [];
+
+                        foreach ($content as $k => $value)
+                        {
+                            if ($k != 'active' && $k != 'added_at' && $k != 'combined_fields')
+                            {
+                                $newctnt[ $categoryname .'_' .$k ] = $value;
+                            }
+                        }
+
+                        $list[] = $newctnt;
+                    }
+                }
+
+                return $list;
+            }
         }
 
         public function trouverIdsContents($categoryname, $idlist)
@@ -286,6 +293,8 @@
             # list of table to take in select query
             $categoriesJoined = $this->getCategoriesJoinedName($joining['links']);
             array_unshift($categoriesJoined, $categoryname);
+
+            var_dump( $categoriesJoined ); exit();
 
             # to save category fields
             $fields = [];

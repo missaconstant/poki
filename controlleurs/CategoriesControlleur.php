@@ -270,13 +270,16 @@
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
 
-            if (!$this->loadModele()->existsCategory($name)) {
+            if (!$this->loadModele()->existsCategory($name))
+            {
                 $this->redirTo(Routes::find('dashboard'));
                 exit();
             }
             else {
                 $category = $this->loadModele()->trouverCategory($name);
-                if (!$search) {
+
+                if (!$search)
+                {
                     $contents = $this->loadController('contents')->list($name, ["limit" => $limit]);
                     $contentsNumber = $this->loadModele('contents')->compterContents($name);
                 }
@@ -285,6 +288,7 @@
                     $contentsNumber = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, false, true);
                     $contentsNumber = $contentsNumber[0]['countlines'];
                 }
+
                 $this->render('app/category-list', [
                     "admin" => $admin,
                     "pagetitle" => 'Category contents: <a href="'. Routes::find('category-show') . '/' . $name .'">' . $name . '</a>',

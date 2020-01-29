@@ -90,9 +90,9 @@
             else {
                 require_once ROOT . 'modeles/ContentsModele.php';
 
-                $mdl = new ContentsModele();
-                $foreigns = $mdl->trouverTousContents($linked['linkedto']);
-                $options = ['<option value="0"></option>'];
+                $mdl        = new ContentsModele();
+                $foreigns   = $mdl->trouverTousContents($linked['linkedto']);
+                $options    = ['<option value="0"></option>'];
                 
                 foreach ($foreigns as $k => $foreign) {
                     $group      = explode(';', $value);
@@ -151,10 +151,15 @@
 
                 $mdl        = new ContentsModele();
                 $foreigns   = $mdl->trouverValuesContents($linked['linkedto'], $linked['label'], explode(';', $value));
+                $counts     = is_array($foreigns) ? count( $foreigns ) : 0;
                 
-                if (count($foreigns))
+                if ( $foreigns == 'NOEXISTS' )
                 {
-                    $foreign = $foreigns[0];
+                    return $value;
+                }
+                else if (is_array($foreigns) && $counts)
+                {
+                    $foreign    = $foreigns[0];
                     # return $foreign ? $foreign[$linked['label']] : '';
                     # changed for now check for name or label
                     $key = '';
@@ -179,7 +184,8 @@
                         $key = strlen($key) ? $key : $foreign[ $linked['label'] ];
                     }
 
-                    return $foreign[ $key ];
+                    // if have more than one foreign, give the number else give vale
+                    return $counts > 1 ? "$counts elements" : $foreign[ $key ];
                 }
                 else {
                     return '';
@@ -232,9 +238,11 @@
          */
         public static function getCategoryParams($categoryname, $param, $renew=false)
         {
-            if (!isset(self::$categoryparams[$categoryname]) || $renew) {
+            if (!isset(self::$categoryparams[$categoryname]) || $renew)
+            {
                 self::$categoryparams[$categoryname] = json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
             }
+
             return self::$categoryparams[$categoryname][$param] ?? null;
         }
     }
