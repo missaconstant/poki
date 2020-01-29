@@ -61,7 +61,7 @@
                 $joining['name'] = $categoryname;
 
                 # setting the joining keys to replace the defaul one "id"
-                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
+                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) && $joining ? $checkJoin : [];
 
 
                 # searching right query string
@@ -106,11 +106,11 @@
                 $joining['name'] = $categoryname;
 
                 # setting the joining keys to replace the defaul one "id"
-                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) ? $checkJoin : [];
+                $joining['joining_keys'] = $checkJoin && is_array($checkJoin) && $joining ? $checkJoin : [];
 
                 # searching right query string
                 $sql = '';
-                if ($checkJoin && count($joining['links'])) {
+                if ($checkJoin && count($joining['links']) && $joining) {
                     $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $find);
                 }
                 else {
@@ -205,7 +205,7 @@
 
         public function getCategoryParams($categoryname)
         {
-            return json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
+            return json_decode( (@file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params") ?? false ), true);
         }
 
         public function getCategoriesJoinedName($links)
