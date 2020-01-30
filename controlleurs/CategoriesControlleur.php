@@ -276,8 +276,8 @@
                 exit();
             }
             else {
-                $category = $this->loadModele()->trouverCategory($name);
-
+                $category   = $this->loadModele()->trouverCategory($name);
+                $params     = $this->loadModele('params')->getCategoryParams( $name );
                 if (!$search)
                 {
                     $contents = $this->loadController('contents')->list($name, ["limit" => $limit]);
@@ -295,6 +295,7 @@
                     "categories" => $this->list(),
                     "category_name" => $name,
                     "category_fields" => $category,
+                    "category_params" => $params,
                     "nbrcontents" => $contentsNumber,
                     "maxcontentperpage" => $contentMax,
                     "actualcontentspage" => Posts::get([1]) ? Posts::get(1) : 1,

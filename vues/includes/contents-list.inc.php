@@ -65,7 +65,7 @@
                             <?php endif ?>
                             <!--  -->
                             <?php foreach ($category_fields as $k => $field): ?>
-                                <th class="border-top-0"><?= $field['name'] ?></th>
+                                <th class="border-top-0"><?= $category_params['fields'][$field['name']]['fieldlabel'] ?? $field['name'] ?></th>
                                 <?php $categoryOfficialFields[]/*declared at top of this file*/ = $field['name']; ?>
                             <?php endforeach ?>
                         </tr>

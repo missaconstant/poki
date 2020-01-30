@@ -135,7 +135,7 @@
                 $fieldname = $field->name;
                 $fieldtype = $field->type;
                 $oldname = $field->oldname;
-                $fieldlength = $field->type=='varchar' || $field->type=='int' ? '(255)' : '';
+                $fieldlength = $field->type != 'text' && $field->type != 'date' && $field->type != 'tinytext' ? '(255)' : '';
                 $q = modele::$bd->query("ALTER TABLE $category CHANGE $oldname $fieldname $fieldtype $fieldlength");
                 return true;
             }
