@@ -30,6 +30,18 @@
             return implode(' ', $parts);
         }
 
+		public static function generateRandomString($length = 25) {
+			$characters			= '0123456789abcdef';
+			$charactersLength	= strlen($characters);
+			$randomString		= '';
+
+			for ($i = 0; $i < $length; $i++) {
+				$randomString .= $characters[rand(0, $charactersLength - 1)];
+			}
+
+			return $randomString;
+		}
+
         public static function form($options)
         {
             $lines     = $options['fields'];
@@ -76,6 +88,9 @@
             $count  = $options['count'];
             $label  = $options['label'];
             $icon   = $options['icon'];
+            $icolor = '#' . $options['iconcolor'];
+            $attrs  = $options['attrs'] ?  self::serialize( $options['attrs'] ) : '';
+            $element= $options['element'] ?? 'div';
 
             include self::getViewHTML('countbox');
         }

@@ -72,9 +72,9 @@
                                     <span style="vertical-align: middle;"> <?= $params['label_name'] ?> </span>
                                 </a>
                                 <ul class="list-unstyled">
-                                    <?php foreach ($params['menulinks'] as $k => $item): ?>
+                                    <?php foreach ($params['menulinks'] as $k => $item): if ( isset($item['link']) ): ?>
                                     <li><a href="<?= Routes::find('plugins') .'/'. $plugid . '/' . $k ?>"> <?= $item['link'] ?> </a></li>
-                                    <?php endforeach; ?>
+                                    <?php endif; endforeach; ?>
                                 </ul>
                             </li>
                             <?php endif; endforeach; ?>

@@ -75,8 +75,8 @@
             });
         </script>
         <!-- Plugins styles -->
-        <?php if (isset($scripts)): foreach ( $scripts as $k => $script ): ?>
-            <script src="<?= Config::$plugin_base_webpath . $plugin_id .'/'. $script ?>"></script>
+        <?php if (isset($scripts)): foreach ( $scripts as $k => $script ): $local = !\preg_match("#http[s]?://#", $script); ?>
+            <script src="<?= ($local ? Config::$plugin_base_webpath . $plugin_id .'/' : '') . $script ?>"></script>
         <?php endforeach; endif; ?>
     </body>
 </html>

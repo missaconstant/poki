@@ -294,8 +294,6 @@
             $categoriesJoined = $this->getCategoriesJoinedName($joining['links']);
             array_unshift($categoriesJoined, $categoryname);
 
-            var_dump( $categoriesJoined ); exit();
-
             # to save category fields
             $fields = [];
 
