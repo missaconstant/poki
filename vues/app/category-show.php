@@ -70,7 +70,7 @@
                 $('.link-choose').select2();
                 $('.link-choose').on('change', function (e) {
                     var linkto = this.value, field = this.name, category = $('#currentcategoryname').val();
-                    
+
                     if (!linkto.length) return;
 
                     loader.show();
@@ -88,6 +88,7 @@
                 $form = $('#newfieldmodalform');
                 var edition = $('#newfieldmodalform #editingfield').val();
                     edition = edition != '0' ? edition : 0;
+
                 $.ajax({
                     url: $form[0].action + (edition!=0 ? '/edit-field' : '/add-field'),
                     type: 'post',
@@ -153,6 +154,7 @@
                 $newline = $($mainline[0].cloneNode(true));
                 $newline.removeClass('mainline').find('.field-name').val('');
                 $newline.find('.field-name').attr({name: 'fieldname_' + nblines});
+                $newline.find('.field-label').attr({name: 'fieldlabel_' + nblines});
                 $newline.find('.field-type').attr({name: 'fieldtype_' + nblines});
                 $('#newfieldmodalform').append($newline);
             }
@@ -226,7 +228,7 @@
                         }
                     }
                 }
-                
+
                 $('.more-field-btn').hide();
                 $('#addfieldmodal .modal-title').text('Edit field');
                 $('#addfieldmodal').modal('show');
@@ -368,7 +370,7 @@
                 $form = $('#apimodalform');
                 $.ajax({
                     url: $form[0].action,
-                    method: 'post',            
+                    method: 'post',
                     data: $form.serialize(),
                     dataType: 'json',
                     success: function (response) {
