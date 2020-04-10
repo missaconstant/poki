@@ -181,19 +181,25 @@
             $lines = $this->loadModele()->trouverTousContents($categoryname);
             $heads = $this->loadModele('categories')->trouverCategory($categoryname);
             $files = [];
+            
             # looping for header
             $head = [];
             foreach ($heads as $k => $col) {
+                
                 $head[] = '"'. $col['name'] .'"';
             }
+            
             # looping for lines
             foreach ($lines as $k => $line) {
-                $lines[$k] = implode(',', array_map(function ($item) { return '"'. $item .'"'; }, array_slice($line, 3)) );
+                $lines[$k] = implode(',', array_map(function ($item) { return '"'. html_entity_decode($item) .'"'; }, array_slice($line, 4)) );
             }
+            
             # assembling
             $files[] = implode(',', $head);
+            $files[] = "";
             $files[] = implode("\n", $lines);
             $files = implode("\n", $files);
+            
             # writing
             if (file_put_contents(ROOT . 'appfiles/fields_files/' . $categoryname . '.csv', $files)) {
                 echo $this->json_success(WROOT . 'appfiles/fields_files/' . $categoryname . '.csv');
@@ -201,11 +207,6 @@
             else {
                 echo $this->json_error("Permission denied !");
             }
-        }
-
-        public function test()
-        {
-            var_dump(Posts::get([1]));
         }
     }
     
