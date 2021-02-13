@@ -48,7 +48,7 @@
 
         public function getCategoryParams($categoryname)
         {
-            return json_decode(file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params"), true);
+            return json_decode(file_get_contents(Config::$jsonp_files_path . CATEG_PREFIX . "$categoryname.params"), true);
         }
 
         public function createCategoryParams($category)
@@ -91,12 +91,12 @@
 
         public function saveCategoryParams($categoryname, $datas)
         {
-            return file_put_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params", json_encode($datas));
+            return file_put_contents(Config::$jsonp_files_path . CATEG_PREFIX . "$categoryname.params", json_encode($datas));
         }
 
         public function deleteCategoryParams($categoryname)
         {
-            return unlink(Config::$jsonp_files_path . "adm_app_$categoryname.params");
+            return unlink(Config::$jsonp_files_path . CATEG_PREFIX . "$categoryname.params");
         }
 
         public function updateCategoryParams($category)
@@ -104,7 +104,7 @@
             $categoryname   = $category->oldname;
             $newname        = $category->name;
 
-            return rename(Config::$jsonp_files_path . "adm_app_$categoryname.params", Config::$jsonp_files_path . "adm_app_$newname.params");
+            return rename(Config::$jsonp_files_path . CATEG_PREFIX . "$categoryname.params", Config::$jsonp_files_path . CATEG_PREFIX . "$newname.params");
         }
 
         public function changeFieldType($categoryname, $field, $type)

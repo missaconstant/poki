@@ -110,27 +110,29 @@
 
 	}
 
-	class FlxZipArchive extends \ZipArchive
-	{
-		public function addDir($location, $name)
+	if (class_exists('ZipArchive')) {
+		class FlxZipArchive extends \ZipArchive
 		{
-			$this->addEmptyDir($name);
-			$this->addDirDo($location, $name);
-		}
-
-		private function addDirDo($location, $name)
-		{
-			$name .= '/';
-			$location .= '/';
-			$dir = opendir($location);
-
-			while ($file = readdir($dir))
+			public function addDir($location, $name)
 			{
-				if ($file == '.' || $file == '..') continue;
-				$do = (filetype( $location . $file) == 'dir') ? 'addDir' : 'addFile';
-				$this->$do($location . $file, $name . $file);
+				$this->addEmptyDir($name);
+				$this->addDirDo($location, $name);
 			}
 
-			closedir($dir);
+			private function addDirDo($location, $name)
+			{
+				$name .= '/';
+				$location .= '/';
+				$dir = opendir($location);
+
+				while ($file = readdir($dir))
+				{
+					if ($file == '.' || $file == '..') continue;
+					$do = (filetype( $location . $file) == 'dir') ? 'addDir' : 'addFile';
+					$this->$do($location . $file, $name . $file);
+				}
+
+				closedir($dir);
+			}
 		}
 	}

@@ -8,7 +8,9 @@
         public function trouverTousCategories($getone='')
         {
             $dbname = Config::$db_name;
-            $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app_". ( strlen($getone) ? $getone : '' ) ."'");
+            // $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name REGEXP '^adm_app_". ( strlen($getone) ? $getone : '' ) ."'");
+            $table_get_exp = strlen($getone) ? "table_name = ". CATEG_PREFIX ."'$getone'" : "table_name NOT REGEXP '^_adm_'";
+            $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND $table_get_exp");
             $r = $q->fetchAll(\PDO::FETCH_ASSOC);
 
             // associating label for each category
@@ -28,7 +30,7 @@
         public function trouverCategory($name)
         {
             $dbname = Config::$db_name;
-            $c_name = 'adm_app_' . $name;
+            $c_name = CATEG_PREFIX . $name;
             $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' AND column_name!='id' AND column_name!='active' AND column_name!='added_at' AND column_name!='combined_fields'");
             $r = $q->fetchAll();
             
@@ -39,7 +41,7 @@
         public function trouverTousCategoryFields()
         {
             $dbname = Config::$db_name;
-            $q = modele::$bd->query("SELECT table_name as tab_name, column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema='$dbname' AND TABLE_NAME REGEXP '^adm_app' AND column_name!='active' AND column_name!='added_at' AND column_name!='combined_fields'");
+            $q = modele::$bd->query("SELECT table_name as tab_name, column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema='$dbname' AND TABLE_NAME NOT REGEXP '^_adm_' AND column_name!='active' AND column_name!='added_at' AND column_name!='combined_fields'");
             $r = $q->fetchAll(\PDO::FETCH_ASSOC);
 
             $q->closeCursor();
@@ -48,7 +50,7 @@
 
         public function creerCategory($category) {
             try {
-                $name = 'adm_app_' . $category->name;
+                $name = CATEG_PREFIX . $category->name;
                 $q = modele::$bd->exec("CREATE TABLE $name (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     active int(1) NOT NULL DEFAULT '1',
@@ -57,7 +59,7 @@
                 )");
 
                 $name = $category->name;
-                $sql1 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('$name', '', 'noset', '0')";
+                $sql1 = "INSERT INTO _adm_api_access(category, allowed, apikey, active) VALUES('$name', '', 'noset', '0')";
                 $q1 = modele::$bd->exec($sql1);
 
                 return true;
@@ -73,10 +75,10 @@
         public function modifierCategory($category)
         {
             try {
-                $name = 'adm_app_' . $category->name;
-                $oldname = 'adm_app_' . $category->oldname;
+                $name = CATEG_PREFIX . $category->name;
+                $oldname = CATEG_PREFIX . $category->oldname;
                 $q = modele::$bd->exec("ALTER TABLE $oldname RENAME TO $name");
-                $q1 = modele::$bd->exec("UPDATE adm_api_access SET category='" . $category->name ."' WHERE category='". $category->oldname ."'");
+                $q1 = modele::$bd->exec("UPDATE _adm_api_access SET category='" . $category->name ."' WHERE category='". $category->oldname ."'");
                 return true;
             }
             catch (\Exception $e) {
@@ -89,7 +91,7 @@
 
         public function supprimerCategory($name) {
             try {
-                $name = 'adm_app_' . $name;
+                $name = CATEG_PREFIX . $name;
                 $q = modele::$bd->exec("DROP TABLE $name");
                 return true;
             }
@@ -103,7 +105,7 @@
 
         public function existsCategory($name) {
             $dbname = Config::$db_name;
-            $name = 'adm_app_' . $name;
+            $name = CATEG_PREFIX . $name;
             $q = modele::$bd->query("SELECT table_name as field FROM information_schema.tables WHERE table_schema = '$dbname' AND table_name='$name'");
             $r = $q->fetchAll();
             $q->closeCursor();
@@ -114,7 +116,7 @@
         {
             try {
                 foreach ($fields as $k => $field) {
-                    $category = 'adm_app_' . $field->category;
+                    $category = CATEG_PREFIX . $field->category;
                     $fieldname = $field->name;
                     $fieldtype = $field->type;
                     $fieldlength = $field->type != 'text' && $field->type != 'date' && $field->type != 'tinytext' ? '(255)' : '';
@@ -131,7 +133,7 @@
         public function modifierCategoryField($field)
         {
             try {
-                $category = 'adm_app_' . $field->category;
+                $category = CATEG_PREFIX . $field->category;
                 $fieldname = $field->name;
                 $fieldtype = $field->type;
                 $oldname = $field->oldname;
@@ -150,7 +152,7 @@
         public function supprimerCategoryField($fieldname, $category)
         {
             try {
-                $q = modele::$bd->exec("ALTER TABLE adm_app_$category DROP $fieldname");
+                $q = modele::$bd->exec("ALTER TABLE ". CATEG_PREFIX ."$category DROP $fieldname");
                 return $q;
             }
             catch(\Exception $e) {
@@ -163,7 +165,7 @@
 
         public function existsFieldCategory($name, $field) {
             $dbname = Config::$db_name;
-            $c_name = 'adm_app_' . $name;
+            $c_name = CATEG_PREFIX . $name;
             $q = modele::$bd->query("SELECT column_name as name, data_type as type, column_type as ctype FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' AND column_name='$field'");
             $r = $q->fetchAll();
             $q->closeCursor();

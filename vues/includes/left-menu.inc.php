@@ -33,7 +33,7 @@
                                     <?php 
                                         foreach ($categories as $k => $categorie): 
                                             // get category name && use label if exists
-                                            $catname    = substr($categorie['field'], 8);
+                                            $catname    = $categorie['field'];
                                             $field      = isset($categorie['label']) && strlen($categorie['label']) ? $categorie['label'] : $catname;
                                     ?>
                                         <li>

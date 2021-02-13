@@ -77,7 +77,7 @@
                     # query string
                     $left = implode(',', $columns);
                     $right = implode(',', $valuestring);
-                    $q = 'INSERT INTO adm_app_' .$categoryname. ' ('. $left .') VALUES '. $right;
+                    $q = 'INSERT INTO ' .CATEG_PREFIX . $categoryname. ' ('. $left .') VALUES '. $right;
                     # adding in database
                     try {
                         $this->loadModele('categories')->getDbInstance()->exec($q);

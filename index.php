@@ -9,6 +9,7 @@
 	/* request start time */
 	define('REQUEST_START_TIME', $_SERVER['REQUEST_TIME_FLOAT']);
 
+	define('CATEG_PREFIX', '');
 	define('ROOT', str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']));
 	define('WROOT', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 	define('INCLUDES', ROOT.'/vues/includes/');

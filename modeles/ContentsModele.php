@@ -19,7 +19,7 @@
                 $leftstring = implode(', ', $leftstring);
                 $rightstring = implode(', ', $rightstring);
 
-                $q = modele::$bd->prepare("INSERT INTO adm_app_$categoryname ($leftstring) VALUES ($rightstring)");
+                $q = modele::$bd->prepare("INSERT INTO ". CATEG_PREFIX ."$categoryname ($leftstring) VALUES ($rightstring)");
                 $r = $q->execute($content);
                 $q->closeCursor();
                 return true;
@@ -43,7 +43,7 @@
                 $querystring = implode(', ', $querystring);
                 $content['id'] = $contentid;
 
-                $q = modele::$bd->prepare("UPDATE adm_app_$categoryname SET $querystring WHERE id=:id");
+                $q = modele::$bd->prepare("UPDATE ". CATEG_PREFIX ."$categoryname SET $querystring WHERE id=:id");
                 $r = $q->execute($content);
                 $q->closeCursor();
                 return true;
@@ -73,7 +73,7 @@
                     $limit = $filter['limit'];
                     $order = $filter['order'];
                     $where = isset($filter['where']) && strlen(trim($filter['where'])) ? 'WHERE ' . $filter['where']:'';
-                    $sql = "SELECT * FROM adm_app_$categoryname $where $order $limit";
+                    $sql = "SELECT * FROM ". CATEG_PREFIX ."$categoryname $where $order $limit";
                 }
 
                 #doing query
@@ -111,7 +111,7 @@
                     $sql = $this->getQueryStringFromCategoryParams($joining, $categoryname, $find);
                 }
                 else {
-                    $sql = "SELECT * FROM adm_app_$categoryname WHERE $check_in='$find'";
+                    $sql = "SELECT * FROM ". CATEG_PREFIX ."$categoryname WHERE $check_in='$find'";
                 }
                 #doing query
                 $q = modele::$bd->query($sql);
@@ -179,7 +179,7 @@
                 $ids = is_array($contentid) ? $contentid : [ $contentid ];
 
                 foreach ($ids as $k => $id) {
-                    $q = modele::$bd->exec("DELETE FROM adm_app_$categoryname WHERE id='$id'");
+                    $q = modele::$bd->exec("DELETE FROM ". CATEG_PREFIX ."$categoryname WHERE id='$id'");
                 }
 
                 return true;
@@ -195,7 +195,7 @@
         public function compterContents($categoryname)
         {
             try {
-                $q = modele::$bd->query("SELECT count(*) as els_count FROM adm_app_$categoryname");
+                $q = modele::$bd->query("SELECT count(*) as els_count FROM ". CATEG_PREFIX ."$categoryname");
                 $r = $q->fetchAll();
                 $q->closeCursor();
                 return $r[0]['els_count'];
@@ -212,7 +212,7 @@
 
         public function getCategoryParams($categoryname)
         {
-            return json_decode( (@file_get_contents(Config::$jsonp_files_path . "adm_app_$categoryname.params") ?? false ), true);
+            return json_decode( (@file_get_contents(Config::$jsonp_files_path . CATEG_PREFIX . "$categoryname.params") ?? false ), true);
         }
 
         public function getCategoriesJoinedName($links)
@@ -228,7 +228,7 @@
         {
             try {
                 $dbname = Config::$db_name;
-                $c_name = 'adm_app_' . $name;
+                $c_name = CATEG_PREFIX . $name;
                 $norestrictstring = $norestrict ? " AND column_name!='id' AND column_name!='active' AND column_name!='added_at'" : '';
                 $q = modele::$bd->query("SELECT column_name as name FROM INFORMATION_SCHEMA.COLUMNS where table_schema = '$dbname' AND TABLE_NAME='$c_name' $norestrictstring");
                 $r = $q->fetchAll(\PDO::FETCH_COLUMN);
@@ -246,7 +246,7 @@
                 $contentids = is_array($contentid) ? $contentid : [ $contentid ];
 
                 foreach ($contentids as $k => $id) {
-                    modele::$bd->exec("UPDATE adm_app_$categoryname SET active=$newstate WHERE id=$id");
+                    modele::$bd->exec("UPDATE ". CATEG_PREFIX ."$categoryname SET active=$newstate WHERE id=$id");
                 }
 
                 return true;
@@ -269,13 +269,13 @@
         {
             try {
                 # getting category
-                $category = $this->trouverCategory(str_replace('adm_app_', '', $categoryname));
+                $category = $this->trouverCategory(str_replace(CATEG_PREFIX, '', $categoryname));
                 # getting joining table
-                $joining = $this->getCategoryParams(str_replace('adm_app_', '', $categoryname));
-                $joining['name'] = str_replace('adm_app_', '', $categoryname);
+                $joining = $this->getCategoryParams(str_replace(CATEG_PREFIX, '', $categoryname));
+                $joining['name'] = str_replace(CATEG_PREFIX, '', $categoryname);
                 // $query = "SELECT ". ($count==true ? "count(*) as searchcount" : "*") ." FROM $categoryname WHERE ";
                 # getting query string
-                $query = $this->getQueryStringFromCategoryParams($joining, str_replace('adm_app_', '', $categoryname), false, [
+                $query = $this->getQueryStringFromCategoryParams($joining, str_replace(CATEG_PREFIX, '', $categoryname), false, [
                     "like" => $kwd,
                     "limit" => $limit ? $limit : false,
                 ], $count);
@@ -303,9 +303,9 @@
                 if ($tablefields) { // cause can be false if category does not exists
                     $tablestring = [];
                     foreach ($tablefields as $k => $field) {
-                        $tablestring[] = 'adm_app_'.$category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
+                        $tablestring[] = CATEG_PREFIX . $category .'.'. $field . ($category!=$categoryname ? ' as '. $category .'_'. $field : '');
                         # saving fields
-                        $fields[] = 'adm_app_'.$category .'.'. $field;
+                        $fields[] = CATEG_PREFIX . $category .'.'. $field;
                     }
                     return implode(', ', $tablestring);
                 }
@@ -324,8 +324,8 @@
             $joinedstring = [];
             foreach ($joining['links'] as $fieldlinked => $link)
             {
-                $linkedto       = 'adm_app_'. $link['linkedto'];
-                $linked         = 'adm_app_'. $joining['name'];
+                $linkedto       = CATEG_PREFIX . $link['linkedto'];
+                $linked         = CATEG_PREFIX . $joining['name'];
                 $joinkey        = isset( $joining['joining_keys'][$fieldlinked] ) ? $joining['joining_keys'][$fieldlinked] : $link['joined_on'];
 
                 $joinedstring[] = "LEFT JOIN $linkedto ON $linkedto.".  $joinkey  ."=$linked.$fieldlinked";
@@ -339,18 +339,18 @@
 
             # preparing where string
             $isWhere = $contentid || $filter['like'];
-            $contentWhere = $contentid ? "adm_app_$categoryname.id=$contentid" : null;
+            $contentWhere = $contentid ? CATEG_PREFIX . "$categoryname.id=$contentid" : null;
             $likeWhere = isset($filter['like']) ? implode(' OR ', $likestring) : null;
             $whereString = $isWhere ? 'WHERE ' . implode(' AND ', array_filter([$contentWhere, $likeWhere])) : '';
             $whereString .= strlen($where) ? (strlen($whereString) ? ' AND ' . $where : ' WHERE ' . $where) : '' ;
 
             # preparing count string
-            $categoryname = str_replace('adm_app_', '', $categoryname);
-            $countString = $count ? "COUNT(adm_app_$categoryname.id) as countlines" : false;
+            $categoryname = str_replace(CATEG_PREFIX, '', $categoryname);
+            $countString = $count ? "COUNT(". CATEG_PREFIX ."$categoryname.id) as countlines" : false;
 
             // exit("SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit");
 
-            return "SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM adm_app_$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
+            return "SELECT ". ($countString ? $countString : implode(', ', $querySelectStrings)) ." FROM ". CATEG_PREFIX ."$categoryname ". implode(' ', $joinedstring) . " $whereString $order $limit";
         }
 
         private function getFilter($filter)

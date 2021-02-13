@@ -118,7 +118,7 @@
                 "password" => Posts::post('pass'),
                 "id" => Posts::post('editing')
             ];
-
+            
             $this->checkUser($user);
 
             if ($this->loadModele()->{$user->id=='0' ? 'creerUser':'modifierUser'}($user)) {

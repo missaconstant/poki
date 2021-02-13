@@ -7,7 +7,7 @@
         public function creerApi($categoryname)
         {
             try {
-                $q = modele::$bd->prepare('INSERT INTO adm_api_access(category, allowed, apikey) VAlUES(:category, :allow, :apikey)');
+                $q = modele::$bd->prepare('INSERT INTO _adm_api_access(category, allowed, apikey) VAlUES(:category, :allow, :apikey)');
                 $r = $q->execute([
                     "category" => $categoryname,
                     "allowed" => "none",
@@ -27,7 +27,7 @@
         public function modifierApi($categoryname, $allowed)
         {
             try {
-                $q = modele::$bd->prepare("UPDATE adm_api_access SET allowed=:allowed WHERE category=:category");
+                $q = modele::$bd->prepare("UPDATE _adm_api_access SET allowed=:allowed WHERE category=:category");
                 $r = $q->execute([
                     "allowed" => $allowed,
                     "category" => $categoryname
@@ -47,7 +47,7 @@
         {
             try {
                 $newapikey = $delete ? 'noset' : md5(uniqid().date('dmYHis'));
-                $q = modele::$bd->prepare("UPDATE adm_api_access SET apikey=:apikey WHERE category=:category");
+                $q = modele::$bd->prepare("UPDATE _adm_api_access SET apikey=:apikey WHERE category=:category");
                 $r = $q->execute([
                     "apikey" => $newapikey,
                     "category" => $categoryname
@@ -65,7 +65,7 @@
 
         public function toggleApi($categoryname, $value) {
             try {
-                $q = modele::$bd->prepare("UPDATE adm_api_access SET active=:active WHERE category=:category");
+                $q = modele::$bd->prepare("UPDATE _adm_api_access SET active=:active WHERE category=:category");
                 $r = $q->execute([
                     "active" => $value,
                     "category" => $categoryname
@@ -84,7 +84,7 @@
         public function trouverApi($categoryname)
         {
             try {
-                $q = modele::$bd->query("SELECT * FROM adm_api_access WHERE category='$categoryname'");
+                $q = modele::$bd->query("SELECT * FROM _adm_api_access WHERE category='$categoryname'");
                 $r = $q->fetchAll();
                 $q->closeCursor();
                 return count($r) ? (object) $r[0] : false;

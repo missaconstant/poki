@@ -37,7 +37,7 @@
                                 <?php
                                     $listing = false;
                                     foreach ($all_category_fileds as $k => $onefield):
-                                        $categ = substr($onefield['tab_name'], 8);
+                                        $categ = $onefield['tab_name'];
                                         $filds = $onefield['name'];
                                         if ($category_name != $categ):
                                             $link = Helpers::getCategoryParams($category_name, 'links')[$field['name']] ?? false;

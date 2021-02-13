@@ -98,7 +98,6 @@
 
         public function show()
         {
-
             $this->cfg->configSurvey(false);
             $admin = $this->usr->loginSurvey(false, 'login');
 
@@ -284,8 +283,8 @@
                     $contentsNumber = $this->loadModele('contents')->compterContents($name);
                 }
                 else {
-                    $contents = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, $limit);
-                    $contentsNumber = $this->loadModele('contents')->searchInCategory('adm_app_' . $name, $search, false, true);
+                    $contents = $this->loadModele('contents')->searchInCategory(CATEG_PREFIX . $name, $search, $limit);
+                    $contentsNumber = $this->loadModele('contents')->searchInCategory(CATEG_PREFIX . $name, $search, false, true);
                     $contentsNumber = $contentsNumber[0]['countlines'];
                 }
 
@@ -314,7 +313,7 @@
                 $found = [];
                 for ($i=0; $i<count($categories); $i++) {
                     $found[] = [
-                        "category" => str_replace('adm_app_', '', $categories[$i]['field']),
+                        "category" => str_replace(CATEG_PREFIX, '', $categories[$i]['field']),
                         "list" => $this->loadModele('contents')->searchInCategory($categories[$i]['field'], $kwd, false, true)
                     ];
                 }

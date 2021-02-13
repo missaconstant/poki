@@ -7,7 +7,7 @@
         public function creerUser($user)
         {
             try {
-                $q = modele::$bd->prepare("INSERT INTO adm_users(name, email, password, role) VALUES (:name, :email, :password, :role)");
+                $q = modele::$bd->prepare("INSERT INTO _adm_users(name, email, password, role) VALUES (:name, :email, :password, :role)");
                 $r = $q->execute([
                     "name" => $user->name,
                     "email" => $user->email,
@@ -29,7 +29,7 @@
         {
             try {
                 $passwordstring = strlen($user->password) ? 'password=:password,' : '';
-                $q = modele::$bd->prepare("UPDATE adm_users SET name=:name, email=:email, $passwordstring role=:role WHERE md5(id)=:id");
+                $q = modele::$bd->prepare("UPDATE _adm_users SET name=:name, email=:email, $passwordstring role=:role WHERE md5(id)=:id");
                 $left = [
                     "name" => $user->name,
                     "email" => $user->email,
@@ -53,7 +53,7 @@
         public function findAdmin($adminid)
         {
             try {
-                $q = modele::$bd->query("SELECT adm_users.id, adm_users.name, adm_users.email, adm_users.password, adm_users.active, adm_users.role as roleid, adm_roles.role FROM adm_users, adm_roles WHERE md5(adm_users.id)='$adminid' AND adm_roles.id=adm_users.role");
+                $q = modele::$bd->query("SELECT _adm_users.id, _adm_users.name, _adm_users.email, _adm_users.password, _adm_users.active, _adm_users.role as roleid, _adm_roles.role FROM _adm_users, _adm_roles WHERE md5(_adm_users.id)='$adminid' AND _adm_roles.id=_adm_users.role");
                 $r = $q->fetchAll();
                 $q->closeCursor();
                 return count($r) ? (object) $r[0] : false;
@@ -68,14 +68,14 @@
 
         public function tryLogon($user, $pass)
         {
-            $user = self::tryLogin([$user, $pass, 1], ['email', 'password', 'active'], 'adm_users');
+            $user = self::tryLogin([$user, $pass, 1], ['email', 'password', 'active'], '_adm_users');
             return $user;
         }
 
         public function findAll()
         {
             try {
-                $q = modele::$bd->query("SELECT adm_users.id, adm_users.name, adm_users.email, adm_users.password, adm_users.active, adm_users.role as roleid, adm_roles.role FROM adm_users, adm_roles WHERE adm_roles.id=adm_users.role");
+                $q = modele::$bd->query("SELECT _adm_users.id, _adm_users.name, _adm_users.email, _adm_users.password, _adm_users.active, _adm_users.role as roleid, _adm_roles.role FROM _adm_users, _adm_roles WHERE _adm_roles.id=_adm_users.role");
                 $r = $q->fetchAll(\PDO::FETCH_OBJ);
                 $q->closeCursor();
                 return $r;
@@ -91,7 +91,7 @@
         public function changeUserState($id, $newstate)
         {
             try {
-                $q = modele::$bd->exec("UPDATE adm_users SET active='$newstate' WHERE md5(id)='$id'");
+                $q = modele::$bd->exec("UPDATE _adm_users SET active='$newstate' WHERE md5(id)='$id'");
                 return true;
             }
             catch (\Exception $e) {
@@ -105,7 +105,7 @@
         public function supprimerUsers($id)
         {
             try {
-                $q = modele::$bd->exec("DELETE FROM adm_users WHERE md5(id)='$id'");
+                $q = modele::$bd->exec("DELETE FROM _adm_users WHERE md5(id)='$id'");
                 return true;
             }
             catch (\Exception $e) {
@@ -119,7 +119,7 @@
         public function trouverTousRoles()
         {
             try {
-                $q = modele::$bd->query('SELECT * FROM adm_roles');
+                $q = modele::$bd->query('SELECT * FROM _adm_roles');
                 $r = $q->fetchAll(\PDO::FETCH_OBJ);
                 $q->closeCursor();
                 return $r;

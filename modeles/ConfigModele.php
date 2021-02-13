@@ -10,7 +10,7 @@
 
             /* Creating table */
             try {
-                $sql = "CREATE TABLE IF NOT EXISTS adm_users (
+                $sql = "CREATE TABLE IF NOT EXISTS _adm_users (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     name varchar(150) NOT NULL,
                     email varchar(200) NOT NULL,
@@ -27,7 +27,7 @@
 
             /* Creating datas */
             try {
-                $sql = "INSERT INTO adm_users(name, email, password, active, role) VALUES('admin', '$username', md5('$password'), '1', '1')";
+                $sql = "INSERT INTO _adm_users(name, email, password, active, role) VALUES('admin', '$username', md5('$password'), '1', '1')";
                 $q = modele::$bd->query($sql);
                 $q->closeCursor();
             }
@@ -49,7 +49,7 @@
 
             try {
                 /* table 1 */
-                $sql = "CREATE TABLE IF NOT EXISTS adm_settings (
+                $sql = "CREATE TABLE IF NOT EXISTS _adm_settings (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     keyname varchar(150) NOT NULL,
                     keyalias varchar(155) NOT NULL,
@@ -62,7 +62,7 @@
 
 
                 /* table 1 */
-                $sql3 = "CREATE TABLE IF NOT EXISTS adm_roles (
+                $sql3 = "CREATE TABLE IF NOT EXISTS _adm_roles (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     role varchar(100) NOT NULL,
                     active int(1) NOT NULL DEFAULT '1'
@@ -71,7 +71,7 @@
                 $q->closeCursor();
 
                 /* table 2 */
-                $sql1 = "CREATE TABLE IF NOT EXISTS adm_api_access (
+                $sql1 = "CREATE TABLE IF NOT EXISTS _adm_api_access (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     category varchar(255) NOT NULL,
                     allowed text,
@@ -83,7 +83,7 @@
                 $q1->closeCursor();
                 
                 /* table 2 */
-                $sql2 = "CREATE TABLE IF NOT EXISTS adm_app_default (
+                $sql2 = "CREATE TABLE IF NOT EXISTS ". CATEG_PREFIX ."poki_default (
                     id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     title varchar(150) NOT NULL,
                     content text NOT NULL,
@@ -99,19 +99,19 @@
 
             /* Creating datas */
             try {
-                $sql5 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('language', 'default', 'english')";
+                $sql5 = "INSERT INTO _adm_settings(keyname, keyalias, content) VALUES('language', 'default', 'english')";
                 $q5 = modele::$bd->exec($sql5);
 
-                $sql4 = "INSERT INTO adm_roles(role, active) VALUES ('admin', '1'), ('writer', '1'), ('viewer', '1')";
+                $sql4 = "INSERT INTO _adm_roles(role, active) VALUES ('admin', '1'), ('writer', '1'), ('viewer', '1')";
                 $q4 = modele::$bd->exec($sql4);
 
-                $sql6 = "INSERT INTO adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete,find')";
+                $sql6 = "INSERT INTO _adm_settings(keyname, keyalias, content) VALUES('apipermissiontypes', 'apitypes', 'get,get-one,add,edit,delete,find')";
                 $q6 = modele::$bd->exec($sql6);
 
-                $sql7 = "INSERT INTO adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
+                $sql7 = "INSERT INTO _adm_api_access(category, allowed, apikey, active) VALUES('default', '', 'noset', 0)";
                 $q7 = modele::$bd->exec($sql7);
 
-                $sql8 = "INSERT INTO adm_app_default(title, content, active, added_at) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
+                $sql8 = "INSERT INTO ". CATEG_PREFIX ."poki_default(title, content, active, added_at) VALUES('Welcome on Poki !', 'You are now on Poki. Then enjoy ! Create categories and admin your website easely.', '1', '" .date('d-m-Y H:i'). "')";
                 $q8 = modele::$bd->exec($sql8);
             }
             catch (\Exception $e) {
@@ -125,7 +125,7 @@
         public function existsDefaultTables()
         {
             $dbname = Config::$db_name;
-            $sql = "SELECT * FROM information_schema.tables WHERE table_schema = '$dbname' AND (table_name = 'adm_default' OR table_name = 'adm_users' OR table_name = 'settings')";
+            $sql = "SELECT * FROM information_schema.tables WHERE table_schema = '$dbname' AND (table_name = '". CATEG_PREFIX ."poki_default' OR table_name = '_adm_users' OR table_name = '_adm_settings')";
             try {
                 $q = modele::$bd->query($sql);
                 $r = $q->fetchAll();
@@ -144,7 +144,7 @@
                 "links" => [],
                 "created_at" => date('d-m-Y H:i')
             ];
-            return file_put_contents(Config::$jsonp_files_path . "adm_app_$category.params", json_encode($structure));
+            return file_put_contents(Config::$jsonp_files_path . "$category.params", json_encode($structure));
         }
     }
     
